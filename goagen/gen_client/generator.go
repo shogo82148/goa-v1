@@ -267,7 +267,7 @@ func (g *Generator) generateClient(clientFile string, clientPkg string, funcs te
 	// Setup codegen
 	imports := []*codegen.ImportSpec{
 		codegen.SimpleImport("net/http"),
-		codegen.SimpleImport("github.com/shogo82148/goa-v1"),
+		codegen.NewImport("goa", "github.com/shogo82148/goa-v1"),
 		codegen.NewImport("goaclient", "github.com/shogo82148/goa-v1/client"),
 		codegen.NewImport("uuid", "github.com/shogo82148/goa-v1/uuid"),
 	}
@@ -590,7 +590,7 @@ func (g *Generator) generateMediaTypes(pkgDir string, funcs template.FuncMap) (e
 	}()
 	title := fmt.Sprintf("%s: Application Media Types", g.API.Context())
 	imports := []*codegen.ImportSpec{
-		codegen.SimpleImport("github.com/shogo82148/goa-v1"),
+		codegen.NewImport("goa", "github.com/shogo82148/goa-v1"),
 		codegen.SimpleImport("fmt"),
 		codegen.SimpleImport("net/http"),
 		codegen.SimpleImport("time"),
@@ -644,7 +644,7 @@ func (g *Generator) generateUserTypes(pkgDir string) (err error) {
 	}()
 	title := fmt.Sprintf("%s: Application User Types", g.API.Context())
 	imports := []*codegen.ImportSpec{
-		codegen.SimpleImport("github.com/shogo82148/goa-v1"),
+		codegen.NewImport("goa", "github.com/shogo82148/goa-v1"),
 		codegen.SimpleImport("fmt"),
 		codegen.SimpleImport("time"),
 		codegen.SimpleImport("unicode/utf8"),

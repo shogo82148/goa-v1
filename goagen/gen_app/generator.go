@@ -150,7 +150,7 @@ func (g *Generator) generateContexts() (err error) {
 		codegen.SimpleImport("strings"),
 		codegen.SimpleImport("time"),
 		codegen.SimpleImport("unicode/utf8"),
-		codegen.SimpleImport("github.com/shogo82148/goa-v1"),
+		codegen.NewImport("goa", "github.com/shogo82148/goa-v1"),
 		codegen.NewImport("uuid", "github.com/gofrs/uuid"),
 		codegen.SimpleImport("context"),
 	}
@@ -239,7 +239,7 @@ func (g *Generator) generateControllers() (err error) {
 		codegen.SimpleImport("net/http"),
 		codegen.SimpleImport("fmt"),
 		codegen.SimpleImport("context"),
-		codegen.SimpleImport("github.com/shogo82148/goa-v1"),
+		codegen.NewImport("goa", "github.com/shogo82148/goa-v1"),
 		codegen.SimpleImport("github.com/shogo82148/goa-v1/cors"),
 		codegen.SimpleImport("regexp"),
 		codegen.SimpleImport("strconv"),
@@ -362,7 +362,7 @@ func (g *Generator) generateSecurity() (err error) {
 		codegen.SimpleImport("net/http"),
 		codegen.SimpleImport("errors"),
 		codegen.SimpleImport("context"),
-		codegen.SimpleImport("github.com/shogo82148/goa-v1"),
+		codegen.NewImport("goa", "github.com/shogo82148/goa-v1"),
 	}
 	if err = secWr.WriteHeader(title, g.Target, imports); err != nil {
 		return err
@@ -444,7 +444,7 @@ func (g *Generator) generateMediaTypes() (err error) {
 	}()
 	title := fmt.Sprintf("%s: Application Media Types", g.API.Context())
 	imports := []*codegen.ImportSpec{
-		codegen.SimpleImport("github.com/shogo82148/goa-v1"),
+		codegen.NewImport("goa", "github.com/shogo82148/goa-v1"),
 		codegen.SimpleImport("fmt"),
 		codegen.SimpleImport("time"),
 		codegen.SimpleImport("unicode/utf8"),
@@ -495,7 +495,7 @@ func (g *Generator) generateUserTypes() (err error) {
 		codegen.SimpleImport("mime/multipart"),
 		codegen.SimpleImport("time"),
 		codegen.SimpleImport("unicode/utf8"),
-		codegen.SimpleImport("github.com/shogo82148/goa-v1"),
+		codegen.NewImport("goa", "github.com/shogo82148/goa-v1"),
 		codegen.NewImport("uuid", "github.com/gofrs/uuid"),
 	}
 	for _, v := range g.API.Types {

@@ -168,7 +168,7 @@ func GenerateController(force, regen bool, appPkg, outDir, pkg, name string, r *
 
 	imports := []*codegen.ImportSpec{
 		codegen.SimpleImport("io"),
-		codegen.SimpleImport("github.com/shogo82148/goa-v1"),
+		codegen.NewImport("goa", "github.com/shogo82148/goa-v1"),
 		codegen.SimpleImport(imp),
 		codegen.SimpleImport("golang.org/x/net/websocket"),
 	}
@@ -290,7 +290,7 @@ func (g *Generator) createMainFile(mainFile string, funcs template.FuncMap) (err
 	appPkg := path.Join(outPkg, "app")
 	imports := []*codegen.ImportSpec{
 		codegen.SimpleImport("time"),
-		codegen.SimpleImport("github.com/shogo82148/goa-v1"),
+		codegen.NewImport("goa", "github.com/shogo82148/goa-v1"),
 		codegen.SimpleImport("github.com/shogo82148/goa-v1/middleware"),
 		codegen.SimpleImport(appPkg),
 	}

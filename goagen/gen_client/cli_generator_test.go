@@ -8,14 +8,14 @@ import (
 	"path/filepath"
 	"strings"
 
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gexec"
 	"github.com/shogo82148/goa-v1/design"
 	"github.com/shogo82148/goa-v1/dslengine"
 	"github.com/shogo82148/goa-v1/goagen/codegen"
 	genclient "github.com/shogo82148/goa-v1/goagen/gen_client"
 	"github.com/shogo82148/goa-v1/version"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-	"github.com/onsi/gomega/gexec"
 )
 
 var _ = Describe("Generate", func() {
@@ -25,7 +25,10 @@ var _ = Describe("Generate", func() {
 	var files []string
 	var genErr error
 
+	oldGO111MODULE := os.Getenv("GO111MODULE")
+
 	BeforeEach(func() {
+		os.Setenv("GO111MODULE", "off")
 		gopath := filepath.SplitList(os.Getenv("GOPATH"))[0]
 		outDir = filepath.Join(gopath, "src", testgenPackagePath)
 		err := os.MkdirAll(outDir, 0777)
@@ -40,6 +43,7 @@ var _ = Describe("Generate", func() {
 	AfterEach(func() {
 		os.RemoveAll(outDir)
 		delete(codegen.Reserved, "client")
+		os.Setenv("GO111MODULE", oldGO111MODULE)
 	})
 
 	Context("with a dummy API", func() {

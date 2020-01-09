@@ -93,7 +93,7 @@ func (g *Generator) generateResourceTest() error {
 		codegen.SimpleImport("strings"),
 		codegen.SimpleImport("time"),
 		codegen.SimpleImport(appPkg),
-		codegen.SimpleImport("github.com/shogo82148/goa-v1"),
+		codegen.NewImport("goa", "github.com/shogo82148/goa-v1"),
 		codegen.SimpleImport("github.com/shogo82148/goa-v1/goatest"),
 		codegen.SimpleImport("context"),
 		codegen.NewImport("uuid", "github.com/gofrs/uuid"),

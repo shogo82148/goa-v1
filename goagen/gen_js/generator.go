@@ -260,7 +260,7 @@ func (g *Generator) generateExample() error {
 	imports := []*codegen.ImportSpec{
 		codegen.SimpleImport("net/http"),
 		codegen.SimpleImport("github.com/dimfeld/httptreemux"),
-		codegen.SimpleImport("github.com/shogo82148/goa-v1"),
+		codegen.NewImport("goa", "github.com/shogo82148/goa-v1"),
 	}
 	if err := file.WriteHeader(fmt.Sprintf("%s JavaScript Client Example", g.API.Name), "js", imports); err != nil {
 		return err
