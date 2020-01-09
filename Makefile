@@ -29,7 +29,7 @@ docs:
 .PHONY: depend
 depend:
 	go mod download
-	GO111MODULE=off go get -v github.com/onsi/ginkgo/ginkgo
+	go get github.com/onsi/ginkgo/ginkgo
 
 lint:
 	@for d in $(DIRS) ; do \

@@ -8,13 +8,13 @@ import (
 	"strings"
 	"text/template"
 
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 	"github.com/shogo82148/goa-v1/design"
 	"github.com/shogo82148/goa-v1/dslengine"
 	"github.com/shogo82148/goa-v1/goagen/codegen"
 	genapp "github.com/shogo82148/goa-v1/goagen/gen_app"
 	"github.com/shogo82148/goa-v1/version"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Generate", func() {
@@ -22,8 +22,11 @@ var _ = Describe("Generate", func() {
 	var outDir string
 	var files []string
 	var genErr error
+	oldGO111MODULE := os.Getenv("GO111MODULE")
 
 	BeforeEach(func() {
+		os.Setenv("GO111MODULE", "off")
+
 		var err error
 		workspace, err = codegen.NewWorkspace("test")
 		Ω(err).ShouldNot(HaveOccurred())
@@ -42,6 +45,7 @@ var _ = Describe("Generate", func() {
 	AfterEach(func() {
 		workspace.Delete()
 		delete(codegen.Reserved, "app")
+		os.Setenv("GO111MODULE", oldGO111MODULE)
 	})
 
 	Context("with a dummy API", func() {
