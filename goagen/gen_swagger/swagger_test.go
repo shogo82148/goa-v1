@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/go-openapi/loads"
-	_ "github.com/shogo82148/goa-v1-cellar/design"
+	_ "github.com/shogo82148/goa-v1/goagen/gen_swagger/internal/design"
 	. "github.com/shogo82148/goa-v1/design"
 	. "github.com/shogo82148/goa-v1/design/apidsl"
 	"github.com/shogo82148/goa-v1/dslengine"

@@ -41,10 +41,9 @@ docs:
 	@mv goa.design/public public
 	@rm -rf goa.design
 
+.PHONY: depend
 depend:
-	@mkdir -p $(GOPATH)/src/golang.org/x
-	@go get -v ./...
-	@go get -v $(DEPEND)
+	go mod download
 
 lint:
 	@for d in $(DIRS) ; do \
