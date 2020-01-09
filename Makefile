@@ -44,6 +44,7 @@ docs:
 .PHONY: depend
 depend:
 	go mod download
+	GO111MODULE=off go get github.com/onsi/ginkgo/ginkgo
 
 lint:
 	@for d in $(DIRS) ; do \
@@ -60,8 +61,9 @@ cyclo:
 		echo "^ - Cyclomatic complexity exceeds 20, refactor the code!" && echo && exit 1; \
 	fi
 
+.PHONY: test
 test:
-	@ginkgo -r --randomizeAllSpecs --failOnPending --randomizeSuites -race -skipPackage vendor
+	ginkgo -r --randomizeAllSpecs --failOnPending --randomizeSuites -race
 	go test ./_integration_tests
 
 goagen:
