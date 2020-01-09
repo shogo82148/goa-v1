@@ -205,9 +205,9 @@ var _ = Describe("Workspace", func() {
 				})
 
 				Context("inside GOPATH", func() {
-					It("should return an error", func() {
+					It("should not return an error", func() {
 						_, err := codegen.WorkspaceFor(abs("bar", "xx", "42"))
-						Ω(err).Should(Equal(fmt.Errorf(`Go source file "%s" not in Go workspace, adjust GOPATH %s or use modules`, abs("bar", "xx", "42"), abs("xx"))))
+						Ω(err).ShouldNot(HaveOccurred())
 					})
 				})
 
@@ -221,9 +221,9 @@ var _ = Describe("Workspace", func() {
 						Ω(os.RemoveAll(gopath)).ShouldNot(HaveOccurred())
 					})
 
-					It("should return an error", func() {
+					It("should not return an error", func() {
 						_, err := codegen.WorkspaceFor(abs("bar", "xx", "42"))
-						Ω(err).Should(Equal(fmt.Errorf(`Go source file "%s" not in Go workspace, adjust GOPATH %s or use modules`, abs("bar", "xx", "42"), gopath)))
+						Ω(err).ShouldNot(HaveOccurred())
 					})
 				})
 			})
