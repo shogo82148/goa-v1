@@ -3,6 +3,7 @@ package goa_test
 import (
 	"bytes"
 	"fmt"
+	"go/build"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -13,9 +14,9 @@ import (
 
 	"sync"
 
-	"github.com/shogo82148/goa-v1"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1"
 )
 
 var _ = Describe("Service", func() {
@@ -389,7 +390,7 @@ var _ = Describe("Service", func() {
 		var muxHandler goa.MuxHandler
 
 		JustBeforeEach(func() {
-			gopath := filepath.SplitList(os.Getenv("GOPATH"))[0]
+			gopath := filepath.SplitList(build.Default.GOPATH)[0]
 			outDir = filepath.Join(gopath, "src", publicPath)
 			err := os.MkdirAll(filepath.Join(outDir, "swagger"), 0777)
 			Ω(err).ShouldNot(HaveOccurred())
