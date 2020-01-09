@@ -13,7 +13,7 @@ import (
 
 	"sync"
 
-	"github.com/goadesign/goa"
+	"github.com/shogo82148/goa-v1"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -378,7 +378,7 @@ var _ = Describe("Service", func() {
 	})
 
 	Describe("FileHandler", func() {
-		const publicPath = "github.com/goadesign/goa/public"
+		const publicPath = "github.com/shogo82148/goa-v1/public"
 
 		var outDir string
 

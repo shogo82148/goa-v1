@@ -3,7 +3,7 @@ package client_test
 import (
 	"context"
 
-	"github.com/goadesign/goa/client"
+	"github.com/shogo82148/goa-v1/client"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

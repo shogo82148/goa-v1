@@ -1,10 +1,10 @@
 package genschema_test
 
 import (
-	"github.com/goadesign/goa/design"
-	. "github.com/goadesign/goa/design/apidsl"
-	"github.com/goadesign/goa/dslengine"
-	genschema "github.com/goadesign/goa/goagen/gen_schema"
+	"github.com/shogo82148/goa-v1/design"
+	. "github.com/shogo82148/goa-v1/design/apidsl"
+	"github.com/shogo82148/goa-v1/dslengine"
+	genschema "github.com/shogo82148/goa-v1/goagen/gen_schema"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

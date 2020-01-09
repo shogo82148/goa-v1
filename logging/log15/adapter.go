@@ -16,7 +16,7 @@ package goalog15
 import (
 	"context"
 
-	"github.com/goadesign/goa"
+	"github.com/shogo82148/goa-v1"
 	"github.com/inconshreveable/log15"
 )
 
