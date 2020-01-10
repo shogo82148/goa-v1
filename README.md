@@ -5,8 +5,8 @@ unique design-first approach.
 
 [![Build Status](https://travis-ci.org/goadesign/goa.svg?branch=master)](https://travis-ci.org/goadesign/goa)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/vixp37loj5i6qmaf/branch/master?svg=true)](https://ci.appveyor.com/project/RaphaelSimon/goa-oqtis/branch/master)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/goadesign/goa/blob/master/LICENSE)
-[![Godoc](https://godoc.org/github.com/goadesign/goa?status.svg)](https://godoc.org/gopkg.in/goadesign/goa.v1)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/shogo82148/goa-v1/blob/master/LICENSE)
+[![Godoc](https://godoc.org/github.com/shogo82148/goa-v1?status.svg)](https://godoc.org/gopkg.in/goadesign/goa.v1)
 [![Slack](https://img.shields.io/badge/slack-gophers-orange.svg?style=flat)](https://gophers.slack.com/messages/goa/)
 
 ## Why goa?
@@ -65,7 +65,7 @@ Goa v1 can be used with Go modules:
 ```bash
 export GO111MODULE=on
 go mod init <my project>
-go get github.com/goadesign/goa/...@v1
+go get github.com/shogo82148/goa-v1/...@v1
 ```
 
 Or without Go modules by cloning the repo first:
@@ -74,9 +74,9 @@ Or without Go modules by cloning the repo first:
 cd $GOPATH/src
 mkdir -p github.com/goadesign
 cd github.com/goadesign
-git clone https://github.com/goadesign/goa
+git clone https://github.com/shogo82148/goa-v1
 cd goa; git checkout v1
-go get -v github.com/goadesign/goa/...
+go get -v github.com/shogo82148/goa-v1/...
 ```
 
 ### Stable Versions
@@ -100,8 +100,8 @@ Create the file `$GOPATH/src/goa-adder/design/design.go` with the following cont
 package design
 
 import (
-        . "github.com/goadesign/goa/design"
-        . "github.com/goadesign/goa/design/apidsl"
+        . "github.com/shogo82148/goa-v1/design"
+        . "github.com/shogo82148/goa-v1/design/apidsl"
 )
 
 var _ = API("adder", func() {
@@ -249,7 +249,7 @@ For open source projects hosted on
 github [swagger.goa.design](http://swagger.goa.design) provides a free service
 that renders the Swagger representation dynamically from goa design packages.
 Simply set the `url` query string with the import path to the design package.
-For example displaying the docs for `github.com/goadesign/goa-cellar/design` is
+For example displaying the docs for `github.com/shogo82148/goa-v1-cellar/design` is
 done by browsing to:
 
 http://swagger.goa.design/?url=goadesign%2Fgoa-cellar%2Fdesign
@@ -342,7 +342,7 @@ started guide, detailed DSL documentation as well as information on how to imple
 The [examples](https://github.com/goadesign/examples) repo contains simple examples illustrating
 basic concepts.
 
-The [goa-cellar](https://github.com/goadesign/goa-cellar) repo contains the implementation for a
+The [goa-cellar](https://github.com/shogo82148/goa-v1-cellar) repo contains the implementation for a
 goa service which demonstrates many aspects of the design language. It is kept up-to-date and
 provides a reference for testing functionality.
 

@@ -1,6 +1,7 @@
 package genjs_test
 
 import (
+	"go/build"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -8,22 +9,22 @@ import (
 
 	"time"
 
-	"github.com/goadesign/goa/design"
-	genjs "github.com/goadesign/goa/goagen/gen_js"
-	"github.com/goadesign/goa/version"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
+	genjs "github.com/shogo82148/goa-v1/goagen/gen_js"
+	"github.com/shogo82148/goa-v1/version"
 )
 
 var _ = Describe("Generate", func() {
-	const testgenPackagePath = "github.com/goadesign/goa/goagen/gen_js/test_"
+	const testgenPackagePath = "github.com/shogo82148/goa-v1/goagen/gen_js/test_"
 
 	var outDir string
 	var files []string
 	var genErr error
 
 	BeforeEach(func() {
-		gopath := filepath.SplitList(os.Getenv("GOPATH"))[0]
+		gopath := filepath.SplitList(build.Default.GOPATH)[0]
 		outDir = filepath.Join(gopath, "src", testgenPackagePath)
 		err := os.MkdirAll(outDir, 0777)
 		Ω(err).ShouldNot(HaveOccurred())

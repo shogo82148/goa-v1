@@ -1,9 +1,9 @@
 package test
 
 import (
-	. "github.com/goadesign/goa/design"
-	. "github.com/goadesign/goa/design/apidsl"
-	"github.com/goadesign/goa/dslengine"
+	. "github.com/shogo82148/goa-v1/design"
+	. "github.com/shogo82148/goa-v1/design/apidsl"
+	"github.com/shogo82148/goa-v1/dslengine"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

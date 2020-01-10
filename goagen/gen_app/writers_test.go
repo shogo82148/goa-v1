@@ -4,13 +4,13 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/goadesign/goa/design"
-	"github.com/goadesign/goa/design/apidsl"
-	"github.com/goadesign/goa/dslengine"
-	"github.com/goadesign/goa/goagen/codegen"
-	genapp "github.com/goadesign/goa/goagen/gen_app"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/design/apidsl"
+	"github.com/shogo82148/goa-v1/dslengine"
+	"github.com/shogo82148/goa-v1/goagen/codegen"
+	genapp "github.com/shogo82148/goa-v1/goagen/gen_app"
 )
 
 var _ = Describe("ContextsWriter", func() {
@@ -18,7 +18,11 @@ var _ = Describe("ContextsWriter", func() {
 	var filename string
 	var workspace *codegen.Workspace
 
+	oldGO111MODULE := os.Getenv("GO111MODULE")
+
 	JustBeforeEach(func() {
+		os.Setenv("GO111MODULE", "off")
+
 		var err error
 		workspace, err = codegen.NewWorkspace("test")
 		Ω(err).ShouldNot(HaveOccurred())
@@ -35,6 +39,7 @@ var _ = Describe("ContextsWriter", func() {
 
 	AfterEach(func() {
 		workspace.Delete()
+		os.Setenv("GO111MODULE", oldGO111MODULE)
 	})
 
 	Context("correctly configured", func() {
@@ -900,7 +905,11 @@ var _ = Describe("ControllersWriter", func() {
 	var workspace *codegen.Workspace
 	var filename string
 
+	oldGO111MODULE := os.Getenv("GO111MODULE")
+
 	BeforeEach(func() {
+		os.Setenv("GO111MODULE", "off")
+
 		var err error
 		workspace, err = codegen.NewWorkspace("test")
 		Ω(err).ShouldNot(HaveOccurred())
@@ -910,6 +919,9 @@ var _ = Describe("ControllersWriter", func() {
 		Ω(err).ShouldNot(HaveOccurred())
 		defer src.Close()
 		filename = src.Abs()
+	})
+	AfterEach(func() {
+		os.Setenv("GO111MODULE", oldGO111MODULE)
 	})
 
 	JustBeforeEach(func() {
@@ -1388,8 +1400,11 @@ var _ = Describe("HrefWriter", func() {
 	var writer *genapp.ResourcesWriter
 	var workspace *codegen.Workspace
 	var filename string
+	oldGO111MODULE := os.Getenv("GO111MODULE")
 
 	BeforeEach(func() {
+		os.Setenv("GO111MODULE", "off")
+
 		var err error
 		workspace, err = codegen.NewWorkspace("test")
 		Ω(err).ShouldNot(HaveOccurred())
@@ -1409,6 +1424,7 @@ var _ = Describe("HrefWriter", func() {
 
 	AfterEach(func() {
 		workspace.Delete()
+		os.Setenv("GO111MODULE", oldGO111MODULE)
 	})
 
 	Context("correctly configured", func() {
@@ -1523,7 +1539,11 @@ var _ = Describe("UserTypesWriter", func() {
 	var workspace *codegen.Workspace
 	var filename string
 
+	oldGO111MODULE := os.Getenv("GO111MODULE")
+
 	BeforeEach(func() {
+		os.Setenv("GO111MODULE", "off")
+
 		var err error
 		workspace, err = codegen.NewWorkspace("test")
 		Ω(err).ShouldNot(HaveOccurred())
@@ -1543,6 +1563,7 @@ var _ = Describe("UserTypesWriter", func() {
 
 	AfterEach(func() {
 		workspace.Delete()
+		os.Setenv("GO111MODULE", oldGO111MODULE)
 	})
 
 	Context("correctly configured", func() {

@@ -12,39 +12,24 @@
 #
 DIRS=$(shell go list -f {{.Dir}} ./...)
 
-# Only list test and build dependencies
-# Standard dependencies are installed via go get
-DEPEND=\
-	github.com/go-openapi/loads \
-	github.com/goadesign/goa-cellar \
-	github.com/goadesign/goa.design/tools/mdc \
-	github.com/fzipp/gocyclo \
-	github.com/onsi/ginkgo \
-	github.com/onsi/ginkgo/ginkgo \
-	github.com/onsi/gomega \
-	github.com/pkg/errors \
-	golang.org/x/lint/golint \
-	golang.org/x/tools/cmd/cover \
-	golang.org/x/tools/cmd/goimports
-
 .PHONY: goagen
 
 all: depend lint cyclo goagen test
 
 docs:
 	@go get -v github.com/spf13/hugo
-	@git clone https://github.com/goadesign/goa.design
+	@git clone https://github.com/shogo82148/goa-v1.design
 	@rm -rf goa.design/content/reference goa.design/public
-	@mdc --exclude goa.design github.com/goadesign/goa goa.design/content/reference
+	@mdc --exclude goa.design github.com/shogo82148/goa-v1 goa.design/content/reference
 	@cd goa.design && hugo
 	@rm -rf public
 	@mv goa.design/public public
 	@rm -rf goa.design
 
+.PHONY: depend
 depend:
-	@mkdir -p $(GOPATH)/src/golang.org/x
-	@go get -v ./...
-	@go get -v $(DEPEND)
+	go mod download
+	go get github.com/onsi/ginkgo/ginkgo
 
 lint:
 	@for d in $(DIRS) ; do \
@@ -61,9 +46,11 @@ cyclo:
 		echo "^ - Cyclomatic complexity exceeds 20, refactor the code!" && echo && exit 1; \
 	fi
 
+.PHONY: test
 test:
-	@ginkgo -r --randomizeAllSpecs --failOnPending --randomizeSuites -race -skipPackage vendor
-	go test ./_integration_tests
+	ginkgo -r --randomizeAllSpecs --failOnPending --randomizeSuites -race
+	# FIXME: @shogo82148 enable me!
+	# go test ./_integration_tests
 
 goagen:
 	@cd goagen && \
