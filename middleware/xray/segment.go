@@ -11,8 +11,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/shogo82148/goa-v1"
 	"github.com/pkg/errors"
+	"github.com/shogo82148/goa-v1"
 )
 
 type (
@@ -38,7 +38,7 @@ type (
 		// EndTime is the segment end time.
 		EndTime float64 `json:"end_time,omitempty"`
 		// InProgress is true if the segment hasn't completed yet.
-		InProgress bool `json:"in_progress,omitempty""`
+		InProgress bool `json:"in_progress,omitempty"`
 		// HTTP contains the HTTP request and response information and is
 		// only initialized for the root segment.
 		HTTP *HTTP `json:"http,omitempty"`
@@ -48,15 +48,15 @@ type (
 		// Error is true when a request causes an internal error. It is
 		// automatically set by Close when the response status code is
 		// 500 or more.
-		Error bool `json:"error,omitempty""`
+		Error bool `json:"error,omitempty"`
 		// Fault is true when a request results in an error that is due
 		// to the user. Typically it should be set when the response
 		// status code is between 400 and 500 (but not 429).
-		Fault bool `json:"fault,omitempty""`
+		Fault bool `json:"fault,omitempty"`
 		// Throttle is true when a request is throttled. It is set to
 		// true when the segment closes and the response status code is
 		// 429. Client code may set it to true manually as well.
-		Throttle bool `json:"throttle,omitempty""`
+		Throttle bool `json:"throttle,omitempty"`
 		// Annotations contains the segment annotations.
 		Annotations map[string]interface{} `json:"annotations,omitempty"`
 		// Metadata contains the segment metadata.
