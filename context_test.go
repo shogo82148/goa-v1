@@ -1,14 +1,14 @@
 package goa_test
 
 import (
+	"context"
 	"net/http"
 	"net/url"
+	"time"
 
-	"context"
-
-	"github.com/shogo82148/goa-v1"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1"
 )
 
 var _ = Describe("ResponseData", func() {
@@ -53,6 +53,109 @@ var _ = Describe("ResponseData", func() {
 			_, err := data.Write(nil)
 			Ω(err).Should(BeNil())
 			Ω(data.Status).Should(Equal(status))
+		})
+	})
+
+	Context("Context", func() {
+		mergeContext := func(parent, child context.Context) context.Context {
+			req, err := http.NewRequestWithContext(child, "GET", "google.com", nil)
+			Ω(err).Should(BeNil())
+			return goa.NewContext(parent, &TestResponseWriter{Status: 42}, req, url.Values{})
+		}
+		Context("Deadline", func() {
+			It("should be empty if the parent and the child have no deadline", func() {
+				ctx := mergeContext(context.Background(), context.Background())
+				_, ok := ctx.Deadline()
+				Ω(ok).Should(Equal(false))
+			})
+			It("should return the parent's deadline if the child have no deadline", func() {
+				deadline := time.Now().Add(time.Second)
+				parent, cancel := context.WithDeadline(context.Background(), deadline)
+				defer cancel()
+				ctx := mergeContext(parent, context.Background())
+				got, ok := ctx.Deadline()
+				Ω(ok).Should(Equal(true))
+				Ω(got).Should(BeTemporally("~", deadline, 100*time.Millisecond))
+			})
+			It("should return the child's deadline if the parent have no deadline", func() {
+				deadline := time.Now().Add(time.Second)
+				child, cancel := context.WithDeadline(context.Background(), deadline)
+				defer cancel()
+				ctx := mergeContext(context.Background(), child)
+				got, ok := ctx.Deadline()
+				Ω(ok).Should(Equal(true))
+				Ω(got).Should(BeTemporally("~", deadline, 100*time.Millisecond))
+			})
+			It("should return the child's deadline if it is earlier than the parent's one", func() {
+				deadline1 := time.Now().Add(time.Second)
+				child, cancel := context.WithDeadline(context.Background(), deadline1)
+				defer cancel()
+				deadline2 := time.Now().Add(2 * time.Second)
+				parent, cancel := context.WithDeadline(context.Background(), deadline2)
+				defer cancel()
+
+				ctx := mergeContext(parent, child)
+				got, ok := ctx.Deadline()
+				Ω(ok).Should(Equal(true))
+				Ω(got).Should(BeTemporally("~", deadline1, 100*time.Millisecond))
+			})
+			It("should return the parent's deadline if it is earlier than the child's one", func() {
+				deadline1 := time.Now().Add(2 * time.Second)
+				child, cancel := context.WithDeadline(context.Background(), deadline1)
+				defer cancel()
+				deadline2 := time.Now().Add(time.Second)
+				parent, cancel := context.WithDeadline(context.Background(), deadline2)
+				defer cancel()
+
+				ctx := mergeContext(parent, child)
+				got, ok := ctx.Deadline()
+				Ω(ok).Should(Equal(true))
+				Ω(got).Should(BeTemporally("~", deadline2, 100*time.Millisecond))
+			})
+		})
+		Context("Done", func() {
+			It("should be canceled when the parent is canceled", func() {
+				deadline := time.Now().Add(time.Second)
+				parent, cancel := context.WithDeadline(context.Background(), deadline)
+				defer cancel()
+
+				ctx := mergeContext(parent, context.Background())
+				select {
+				case <-ctx.Done():
+				case <-time.After(5 * time.Second):
+					Fail("timeout")
+				}
+				Ω(ctx.Err()).ShouldNot(BeNil())
+				Ω(time.Now()).Should(BeTemporally("~", deadline, 100*time.Millisecond))
+			})
+			It("should be canceled when the child is canceled", func() {
+				deadline := time.Now().Add(time.Second)
+				child, cancel := context.WithDeadline(context.Background(), deadline)
+				defer cancel()
+
+				ctx := mergeContext(context.Background(), child)
+				select {
+				case <-ctx.Done():
+				case <-time.After(5 * time.Second):
+					Fail("timeout")
+				}
+				Ω(ctx.Err()).ShouldNot(BeNil())
+				Ω(time.Now()).Should(BeTemporally("~", deadline, 100*time.Millisecond))
+			})
+		})
+		Context("Value", func() {
+			It("should return the value associated with the child if it exists", func() {
+				parent := context.WithValue(context.Background(), "key", "parent value")
+				child := context.WithValue(context.Background(), "key", "child value")
+				ctx := mergeContext(parent, child)
+				Ω(ctx.Value("key")).Should(Equal("child value"))
+			})
+			It("should return the value associated with the parent if the child associates nothing", func() {
+				parent := context.WithValue(context.Background(), "key", "parent value")
+				child := context.WithValue(context.Background(), "other-key", "child value")
+				ctx := mergeContext(parent, child)
+				Ω(ctx.Value("key")).Should(Equal("parent value"))
+			})
 		})
 	})
 })
