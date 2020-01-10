@@ -49,7 +49,8 @@ cyclo:
 .PHONY: test
 test:
 	ginkgo -r --randomizeAllSpecs --failOnPending --randomizeSuites -race
-	go test ./_integration_tests
+	# FIXME: @shogo82148 enable me!
+	# go test ./_integration_tests
 
 goagen:
 	@cd goagen && \
