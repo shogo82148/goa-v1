@@ -32,7 +32,7 @@ type (
 	}
 )
 
-// NewLogger returns a goa log adpater backed by a log logger.
+// NewLogger returns a goa log adapter backed by a log logger.
 func NewLogger(logger *log.Logger) LogAdapter {
 	return &adapter{Logger: logger}
 }

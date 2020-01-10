@@ -345,7 +345,7 @@ func joinNames(useNil bool, atts ...*design.AttributeDefinition) string {
 }
 
 // resolve non required, non array Param/QueryParam for access via CII flags.
-// Some types need convertion from string to 'Type' before calling rich client Commands.
+// Some types need conversion from string to 'Type' before calling rich client Commands.
 func flagTypeVal(a *design.AttributeDefinition, key string, field string) string {
 	switch a.Type {
 	case design.Integer:
@@ -383,7 +383,7 @@ func flagTypeArrayVal(a *design.AttributeDefinition, field string) string {
 	return field
 }
 
-// format a stirng format("%s") with the given vars as argument
+// format a string format("%s") with the given vars as argument
 func format(format string, vars []string) string {
 	new := make([]interface{}, len(vars))
 	for i, v := range vars {
@@ -400,7 +400,7 @@ type specialTypeResult struct {
 }
 
 // generate the relation and output of specially typed Params that need
-// custom convertion from String Flags to Rich objects in Client action
+// custom conversion from String Flags to Rich objects in Client action
 //
 // tmp, err := uuidVal(cmd.X)
 // if err != nil {

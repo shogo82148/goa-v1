@@ -62,7 +62,7 @@ var (
 	// security scheme defined in the design.
 	ErrNoAuthMiddleware = NewErrorClass("no_auth_middleware", 500)
 
-	// ErrInvalidFile is the error produced by ServeFiles when requested to serve non-existant
+	// ErrInvalidFile is the error produced by ServeFiles when requested to serve non-existent
 	// or non-readable files.
 	ErrInvalidFile = NewErrorClass("invalid_file", 404)
 

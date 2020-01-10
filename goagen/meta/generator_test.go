@@ -202,7 +202,7 @@ var _ = Describe("Run", func() {
 		// 			os.Setenv("GOPATH", gopath)
 		// 		})
 
-		// 		It("successfull runs", func() {
+		// 		It("successful runs", func() {
 		// 			Ω(compileError).ShouldNot(HaveOccurred())
 		// 		})
 		// 	})

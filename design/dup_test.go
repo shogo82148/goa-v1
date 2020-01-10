@@ -1,9 +1,9 @@
 package design_test
 
 import (
-	. "github.com/shogo82148/goa-v1/design"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	. "github.com/shogo82148/goa-v1/design"
 )
 
 var _ = Describe("Dup", func() {
@@ -138,7 +138,7 @@ var _ = Describe("Dup", func() {
 			dt = mt
 		})
 
-		It("duplicates without looping infinitly", func() {
+		It("duplicates without looping infinity", func() {
 			Ω(dup).Should(Equal(dt))
 			Ω(dup == dt).Should(BeFalse())
 			Ω(dup.(*MediaTypeDefinition).UserTypeDefinition == ut).Should(BeFalse())

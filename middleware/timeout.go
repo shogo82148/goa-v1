@@ -10,7 +10,7 @@ import (
 )
 
 // Timeout sets a global timeout for all controller actions.
-// The timeout notification is made through the context, it is the responsability of the request
+// The timeout notification is made through the context, it is the responsibility of the request
 // handler to handle it. For example:
 //
 // 	func (ctrl *Controller) DoLongRunningAction(ctx *DoLongRunningActionContext) error {

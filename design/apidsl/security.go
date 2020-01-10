@@ -6,7 +6,7 @@ import (
 )
 
 // Security defines an authentication requirements to access a goa Action.  When defined on a
-// Resource, it applies to all Actions, unless overriden by individual actions.  When defined at the
+// Resource, it applies to all Actions, unless overridden by individual actions.  When defined at the
 // API level, it will apply to all resources by default, following the same logic.
 //
 // The scheme refers to previous definitions of either OAuth2Security, BasicAuthSecurity,

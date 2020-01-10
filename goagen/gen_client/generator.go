@@ -78,7 +78,7 @@ func Generate() (files []string, err error) {
 	return g.Generate()
 }
 
-// Generate generats the client package and CLI.
+// Generate generates the client package and CLI.
 func (g *Generator) Generate() (_ []string, err error) {
 	if g.API == nil {
 		return nil, fmt.Errorf("missing API definition, make sure design is properly initialized")
@@ -684,7 +684,7 @@ func join(att *design.AttributeDefinition, usePointers bool, pos ...[]string) st
 	if len(pos) > 0 {
 		keys = pos[0]
 		if len(keys) != len(obj) {
-			panic("invalid position slice, lenght does not match attribute field count") // bug
+			panic("invalid position slice, length does not match attribute field count") // bug
 		}
 	} else {
 		keys = make([]string, len(obj))
