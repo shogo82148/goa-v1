@@ -894,7 +894,7 @@ func initParams(att *design.AttributeDefinition) ([]*paramData, []*paramData) {
 	var reqParamData []*paramData
 	var optParamData []*paramData
 	for n, q := range obj {
-		varName := codegen.Goify(n, false)
+		varName := codegen.GoifyAtt(q, n, false)
 		param := &paramData{
 			Name:      n,
 			VarName:   varName,
@@ -970,9 +970,9 @@ func (c *Client) {{ $funcName }}(resp *http.Response) ({{ decodegotyperef . .All
 	pathTmpl = `{{ $funcName := printf "%sPath%s" (goify (printf "%s%s" .Route.Parent.Name (title .Route.Parent.Parent.Name)) true) ((or (and .Index (add .Index 1)) "") | printf "%v") }}{{/*
 */}}// {{ $funcName }} computes a request path to the {{ .Route.Parent.Name }} action of {{ .Route.Parent.Parent.Name }}.
 func {{ $funcName }}({{ pathParams .Route }}) string {
-	{{ range $i, $param := .Params }}{{/*
-*/}}{{ toString $param.VarName (printf "param%d" $i) $param.Attribute }}
-	{{ end }}
+	{{- range $i, $param := .Params -}}
+	{{ toString $param.VarName (printf "param%d" $i) $param.Attribute }}{{"\n"}}
+	{{- end -}}
 	return fmt.Sprintf({{ printf "%q" (pathTemplate .Route) }}{{ range $i, $param := .Params }}, {{ printf "param%d" $i }}{{ end }})
 }
 `

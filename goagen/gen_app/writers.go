@@ -521,85 +521,85 @@ type {{ .Name }} struct {
 
 */}}{{/* BooleanType */}}{{/*
 */}}{{ $varName := or (and (not .Pointer) .VarName) tempvar }}{{/*
-*/}}{{ tabs .Depth }}if {{ .VarName }}, err2 := strconv.ParseBool(raw{{ goify .Name true }}); err2 == nil {
+*/}}{{ tabs .Depth }}if {{ .VarName }}, err2 := strconv.ParseBool(raw{{ goifyatt .Attribute .Name true }}); err2 == nil {
 {{ if .Pointer }}{{ tabs .Depth }}	{{ $varName }} := &{{ .VarName }}
 {{ end }}{{ tabs .Depth }}	{{ .Pkg }} = {{ $varName }}
 {{ tabs .Depth }}} else {
-{{ tabs .Depth }}	err = goa.MergeErrors(err, goa.InvalidParamTypeError("{{ .Name }}", raw{{ goify .Name true }}, "boolean"))
+{{ tabs .Depth }}	err = goa.MergeErrors(err, goa.InvalidParamTypeError("{{ .Name }}", raw{{ goifyatt .Attribute .Name true }}, "boolean"))
 {{ tabs .Depth }}}
 {{ else if eq .Attribute.Type.Kind 2 }}{{/*
 
 */}}{{/* IntegerType */}}{{/*
 */}}{{ $tmp := tempvar }}{{/*
-*/}}{{ tabs .Depth }}if {{ .VarName }}, err2 := strconv.Atoi(raw{{ goify .Name true }}); err2 == nil {
+*/}}{{ tabs .Depth }}if {{ .VarName }}, err2 := strconv.Atoi(raw{{ goifyatt .Attribute .Name true }}); err2 == nil {
 {{ if .Pointer }}{{ $tmp2 := tempvar }}{{ tabs .Depth }}	{{ $tmp2 }} := {{ .VarName }}
 {{ tabs .Depth }}	{{ $tmp }} := &{{ $tmp2 }}
 {{ tabs .Depth }}	{{ .Pkg }} = {{ $tmp }}
 {{ else }}{{ tabs .Depth }}	{{ .Pkg }} = {{ .VarName }}
 {{ end }}{{ tabs .Depth }}} else {
-{{ tabs .Depth }}	err = goa.MergeErrors(err, goa.InvalidParamTypeError("{{ .Name }}", raw{{ goify .Name true }}, "integer"))
+{{ tabs .Depth }}	err = goa.MergeErrors(err, goa.InvalidParamTypeError("{{ .Name }}", raw{{ goifyatt .Attribute .Name true }}, "integer"))
 {{ tabs .Depth }}}
 {{ else if eq .Attribute.Type.Kind 3 }}{{/*
 
 */}}{{/* NumberType */}}{{/*
 */}}{{ $varName := or (and (not .Pointer) .VarName) tempvar }}{{/*
-*/}}{{ tabs .Depth }}if {{ .VarName }}, err2 := strconv.ParseFloat(raw{{ goify .Name true }}, 64); err2 == nil {
+*/}}{{ tabs .Depth }}if {{ .VarName }}, err2 := strconv.ParseFloat(raw{{ goifyatt .Attribute .Name true }}, 64); err2 == nil {
 {{ if .Pointer }}{{ tabs .Depth }}	{{ $varName }} := &{{ .VarName }}
 {{ end }}{{ tabs .Depth }}	{{ .Pkg }} = {{ $varName }}
 {{ tabs .Depth }}} else {
-{{ tabs .Depth }}	err = goa.MergeErrors(err, goa.InvalidParamTypeError("{{ .Name }}", raw{{ goify .Name true }}, "number"))
+{{ tabs .Depth }}	err = goa.MergeErrors(err, goa.InvalidParamTypeError("{{ .Name }}", raw{{ goifyatt .Attribute .Name true }}, "number"))
 {{ tabs .Depth }}}
 {{ else if eq .Attribute.Type.Kind 4 }}{{/*
 
 */}}{{/* StringType */}}{{/*
-*/}}{{ tabs .Depth }}{{ .Pkg }} = {{ if .Pointer }}&{{ end }}raw{{ goify .Name true }}
+*/}}{{ tabs .Depth }}{{ .Pkg }} = {{ if .Pointer }}&{{ end }}raw{{ goifyatt .Attribute .Name true }}
 {{ else if eq .Attribute.Type.Kind 5 }}{{/*
 
 */}}{{/* DateTimeType */}}{{/*
 */}}{{ $varName := or (and (not .Pointer) .VarName) tempvar }}{{/*
-*/}}{{ tabs .Depth }}if {{ .VarName }}, err2 := time.Parse(time.RFC3339, raw{{ goify .Name true }}); err2 == nil {
+*/}}{{ tabs .Depth }}if {{ .VarName }}, err2 := time.Parse(time.RFC3339, raw{{ goifyatt .Attribute .Name true }}); err2 == nil {
 {{ if .Pointer }}{{ tabs .Depth }}	{{ $varName }} := &{{ .VarName }}
 {{ end }}{{ tabs .Depth }}	{{ .Pkg }} = {{ $varName }}
 {{ tabs .Depth }}} else {
-{{ tabs .Depth }}	err = goa.MergeErrors(err, goa.InvalidParamTypeError("{{ .Name }}", raw{{ goify .Name true }}, "datetime"))
+{{ tabs .Depth }}	err = goa.MergeErrors(err, goa.InvalidParamTypeError("{{ .Name }}", raw{{ goifyatt .Attribute .Name true }}, "datetime"))
 {{ tabs .Depth }}}
 {{ else if eq .Attribute.Type.Kind 6 }}{{/*
 
 */}}{{/* UUIDType */}}{{/*
 */}}{{ $varName := or (and (not .Pointer) .VarName) tempvar }}{{/*
-*/}}{{ tabs .Depth }}if {{ .VarName }}, err2 := uuid.FromString(raw{{ goify .Name true }}); err2 == nil {
+*/}}{{ tabs .Depth }}if {{ .VarName }}, err2 := uuid.FromString(raw{{ goifyatt .Attribute .Name true }}); err2 == nil {
 {{ if .Pointer }}{{ tabs .Depth }}	{{ $varName }} := &{{ .VarName }}
 {{ end }}{{ tabs .Depth }}	{{ .Pkg }} = {{ $varName }}
 {{ tabs .Depth }}} else {
-{{ tabs .Depth }}	err = goa.MergeErrors(err, goa.InvalidParamTypeError("{{ .Name }}", raw{{ goify .Name true }}, "uuid"))
+{{ tabs .Depth }}	err = goa.MergeErrors(err, goa.InvalidParamTypeError("{{ .Name }}", raw{{ goifyatt .Attribute .Name true }}, "uuid"))
 {{ tabs .Depth }}}
 {{ else if eq .Attribute.Type.Kind 7 }}{{/*
 
 */}}{{/* AnyType */}}{{/*
-*/}}{{ if .Pointer }}{{ $tmp := tempvar }}{{ tabs .Depth }}{{ $tmp }} := interface{}(raw{{ goify .Name true }})
+*/}}{{ if .Pointer }}{{ $tmp := tempvar }}{{ tabs .Depth }}{{ $tmp }} := interface{}(raw{{ goifyatt .Attribute .Name true }})
 {{ tabs .Depth }}{{ .Pkg }} = &{{ $tmp }}
-{{ else }}{{ tabs .Depth }}{{ .Pkg }} = raw{{ goify .Name true }}{{/*
+{{ else }}{{ tabs .Depth }}{{ .Pkg }} = raw{{ goifyatt .Attribute .Name true }}{{/*
 */}}{{ end }}
 {{ else if eq .Attribute.Type.Kind 8 }}{{/*
 
 */}}{{/* ArrayType */}}{{/*
-*/}}{{ tabs .Depth }}tmp{{ goify .Name true }} := make({{ valueTypeOf "" .Attribute }}, len(raw{{ goify .Name true }}))
-{{ tabs .Depth }}for i := 0; i < len(raw{{ goify .Name true }}); i++ {
-{{ if eq (arrayAttribute .Attribute).Type.Kind 4 }}{{ tabs .Depth}}	tmp := raw{{ goify .Name true }}[i]{{ else }}{{/*
-*/}}{{ tabs .Depth }}	tmp, err2 := {{ fromString (arrayAttribute .Attribute) (printf "raw%s[i]" (goify .Name true)) }}
+*/}}{{ tabs .Depth }}tmp{{ goifyatt .Attribute .Name true }} := make({{ valueTypeOf "" .Attribute }}, len(raw{{ goifyatt .Attribute .Name true }}))
+{{ tabs .Depth }}for i := 0; i < len(raw{{ goifyatt .Attribute .Name true }}); i++ {
+{{ if eq (arrayAttribute .Attribute).Type.Kind 4 }}{{ tabs .Depth}}	tmp := raw{{ goifyatt .Attribute .Name true }}[i]{{ else }}{{/*
+*/}}{{ tabs .Depth }}	tmp, err2 := {{ fromString (arrayAttribute .Attribute) (printf "raw%s[i]" (goifyatt .Attribute .Name true)) }}
 {{ tabs .Depth }}	if err2 != nil {
-{{ tabs .Depth }}		err = goa.MergeErrors(err, goa.InvalidParamTypeError("{{ .Name }}", raw{{ goify .Name true }}, "{{ valueTypeOf "" .Attribute }}"))
+{{ tabs .Depth }}		err = goa.MergeErrors(err, goa.InvalidParamTypeError("{{ .Name }}", raw{{ goifyatt .Attribute .Name true }}, "{{ valueTypeOf "" .Attribute }}"))
 {{ tabs .Depth }}		break
 {{ tabs .Depth }}	}{{ end }}
-{{ tabs .Depth}}	tmp{{ goify .Name true }}[i] = tmp
+{{ tabs .Depth}}	tmp{{ goifyatt .Attribute .Name true }}[i] = tmp
 {{ tabs .Depth}}}
-{{ tabs .Depth }}{{ .Pkg }} = tmp{{ goify .Name true }}{{/*
+{{ tabs .Depth }}{{ .Pkg }} = tmp{{ goifyatt .Attribute .Name true }}{{/*
 */}}
 {{ else if eq .Attribute.Type.Kind 13 }}{{/*
 
 */}}{{/* FileType */}}{{/*
 */}}{{ tabs .Depth }}if err2 == nil {
-{{ tabs .Depth }}	{{ .Pkg }} = {{ printf "raw%s" (goify .VarName true) }}
+{{ tabs .Depth }}	{{ .Pkg }} = {{ printf "raw%s" (goifyatt .Attribute .Name true) }}
 {{ tabs .Depth }}} else {
 {{ tabs .Depth }}	err = goa.MergeErrors(err, goa.InvalidParamTypeError("{{ .Name }}", "{{ .Name }}", "file"))
 {{ tabs .Depth }}}
@@ -618,20 +618,20 @@ func New{{ .Name }}(ctx context.Context, r *http.Request, service *goa.Service) 
 	req.Request = r
 	rctx := {{ .Name }}{Context: ctx, ResponseData: resp, RequestData: req}{{/*
 */}}
-{{ if .Headers }}{{ range $name, $att := .Headers.Type.ToObject }}	header{{ goify $name true }} := req.Header["{{ canonicalHeaderKey $name }}"]
-{{ $mustValidate := $.Headers.IsRequired $name }}{{ if $mustValidate }}	if len(header{{ goify $name true }}) == 0 {
+{{ if .Headers }}{{ range $name, $att := .Headers.Type.ToObject }}	header{{ goifyatt $att $name true }} := req.Header["{{ canonicalHeaderKey $name }}"]
+{{ $mustValidate := $.Headers.IsRequired $name }}{{ if $mustValidate }}	if len(header{{ goifyatt $att $name true }}) == 0 {
 		err = goa.MergeErrors(err, goa.MissingHeaderError("{{ $name }}"))
 	} else {
-{{ else }}	if len(header{{ goify $name true }}) > 0 {
-{{ end }}{{/* if $mustValidate */}}{{ if $att.Type.IsArray }}		req.Params["{{ $name }}"] = header{{ goify $name true }}
-{{ if eq (arrayAttribute $att).Type.Kind 4 }}		headers := header{{ goify $name true }}
-{{ else }}		headers := make({{ gotypedef $att 2 true false }}, len(header{{ goify $name true }}))
-		for i, raw{{ goify $name true}} := range header{{ goify $name true}} {
+{{ else }}	if len(header{{ goifyatt $att $name true }}) > 0 {
+{{ end }}{{/* if $mustValidate */}}{{ if $att.Type.IsArray }}		req.Params["{{ $name }}"] = header{{ goifyatt $att $name true }}
+{{ if eq (arrayAttribute $att).Type.Kind 4 }}		headers := header{{ goifyatt $att $name true }}
+{{ else }}		headers := make({{ gotypedef $att 2 true false }}, len(header{{ goifyatt $att $name true }}))
+		for i, raw{{ goifyatt $att $name true }} := range header{{ goifyatt $att $name true }} {
 {{ template "Coerce" (newCoerceData $name (arrayAttribute $att) ($.Headers.IsPrimitivePointer $name) "headers[i]" 3) }}{{/*
 */}}		}
 {{ end }}		{{ printf "rctx.%s" (goifyatt $att $name true) }} = headers
-{{ else }}		raw{{ goify $name true}} := header{{ goify $name true}}[0]
-		req.Params["{{ $name }}"] = []string{raw{{ goify $name true }}}
+{{ else }}		raw{{ goifyatt $att $name true }} := header{{ goifyatt $att $name true }}[0]
+		req.Params["{{ $name }}"] = []string{raw{{ goifyatt $att $name true }}}
 {{ template "Coerce" (newCoerceData $name $att ($.Headers.IsPrimitivePointer $name) (printf "rctx.%s" (goifyatt $att $name true)) 2) }}{{ end }}{{/*
 */}}{{ $validation := validationChecker $att ($.Headers.IsNonZero $name) ($.Headers.IsRequired $name) ($.Headers.HasDefaultValue $name) (printf "rctx.%s" (goifyatt $att $name true)) $name 2 false }}{{/*
 */}}{{ if $validation }}{{ $validation }}
@@ -639,22 +639,22 @@ func New{{ .Name }}(ctx context.Context, r *http.Request, service *goa.Service) 
 {{ end }}{{ end }}{{/* if .Headers }}{{/*
 
 */}}{{ if .Params }}{{ range $name, $att := .Params.Type.ToObject }}{{/*
-*/}}	param{{ goify $name true }} := req.Params["{{ $name }}"]
-{{ $mustValidate := $.MustValidate $name }}{{ if $mustValidate }}	if len(param{{ goify $name true }}) == 0 {
+*/}}	param{{ goifyatt $att $name true }} := req.Params["{{ $name }}"]
+{{ $mustValidate := $.MustValidate $name }}{{ if $mustValidate }}	if len(param{{ goifyatt $att $name true }}) == 0 {
 		{{ if $.Params.HasDefaultValue $name }}{{printf "rctx.%s" (goifyatt $att $name true) }} = {{ printVal $att.Type $att.DefaultValue }}{{else}}{{/*
 */}}err = goa.MergeErrors(err, goa.MissingParamError("{{ $name }}")){{end}}
 	} else {
-{{ else }}{{ if $.Params.HasDefaultValue $name }}	if len(param{{ goify $name true }}) == 0 {
+{{ else }}{{ if $.Params.HasDefaultValue $name }}	if len(param{{ goifyatt $att $name true }}) == 0 {
 		{{printf "rctx.%s" (goifyatt $att $name true) }} = {{ printVal $att.Type $att.DefaultValue }}
 	} else {
-{{ else }}	if len(param{{ goify $name true }}) > 0 {
-{{ end }}{{ end }}{{/* if $mustValidate */}}{{ if $att.Type.IsArray }}{{ if eq (arrayAttribute $att).Type.Kind 4 }}		params := param{{ goify $name true }}
-{{ else }}		params := make({{ gotypedef $att 2 true false }}, len(param{{ goify $name true }}))
-		for i, raw{{ goify $name true}} := range param{{ goify $name true}} {
+{{ else }}	if len(param{{ goifyatt $att $name true }}) > 0 {
+{{ end }}{{ end }}{{/* if $mustValidate */}}{{ if $att.Type.IsArray }}{{ if eq (arrayAttribute $att).Type.Kind 4 }}		params := param{{ goifyatt $att $name true }}
+{{ else }}		params := make({{ gotypedef $att 2 true false }}, len(param{{ goifyatt $att $name true }}))
+		for i, raw{{ goifyatt $att $name true }} := range param{{ goifyatt $att $name true }} {
 {{ template "Coerce" (newCoerceData $name (arrayAttribute $att) ($.Params.IsPrimitivePointer $name) "params[i]" 3) }}{{/*
 */}}		}
 {{ end }}		{{ printf "rctx.%s" (goifyatt $att $name true) }} = params
-{{ else }}		raw{{ goify $name true}} := param{{ goify $name true}}[0]
+{{ else }}		raw{{ goifyatt $att $name true }} := param{{ goifyatt $att $name true }}[0]
 {{ template "Coerce" (newCoerceData $name $att ($.Params.IsPrimitivePointer $name) (printf "rctx.%s" (goifyatt $att $name true)) 2) }}{{ end }}{{/*
 */}}{{ if $att.Type.IsArray }}{{ $validation := validationChecker (arrayAttribute $att) true true false "param" (printf "%s[0]" $name) 2 false }}{{/*
 */}}{{ if $validation }}for _, param := range {{ printf "rctx.%s" (goifyatt $att $name true) }} {

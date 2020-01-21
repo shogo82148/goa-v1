@@ -2342,15 +2342,15 @@ func NewListBottleContext(ctx context.Context, r *http.Request, service *goa.Ser
 	req := goa.ContextRequest(ctx)
 	req.Request = r
 	rctx := ListBottleContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramInt := req.Params["int"]
-	if len(paramInt) > 0 {
-		rawInt := paramInt[0]
-		if int_, err2 := strconv.Atoi(rawInt); err2 == nil {
+	paramCustom := req.Params["int"]
+	if len(paramCustom) > 0 {
+		rawCustom := paramCustom[0]
+		if int_, err2 := strconv.Atoi(rawCustom); err2 == nil {
 			tmp2 := int_
 			tmp1 := &tmp2
 			rctx.Custom = tmp1
 		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("int", rawInt, "integer"))
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("int", rawCustom, "integer"))
 		}
 	}
 	return &rctx, err
