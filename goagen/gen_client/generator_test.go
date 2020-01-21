@@ -675,6 +675,8 @@ var _ = Describe("Generate", func() {
 			content := string(c)
 			Ω(string(content)).Should(ContainSubstring("ShowFoo(ctx context.Context, path string, metaFoo *string)"))
 			Ω(string(content)).Should(ContainSubstring("NewShowFooRequest(ctx context.Context, path string, metaFoo *string)"))
+			Ω(string(content)).Should(ContainSubstring("if metaFoo != nil {"))
+			Ω(string(content)).Should(ContainSubstring("values.Set(\"foo\", *metaFoo)"))
 		})
 	})
 })

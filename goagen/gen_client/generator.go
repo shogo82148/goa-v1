@@ -478,14 +478,12 @@ func (g *Generator) generateActionClient(action *design.ActionDefinition, file *
 
 		// Update closure
 		for _, p := range reqData {
-			name := codegen.GoifyAtt(p.Attribute, p.VarName, false)
-			names = append(names, name)
+			names = append(names, p.VarName)
 			params = append(params, p.VarName+" "+cmdFieldType(p.Attribute.Type, false))
 		}
 		for _, p := range optData {
-			name := codegen.GoifyAtt(p.Attribute, p.VarName, false)
-			names = append(names, name)
-			params = append(params, name+" "+cmdFieldType(p.Attribute.Type, p.Attribute.Type.IsPrimitive()))
+			names = append(names, p.VarName)
+			params = append(params, p.VarName+" "+cmdFieldType(p.Attribute.Type, p.Attribute.Type.IsPrimitive()))
 		}
 		return append(reqData, optData...)
 	}
@@ -896,7 +894,7 @@ func initParams(att *design.AttributeDefinition) ([]*paramData, []*paramData) {
 	var reqParamData []*paramData
 	var optParamData []*paramData
 	for n, q := range obj {
-		varName := codegen.Goify(n, false)
+		varName := codegen.GoifyAtt(q, n, false)
 		param := &paramData{
 			Name:      n,
 			VarName:   varName,
