@@ -3,11 +3,11 @@ package codegen_test
 import (
 	"fmt"
 
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 	"github.com/shogo82148/goa-v1/design"
 	"github.com/shogo82148/goa-v1/dslengine"
 	"github.com/shogo82148/goa-v1/goagen/codegen"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Struct publicize code generation", func() {
@@ -51,6 +51,35 @@ var _ = Describe("Struct publicize code generation", func() {
 			It("copies the struct fields", func() {
 				publication := codegen.Publicizer(att, sourceField, targetField, false, 0, false)
 				Ω(publication).Should(Equal(objectPublicizeCode))
+			})
+		})
+		Context("given an object field with struct:field:name metadata", func() {
+			BeforeEach(func() {
+				att = &design.AttributeDefinition{
+					Type: design.Object{
+						"foo": &design.AttributeDefinition{
+							Type:     design.String,
+							Metadata: dslengine.MetadataDefinition{"struct:field:name": []string{"MetaFoo"}},
+						},
+						"bar": &design.AttributeDefinition{
+							Type:     design.Any,
+							Metadata: dslengine.MetadataDefinition{"struct:field:name": []string{"MetaBar"}},
+						},
+						"baz": &design.AttributeDefinition{
+							Type:     design.Any,
+							Metadata: dslengine.MetadataDefinition{"struct:field:name": []string{"MetaBaz"}},
+						},
+					},
+					Validation: &dslengine.ValidationDefinition{
+						Required: []string{"bar"},
+					},
+				}
+				sourceField = "source"
+				targetField = "target"
+			})
+			It("copies the struct fields", func() {
+				publication := codegen.Publicizer(att, sourceField, targetField, false, 0, false)
+				Ω(publication).Should(Equal(objectPublicizeCodeWithMeta))
 			})
 		})
 		Context("given a user type", func() {
@@ -189,6 +218,21 @@ if source.Baz != nil {
 }
 if source.Foo != nil {
 	target.Foo = source.Foo
+}`
+
+	objectPublicizeCodeWithMeta = `target = &struct {
+	MetaBar interface{} ` + "`" + `form:"bar" json:"bar" yaml:"bar" xml:"bar"` + "`" + `
+	MetaBaz interface{} ` + "`" + `form:"baz,omitempty" json:"baz,omitempty" yaml:"baz,omitempty" xml:"baz,omitempty"` + "`" + `
+	MetaFoo *string ` + "`" + `form:"foo,omitempty" json:"foo,omitempty" yaml:"foo,omitempty" xml:"foo,omitempty"` + "`" + `
+}{}
+if source.MetaBar != nil {
+	target.MetaBar = source.MetaBar
+}
+if source.MetaBaz != nil {
+	target.MetaBaz = source.MetaBaz
+}
+if source.MetaFoo != nil {
+	target.MetaFoo = source.MetaFoo
 }`
 
 	arrayPublicizeCode = `target = make([]*TheUserType, len(source))
