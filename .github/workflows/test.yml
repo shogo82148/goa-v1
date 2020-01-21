@@ -13,8 +13,9 @@ jobs:
         with:
           go-version: '1.13'
       - run: |
-          echo "::add-path::$(go env GOPATH)/bin"
-          echo "::set-env name=GOPATH::$(go env GOPATH)"
+          go version
+          echo "::set-env name=GOPATH::${{ github.workspace }}"
+          echo "::add-path::${{ github.workspace }}/bin"
       - run: make depend
         working-directory: src/github.com/shogo82148/goa-v1
       - run: make test
