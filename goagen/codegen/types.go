@@ -678,7 +678,7 @@ func computeMapping(source, target design.Object, sctx, tctx string) (map[string
 		key := name
 		if keys, ok := att.Metadata[TransformMapKey]; ok {
 			if len(keys) == 0 {
-				return nil, fmt.Errorf("invalid metadata transform key: missing value on attribte %s of %s", name, sctx)
+				return nil, fmt.Errorf("invalid metadata transform key: missing value on attribute %s of %s", name, sctx)
 			}
 			key = keys[0]
 		}
