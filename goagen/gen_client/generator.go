@@ -435,7 +435,7 @@ func (g *Generator) generateFileServer(file *codegen.SourceFile, fs *design.File
 	requestDir, _ := path.Split(fs.RequestPath)
 
 	data := struct {
-		Name            string // Download functionn name
+		Name            string // Download functions name
 		RequestPath     string // File server request path
 		FilePath        string // File server file path
 		FileName        string // Filename being download if request path has no wildcard
