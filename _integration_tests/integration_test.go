@@ -49,11 +49,18 @@ type CreateGreetingPayload struct {
 }
 
 func TestCellar(t *testing.T) {
-	if err := os.MkdirAll("./goa-cellar", 0755); err != nil {
-		t.Error(err.Error())
-	}
-	defer os.RemoveAll("./goa-cellar")
-	if err := goagen("./goa-cellar", "bootstrap", "-d", "github.com/shogo82148/goa-v1-cellar/design"); err != nil {
+	defer os.RemoveAll("./goa-cellar/app")
+	defer os.RemoveAll("./goa-cellar/client")
+	defer os.RemoveAll("./goa-cellar/swagger")
+	defer os.RemoveAll("./goa-cellar/tool")
+	defer os.RemoveAll("./goa-cellar/account.go")
+	defer os.RemoveAll("./goa-cellar/bottle.go")
+	defer os.RemoveAll("./goa-cellar/health.go")
+	defer os.RemoveAll("./goa-cellar/js.go")
+	defer os.RemoveAll("./goa-cellar/main.go")
+	defer os.RemoveAll("./goa-cellar/public.go")
+	defer os.RemoveAll("./goa-cellar/swagger.go")
+	if err := goagen("./goa-cellar", "bootstrap", "-d", "github.com/shogo82148/goa-v1/_integration_tests/goa-cellar/design"); err != nil {
 		t.Error(err.Error())
 	}
 	if err := gobuild("./goa-cellar"); err != nil {

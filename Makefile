@@ -21,8 +21,7 @@ depend:
 .PHONY: test
 test:
 	ginkgo -r --randomizeAllSpecs --failOnPending --randomizeSuites -race
-	# FIXME: @shogo82148 enable me!
-	# go test ./_integration_tests
+	go test ./_integration_tests
 
 .PHONY: goagen
 goagen:
