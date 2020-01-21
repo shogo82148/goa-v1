@@ -1,19 +1,22 @@
 # <img src="http://goa.design/img/goa-logo.svg">
 
+# A fork of Goa v1
+
+This is unofficial fork of Goa v1.
+If you want to use the latest version of Goa, go to [goadesign/goa](https://github.com/goadesign/goa).
+
 goa is a framework for building micro-services and REST APIs in Go using a
 unique design-first approach.
 
-[![Build Status](https://travis-ci.org/goadesign/goa.svg?branch=master)](https://travis-ci.org/goadesign/goa)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/vixp37loj5i6qmaf/branch/master?svg=true)](https://ci.appveyor.com/project/RaphaelSimon/goa-oqtis/branch/master)
+[![Build Status](https://github.com/shogo82148/goa-v1/workflows/test/badge.svg?branch=master)](https://github.com/shogo82148/goa-v1/actions?query=workflow%3Atest)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/shogo82148/goa-v1/blob/master/LICENSE)
-[![Godoc](https://godoc.org/github.com/shogo82148/goa-v1?status.svg)](https://godoc.org/gopkg.in/goadesign/goa.v1)
-[![Slack](https://img.shields.io/badge/slack-gophers-orange.svg?style=flat)](https://gophers.slack.com/messages/goa/)
+[![GoDoc](https://godoc.org/github.com/shogo82148/goa-v1?status.svg)](https://godoc.org/github.com/shogo82148/goa-v1)
 
-## Why goa?
+## Why Goa?
 
-goa takes a different approach to building micro-services. Instead of focusing
-solely on helping with implementation, goa makes it possible to describe the
-*design* of an API using a simple DSL. goa then uses that description to provide
+Goa takes a different approach to building micro-services. Instead of focusing
+solely on helping with implementation, Goa makes it possible to describe the
+*design* of an API using a simple DSL. Goa then uses that description to provide
 specialized helper code to the implementation and to generate documentation, API
 clients, tests, even custom artifacts.
 
@@ -28,12 +31,12 @@ Another aspect to consider is the need for properly designing APIs and making
 sure that the design choices remain consistent across the endpoints or even
 across multiple APIs. If the source code is the only place where design
 decisions are kept then not only is it impossible to maintain consistency it's
-also difficult to think about the design in the first place. The goa DSL makes
+also difficult to think about the design in the first place. The Goa DSL makes
 it possible to think about the design explicitly and - since it's code - to
 re-use design elements for consistency.
 
-The goa DSL allows writing self-explanatory code that describes the resources
-exposed by the API and for each resource the properties and actions. goa comes
+The Goa DSL allows writing self-explanatory code that describes the resources
+exposed by the API and for each resource the properties and actions. Goa comes
 with the `goagen` tool which runs the DSL and generates various types of
 artifacts from the resulting data structures.
 
@@ -56,7 +59,7 @@ boon.
 
 This idea of separating design and implementation is not new, the
 excellent [Praxis](http://praxis-framework.io) framework from RightScale follows
-the same pattern and was an inspiration to goa.
+the same pattern and was an inspiration to Goa.
 
 ## Installation
 
@@ -81,7 +84,7 @@ go get -v github.com/shogo82148/goa-v1/...
 
 ### Stable Versions
 
-goa follows [Semantic Versioning](http://semver.org/) which is a fancy way of saying it publishes
+Goa follows [Semantic Versioning](http://semver.org/) which is a fancy way of saying it publishes
 releases with version numbers of the form `vX.Y.Z` and makes sure that your code can upgrade to new
 versions with the same `X` component without having to make changes.
 
@@ -330,12 +333,12 @@ API design changes.
 
 ## Resources
 
-Consult the following resources to learn more about goa.
+Consult the following resources to learn more about Goa.
 
 ### goa.design
 
-[goa.design](https://goa.design) contains further information on goa including a getting
-started guide, detailed DSL documentation as well as information on how to implement a goa service.
+[goa.design](https://goa.design) contains further information on Goa including a getting
+started guide, detailed DSL documentation as well as information on how to implement a Goa service.
 
 ### Examples
 
@@ -343,7 +346,7 @@ The [examples](https://github.com/goadesign/examples) repo contains simple examp
 basic concepts.
 
 The [goa-cellar](https://github.com/shogo82148/goa-v1-cellar) repo contains the implementation for a
-goa service which demonstrates many aspects of the design language. It is kept up-to-date and
+Goa service which demonstrates many aspects of the design language. It is kept up-to-date and
 provides a reference for testing functionality.
 
 ## Contributing
