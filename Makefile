@@ -21,7 +21,7 @@ depend:
 .PHONY: test
 test:
 	ginkgo -r --randomizeAllSpecs --failOnPending --randomizeSuites -race
-	go test ./_integration_tests
+	go test -v github.com/shogo82148/goa-v1/_integration_tests
 
 .PHONY: goagen
 goagen:
