@@ -478,12 +478,14 @@ func (g *Generator) generateActionClient(action *design.ActionDefinition, file *
 
 		// Update closure
 		for _, p := range reqData {
-			names = append(names, p.VarName)
+			name := codegen.GoifyAtt(p.Attribute, p.VarName, false)
+			names = append(names, name)
 			params = append(params, p.VarName+" "+cmdFieldType(p.Attribute.Type, false))
 		}
 		for _, p := range optData {
-			names = append(names, p.VarName)
-			params = append(params, p.VarName+" "+cmdFieldType(p.Attribute.Type, p.Attribute.Type.IsPrimitive()))
+			name := codegen.GoifyAtt(p.Attribute, p.VarName, false)
+			names = append(names, name)
+			params = append(params, name+" "+cmdFieldType(p.Attribute.Type, p.Attribute.Type.IsPrimitive()))
 		}
 		return append(reqData, optData...)
 	}

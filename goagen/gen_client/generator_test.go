@@ -630,6 +630,53 @@ var _ = Describe("Generate", func() {
 			Ω(string(content)).Should(ContainSubstring("tmp_UUID := payload.UUID"))
 		})
 	})
+
+	Context("querystring params with struct:field:name metadata", func() {
+		BeforeEach(func() {
+			codegen.TempCount = 0
+			o := design.Object{
+				"foo": &design.AttributeDefinition{
+					Type:     design.String,
+					Metadata: dslengine.MetadataDefinition{"struct:field:name": []string{"MetaFoo"}},
+				},
+			}
+			design.Design = &design.APIDefinition{
+				Name:     "testapi",
+				Consumes: design.DefaultEncoders,
+				Resources: map[string]*design.ResourceDefinition{
+					"foo": {
+						Name: "foo",
+						Actions: map[string]*design.ActionDefinition{
+							"show": {
+								Name: "show",
+								Routes: []*design.RouteDefinition{
+									{
+										Verb: "GET",
+										Path: "",
+									},
+								},
+								QueryParams: &design.AttributeDefinition{Type: o},
+							},
+						},
+					},
+				},
+			}
+			fooRes := design.Design.Resources["foo"]
+			showAct := fooRes.Actions["show"]
+			showAct.Parent = fooRes
+			showAct.Routes[0].Parent = showAct
+		})
+
+		It("generates param initialization code that uses the param name given in the design", func() {
+			Ω(genErr).Should(BeNil())
+			Ω(files).Should(HaveLen(9))
+			c, err := ioutil.ReadFile(filepath.Join(outDir, "client", "foo.go"))
+			Ω(err).ShouldNot(HaveOccurred())
+			content := string(c)
+			Ω(string(content)).Should(ContainSubstring("ShowFoo(ctx context.Context, path string, metaFoo *string)"))
+			Ω(string(content)).Should(ContainSubstring("NewShowFooRequest(ctx context.Context, path string, metaFoo *string)"))
+		})
+	})
 })
 
 var _ = Describe("NewGenerator", func() {
