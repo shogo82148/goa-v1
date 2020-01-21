@@ -1,5 +1,10 @@
 # <img src="http://goa.design/img/goa-logo.svg">
 
+# A fork of Goa v1
+
+This is unofficial fork of Goa v1.
+If you want to use the latest version of Goa, go to [goadesign/goa](https://github.com/goadesign/goa).
+
 goa is a framework for building micro-services and REST APIs in Go using a
 unique design-first approach.
 
