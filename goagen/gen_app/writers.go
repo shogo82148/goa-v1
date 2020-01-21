@@ -112,7 +112,7 @@ type (
 	// EncoderTemplateData contains the data needed to render the registration code for a single
 	// encoder or decoder package.
 	EncoderTemplateData struct {
-		// PackagePath is the Go package path to the package implmenting the encoder/decoder.
+		// PackagePath is the Go package path to the package implementing the encoder/decoder.
 		PackagePath string
 		// PackageName is the name of the Go package implementing the encoder/decoder.
 		PackageName string
