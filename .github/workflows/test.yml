@@ -6,6 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          path: src/github.com/shogo82148/goa-v1
+          persist-credentials: false
       - uses: actions/setup-go@v1
         with:
           go-version: '1.13'
@@ -13,4 +16,6 @@ jobs:
           echo "::add-path::$(go env GOPATH)/bin"
           echo "::set-env name=GOPATH::$(go env GOPATH)"
       - run: make depend
+        working-directory: src/github.com/shogo82148/goa-v1
       - run: make test
+        working-directory: src/github.com/shogo82148/goa-v1
