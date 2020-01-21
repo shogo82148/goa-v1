@@ -7,13 +7,13 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"strings"
 	"testing"
 )
 
 func TestBootstrapReadme(t *testing.T) {
-	defer os.RemoveAll("./readme/main.go")
-	defer os.RemoveAll("./readme/tool")
+	defer cleanup("./readme/*")
 	if err := goagen("./readme", "bootstrap", "-d", "github.com/shogo82148/goa-v1/_integration_tests/readme/design"); err != nil {
 		t.Error(err.Error())
 	}
@@ -23,8 +23,7 @@ func TestBootstrapReadme(t *testing.T) {
 }
 
 func TestDefaultMedia(t *testing.T) {
-	defer os.RemoveAll("./media/main.go")
-	defer os.RemoveAll("./media/tool")
+	defer cleanup("./media/*")
 	if err := goagen("./media", "bootstrap", "-d", "github.com/shogo82148/goa-v1/_integration_tests/media/design"); err != nil {
 		t.Error(err.Error())
 	}
@@ -49,11 +48,8 @@ type CreateGreetingPayload struct {
 }
 
 func TestCellar(t *testing.T) {
-	if err := os.MkdirAll("./goa-cellar", 0755); err != nil {
-		t.Error(err.Error())
-	}
-	defer os.RemoveAll("./goa-cellar")
-	if err := goagen("./goa-cellar", "bootstrap", "-d", "github.com/shogo82148/goa-v1-cellar/design"); err != nil {
+	defer cleanup("./goa-cellar/*")
+	if err := goagen("./goa-cellar", "bootstrap", "-d", "github.com/shogo82148/goa-v1/_integration_tests/goa-cellar/design"); err != nil {
 		t.Error(err.Error())
 	}
 	if err := gobuild("./goa-cellar"); err != nil {
@@ -91,4 +87,17 @@ func gobuild(dir string) error {
 		return fmt.Errorf("%s\n%s", err.Error(), out)
 	}
 	return nil
+}
+
+func cleanup(dir string) {
+	files, err := filepath.Glob(dir)
+	if err != nil {
+		return
+	}
+	for _, f := range files {
+		if strings.HasSuffix(f, "design") {
+			continue
+		}
+		os.RemoveAll(f)
+	}
 }
