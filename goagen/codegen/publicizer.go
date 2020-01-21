@@ -55,14 +55,14 @@ func RecursivePublicizer(att *design.AttributeDefinition, source, target string,
 		o.IterateAttributes(func(n string, catt *design.AttributeDefinition) error {
 			publication := Publicizer(
 				catt,
-				fmt.Sprintf("%s.%s", source, Goify(n, true)),
-				fmt.Sprintf("%s.%s", target, Goify(n, true)),
+				fmt.Sprintf("%s.%s", source, GoifyAtt(catt, n, true)),
+				fmt.Sprintf("%s.%s", target, GoifyAtt(catt, n, true)),
 				catt.Type.IsPrimitive() && !att.IsPrimitivePointer(n) && !att.IsInterface(n),
 				depth+1,
 				false,
 			)
 			publication = fmt.Sprintf("%sif %s.%s != nil {\n%s\n%s}",
-				Tabs(depth), source, Goify(n, true), publication, Tabs(depth))
+				Tabs(depth), source, GoifyAtt(catt, n, true), publication, Tabs(depth))
 			publications = append(publications, publication)
 			return nil
 		})
