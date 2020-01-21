@@ -126,7 +126,7 @@ var _ = Describe("ResponseData", func() {
 					Fail("timeout")
 				}
 				Ω(ctx.Err()).ShouldNot(BeNil())
-				Ω(time.Now()).Should(BeTemporally("~", deadline, 100*time.Millisecond))
+				Ω(time.Now()).Should(BeTemporally("~", deadline, 500*time.Millisecond))
 			})
 			It("should be canceled when the child is canceled", func() {
 				deadline := time.Now().Add(time.Second)
@@ -140,7 +140,7 @@ var _ = Describe("ResponseData", func() {
 					Fail("timeout")
 				}
 				Ω(ctx.Err()).ShouldNot(BeNil())
-				Ω(time.Now()).Should(BeTemporally("~", deadline, 100*time.Millisecond))
+				Ω(time.Now()).Should(BeTemporally("~", deadline, 500*time.Millisecond))
 			})
 		})
 		Context("Value", func() {
