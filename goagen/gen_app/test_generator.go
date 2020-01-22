@@ -322,7 +322,7 @@ func reservedNames(params, queryParams, headers []*ObjectType, payload, returnTy
 func attToObject(name string, parent, att *design.AttributeDefinition) *ObjectType {
 	obj := &ObjectType{}
 	obj.Label = name
-	obj.Name = codegen.Goify(name, false)
+	obj.Name = codegen.GoifyAtt(att, name, false)
 	obj.Type = codegen.GoTypeRef(att.Type, nil, 0, false)
 	if att.Type.IsPrimitive() && parent.IsPrimitivePointer(name) {
 		obj.Pointer = "*"
