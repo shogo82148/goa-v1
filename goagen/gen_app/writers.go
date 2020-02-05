@@ -828,8 +828,8 @@ func handle{{ .Resource }}Origin(h goa.Handler) goa.Handler {
 {{ if not (eq $policy.Origin "*") }}			rw.Header().Set("Vary", "Origin")
 {{ end }}{{ if $policy.Exposed }}			rw.Header().Set("Access-Control-Expose-Headers", "{{ join $policy.Exposed ", " }}")
 {{ end }}{{ if gt $policy.MaxAge 0 }}			rw.Header().Set("Access-Control-Max-Age", "{{ $policy.MaxAge }}")
-{{ end }}			rw.Header().Set("Access-Control-Allow-Credentials", "{{ $policy.Credentials }}")
-			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+{{ end }}{{ if $policy.Credentials }}			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+{{ end }}			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
 				// We are handling a preflight request
 {{ if $policy.Methods }}				rw.Header().Set("Access-Control-Allow-Methods", "{{ join $policy.Methods ", " }}")
 {{ end }}{{ if $policy.Headers }}				rw.Header().Set("Access-Control-Allow-Headers", "{{ join $policy.Headers ", " }}")
