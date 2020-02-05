@@ -2555,7 +2555,6 @@ func handleBottlesOrigin(h goa.Handler) goa.Handler {
 			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", origin)
 			rw.Header().Set("Vary", "Origin")
-			rw.Header().Set("Access-Control-Allow-Credentials", "false")
 			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
 				// We are handling a preflight request
 				rw.Header().Set("Access-Control-Allow-Methods", "*")
@@ -2596,7 +2595,6 @@ func handleBottlesOrigin(h goa.Handler) goa.Handler {
 			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", origin)
 			rw.Header().Set("Vary", "Origin")
-			rw.Header().Set("Access-Control-Allow-Credentials", "false")
 			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
 				// We are handling a preflight request
 				rw.Header().Set("Access-Control-Allow-Methods", "*")
