@@ -9,7 +9,6 @@ require (
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598
 	github.com/dimfeld/httptreemux v5.0.1+incompatible
 	github.com/go-kit/kit v0.10.0
-	github.com/go-logfmt/logfmt v0.5.0 // indirect
 	github.com/go-openapi/loads v0.19.4
 	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/gogo/protobuf v1.3.1
@@ -21,18 +20,17 @@ require (
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d
 	github.com/manveru/gobdd v0.0.0-20131210092515-f1a17fdd710b // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
-	github.com/mattn/go-isatty v0.0.11 // indirect
+	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/onsi/ginkgo v1.12.0
 	github.com/onsi/gomega v1.9.0
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.4.2
-	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/spf13/cobra v0.0.6
 	github.com/spf13/pflag v1.0.5
 	github.com/ugorji/go/codec v1.1.7
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea
-	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa
-	golang.org/x/sys v0.0.0-20200121082415-34d275377bf9 // indirect
-	golang.org/x/tools v0.0.0-20200121042740-dbc83e6dc05e
+	golang.org/x/net v0.0.0-20200219183655-46282727080f
+	golang.org/x/sys v0.0.0-20200219091948-cb0a6d8edb6c // indirect
+	golang.org/x/tools v0.0.0-20200220224806-8a925fa4c0df
 	gopkg.in/yaml.v2 v2.2.8
 )
