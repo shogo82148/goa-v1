@@ -850,9 +850,9 @@ func {{ .Unmarshal }}(ctx context.Context, service *goa.Service, req *http.Reque
 	{{ if .PayloadMultipart}}var err error
 	var payload {{ gotypename .Payload nil 1 true }}
 {{ $o := .Payload.ToObject }}{{ range $name, $att := $o -}}
-	{{ if eq $att.Type.Kind 13 }}	_, raw{{ goify $name true }}, err2 := req.FormFile("{{ $name }}"){{ else if eq $att.Type.Kind 8 }}{{/*
-*/}}	raw{{ goify $name true }} := req.Form["{{ $name }}[]"]{{ else }}{{/*
-*/}}	raw{{ goify $name true }} := req.FormValue("{{ $name }}"){{ end }}
+	{{ if eq $att.Type.Kind 13 }}	_, raw{{ goifyatt $att $name true }}, err2 := req.FormFile("{{ $name }}"){{ else if eq $att.Type.Kind 8 }}{{/*
+*/}}	raw{{ goifyatt $att $name true }} := req.Form["{{ $name }}[]"]{{ else }}{{/*
+*/}}	raw{{ goifyatt $att $name true }} := req.FormValue("{{ $name }}"){{ end }}
 {{ template "Coerce" (newCoerceData $name $att true (printf "payload.%s" (goifyatt $att $name true)) 1) }}{{ end }}{{/*
 */}}	if err != nil {
 		return err
