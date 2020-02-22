@@ -146,7 +146,6 @@ func (g *Generator) Generate() (_ []string, err error) {
 			"defaultPath":        defaultPath,
 			"escapeBackticks":    escapeBackticks,
 			"goify":              codegen.Goify,
-			"goifyatt":           codegen.GoifyAtt,
 			"gotypedef":          codegen.GoTypeDef,
 			"gotypedesc":         codegen.GoTypeDesc,
 			"gotypename":         codegen.GoTypeName,
@@ -1073,12 +1072,12 @@ func (c *Client) {{ $funcName }}(ctx context.Context, path string{{ if .Params }
 {{ $payload := .Payload.Definition }}
 {{ $o := .Payload.ToObject }}{{ range $name, $att := $o }}{{ if eq $att.Type.Kind 13 }}{{/*
 */}}	{
-		_, file := filepath.Split({{ printf "payload.%s" (goifyatt $att $name true) }})
+		_, file := filepath.Split({{ printf "payload.%s" (goify $name true) }})
 		fw, err := w.CreateFormFile("{{ $name }}", file)
 		if err != nil {
 			return nil, err
 		}
-		fh, err := os.Open({{ printf "payload.%s" (goifyatt $att $name true) }})
+		fh, err := os.Open({{ printf "payload.%s" (goify $name true) }})
 		if err != nil {
 			return nil, err
 		}
@@ -1092,19 +1091,19 @@ func (c *Client) {{ $funcName }}(ctx context.Context, path string{{ if .Params }
 		if err != nil {
 			return nil, err
 		}
-		tmp_{{ goify $name true }} := {{ toValueTypeName (printf "payload.%s" (goifyatt $att $name true)) $name $payload }}
-		{{ toString (printf "tmp_%s" (goifyatt $att $name true)) "s" $att }}
+		tmp_{{ goify $name true }} := {{ toValueTypeName (printf "payload.%s" (goify $name true)) $name $payload }}
+		{{ toString (printf "tmp_%s" (goify $name true)) "s" $att }}
 		if _, err := fw.Write([]byte(s)); err != nil {
 			return nil, err
 		}
 	}
 {{ else }}  {
-		tmp_{{ goify $name true }} := payload.{{ goifyatt $att $name true }}
+		tmp_{{ goify $name true }} := payload.{{ goify $name true }}
 		fw, err := w.CreateFormField("{{ $name }}")
 		if err != nil {
 			return nil, err
 		}
-		{{ toString (printf "tmp_%s" (goifyatt $att $name true)) "s" $att }}
+		{{ toString (printf "tmp_%s" (goify $name true)) "s" $att }}
 		if _, err := fw.Write([]byte(s)); err != nil {
 			return nil, err
 		}
