@@ -60,6 +60,65 @@ func TestCellar(t *testing.T) {
 	}
 }
 
+func TestCustomFieldName(t *testing.T) {
+	defer cleanup("./field/*")
+	if err := goagen("./field", "bootstrap", "-d", "github.com/shogo82148/goa-v1/_integration_tests/field/design"); err != nil {
+		t.Error(err.Error())
+	}
+	if err := gobuild("./field"); err != nil {
+		t.Error(err.Error())
+	}
+	b, err := ioutil.ReadFile("./field/app/user_types.go")
+	if err != nil {
+		t.Fatal("failed to load user_types.go")
+	}
+
+	expected := `// UploadPayload user type.
+type UploadPayload struct {
+	// A required file field in the parent type.
+	FilePrimary *multipart.FileHeader ` + "`" + `form:"file1" json:"file1" yaml:"file1" xml:"file1"` + "`" + `
+	// A required int field in the parent type.
+	ID int ` + "`" + `form:"id" json:"id" yaml:"id" xml:"id"` + "`" + `
+}
+`
+	if !strings.Contains(string(b), expected) {
+		t.Errorf("UploadPayload attribute definitions reference failed. Generated user_types:\n%s", string(b))
+	}
+
+	b, err = ioutil.ReadFile("./field/app/media_types.go")
+	if err != nil {
+		t.Fatal("failed to load media_types.go")
+	}
+
+	expected = `// Multimedia media type (default view)
+//
+// Identifier: application/vnd.multimedia+json; view=default
+type Multimedia struct {
+	// Media ID
+	MediaID int ` + "`" + `form:"id" json:"id" yaml:"id" xml:"id"` + "`" + `
+	// An optional string field in the Multimedia
+	Note *string ` + "`" + `form:"optional_note,omitempty" json:"optional_note,omitempty" yaml:"optional_note,omitempty" xml:"optional_note,omitempty"` + "`" + `
+	// Media URL
+	MediaURL string ` + "`" + `form:"url" json:"url" yaml:"url" xml:"url"` + "`" + `
+}
+`
+	if !strings.Contains(string(b), expected) {
+		t.Errorf("Multimedia attribute definitions reference failed. Generated media_types:\n%s", string(b))
+	}
+
+	expected = `// multimedia list (default view)
+//
+// Identifier: application/vnd.multimedialist+json; view=default
+type Multimedialist struct {
+	// A required array field in the parent media type
+	MediaList []*Multimedia ` + "`" + `form:"media" json:"media" yaml:"media" xml:"media"` + "`" + `
+}
+`
+	if !strings.Contains(string(b), expected) {
+		t.Errorf("Multimedialist attribute definitions reference failed. Generated media_types:\n%s", string(b))
+	}
+}
+
 func goagen(dir, command string, args ...string) error {
 	pkg, err := build.Import("github.com/shogo82148/goa-v1/goagen", "", 0)
 	if err != nil {
