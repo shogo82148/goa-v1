@@ -84,7 +84,9 @@ func mergeContext(parent, child context.Context) context.Context {
 		child:  child,
 		cancel: cancel,
 	}
-	go ctx.watchCancel()
+	if parent.Done() != nil {
+		go ctx.watchCancel()
+	}
 	return ctx
 }
 
