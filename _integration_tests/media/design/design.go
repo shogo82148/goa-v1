@@ -50,15 +50,13 @@ var _ = Resource("Greeting", func() {
 	DefaultMedia(GreetingMedia)
 
 	Action("show", func() {
-		Routing(
-			GET("/"))
+		Routing(GET("/"))
 		Response(OK, GreetingMedia)
 		Response(BadRequest)
 	})
 
 	Action("create", func() {
-		Routing(
-			POST("/"))
+		Routing(POST("/"))
 		Payload(func() {
 			Member("message")
 			Member("parent_optional")

@@ -63,14 +63,12 @@ var UploadPayload = Type("UploadPayload", func() {
 
 var _ = Resource("Multimedia", func() {
 	Action("list", func() {
-		Routing(
-			GET("/"))
+		Routing(GET("/"))
 		Response(OK, MultimediaListMedia)
 	})
 
 	Action("get", func() {
-		Routing(
-			GET("/:id"))
+		Routing(GET("/:id"))
 		Params(func() {
 			Param("id", Integer)
 			Required("id")
@@ -80,8 +78,7 @@ var _ = Resource("Multimedia", func() {
 	})
 
 	Action("upload", func() {
-		Routing(
-			POST("/upload"))
+		Routing(POST("/upload"))
 		MultipartForm()
 		Payload(UploadPayload)
 		Response(OK)

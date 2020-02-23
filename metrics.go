@@ -44,18 +44,18 @@ func init() {
 	SetMetrics(NewNoOpCollector())
 }
 
-// newNoOpCollecter implements Collector, but provides no collection.
-type noOpCollecter struct{}
+// newNoOpCollector implements Collector, but provides no collection.
+type noOpCollector struct{}
 
-func (*noOpCollecter) AddSample(key []string, val float32)        {}
-func (*noOpCollecter) EmitKey(key []string, val float32)          {}
-func (*noOpCollecter) IncrCounter(key []string, val float32)      {}
-func (*noOpCollecter) MeasureSince(key []string, start time.Time) {}
-func (*noOpCollecter) SetGauge(key []string, val float32)         {}
+func (*noOpCollector) AddSample(key []string, val float32)        {}
+func (*noOpCollector) EmitKey(key []string, val float32)          {}
+func (*noOpCollector) IncrCounter(key []string, val float32)      {}
+func (*noOpCollector) MeasureSince(key []string, start time.Time) {}
+func (*noOpCollector) SetGauge(key []string, val float32)         {}
 
 // NewNoOpCollector returns a Collector that does no collection.
 func NewNoOpCollector() Collector {
-	return &noOpCollecter{}
+	return &noOpCollector{}
 }
 
 // NewNoOpSink returns a NOOP sink.
