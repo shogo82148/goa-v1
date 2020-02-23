@@ -78,13 +78,13 @@ type mergedContext struct {
 }
 
 func mergeContext(parent, child context.Context) context.Context {
-	child, cancel := context.WithCancel(child)
 	ctx := &mergedContext{
 		parent: parent,
 		child:  child,
-		cancel: cancel,
 	}
 	if parent.Done() != nil {
+		// propagate cancellation from the parent to the child.
+		ctx.child, ctx.cancel = context.WithCancel(child)
 		go ctx.watchCancel()
 	}
 	return ctx
