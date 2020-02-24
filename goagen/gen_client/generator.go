@@ -1072,13 +1072,13 @@ func (c *Client) {{ $funcName }}(ctx context.Context, path string{{ if .Params }
 {{ if .PayloadMultipart }}	w := multipart.NewWriter(&body)
 {{ $payload := .Payload.Definition }}
 {{ $o := .Payload.ToObject }}{{ range $name, $att := $o }}{{ if eq $att.Type.Kind 13 }}{{/*
-*/}}	{
-		_, file := filepath.Split({{ printf "payload.%s" (goifyatt $att $name true) }})
+*/}}{{ $optional := not ($payload.IsRequired $name) }}	{{ if $optional }}if {{ printf "payload.%s" (goifyatt $att $name true) }} != nil{{ end }}{
+		_, file := filepath.Split({{ if $optional }}*{{ end }}{{ printf "payload.%s" (goifyatt $att $name true) }})
 		fw, err := w.CreateFormFile("{{ $name }}", file)
 		if err != nil {
 			return nil, err
 		}
-		fh, err := os.Open({{ printf "payload.%s" (goifyatt $att $name true) }})
+		fh, err := os.Open({{ if $optional }}*{{ end }}{{ printf "payload.%s" (goifyatt $att $name true) }})
 		if err != nil {
 			return nil, err
 		}
