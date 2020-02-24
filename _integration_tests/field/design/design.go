@@ -58,6 +58,10 @@ var UploadPayload = Type("UploadPayload", func() {
 		Metadata("struct:field:name", "FilePrimary")
 		Description("A required file field in the parent type.")
 	})
+	Attribute("file2", File, func() {
+		Metadata("struct:field:name", "FileSecondary")
+		Description("An optional file field in the parent type.")
+	})
 	Required("id", "file1")
 })
 

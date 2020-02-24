@@ -77,6 +77,8 @@ func TestCustomFieldName(t *testing.T) {
 type UploadPayload struct {
 	// A required file field in the parent type.
 	FilePrimary *multipart.FileHeader ` + "`" + `form:"file1" json:"file1" yaml:"file1" xml:"file1"` + "`" + `
+	// An optional file field in the parent type.
+	FileSecondary *multipart.FileHeader ` + "`" + `form:"file2,omitempty" json:"file2,omitempty" yaml:"file2,omitempty" xml:"file2,omitempty"` + "`" + `
 	// A required int field in the parent type.
 	ID int ` + "`" + `form:"id" json:"id" yaml:"id" xml:"id"` + "`" + `
 }
