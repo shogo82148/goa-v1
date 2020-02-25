@@ -245,6 +245,7 @@ func (g *Generator) generateControllers() (err error) {
 		codegen.SimpleImport("strconv"),
 		codegen.SimpleImport("time"),
 		codegen.NewImport("uuid", "github.com/gofrs/uuid"),
+		codegen.SimpleImport("errors"),
 	}
 	encoders, err := BuildEncoders(g.API.Produces, true)
 	if err != nil {
