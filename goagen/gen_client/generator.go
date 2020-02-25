@@ -1087,7 +1087,7 @@ func (c *Client) {{ $funcName }}(ctx context.Context, path string{{ if .Params }
 			return nil, err
 		}
 	}
-{{ else if $att.Type.IsPrimitive }}	{
+{{ else if $att.Type.IsPrimitive }}	{{ $optional := not ($payload.IsRequired $name) }}	{{ if $optional }}if {{ printf "payload.%s" (goifyatt $att $name true) }} != nil{{ end }}{
 		fw, err := w.CreateFormField("{{ $name }}")
 		if err != nil {
 			return nil, err
@@ -1098,7 +1098,7 @@ func (c *Client) {{ $funcName }}(ctx context.Context, path string{{ if .Params }
 			return nil, err
 		}
 	}
-{{ else }}  {
+{{ else }}	{{ $optional := not ($payload.IsRequired $name) }}	{{ if $optional }}if {{ printf "payload.%s" (goifyatt $att $name true) }} != nil{{ end }}{
 		tmp_{{ goifyatt $att $name true }} := payload.{{ goifyatt $att $name true }}
 		fw, err := w.CreateFormField("{{ $name }}")
 		if err != nil {
