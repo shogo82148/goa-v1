@@ -2420,7 +2420,7 @@ func unmarshalListBottlePayload(ctx context.Context, service *goa.Service, req *
 	_, rawIcon, err2 := req.FormFile("icon")
 	if err2 == nil {
 		payload.Icon = rawIcon
-	} else {
+	} else if !errors.Is(err2, http.ErrMissingFile) {
 		err = goa.MergeErrors(err, goa.InvalidParamTypeError("icon", "icon", "file"))
 	}`
 
