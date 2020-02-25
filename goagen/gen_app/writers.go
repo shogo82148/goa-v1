@@ -600,7 +600,7 @@ type {{ .Name }} struct {
 */}}{{/* FileType */}}{{/*
 */}}{{ tabs .Depth }}if err2 == nil {
 {{ tabs .Depth }}	{{ .Pkg }} = {{ printf "raw%s" (goifyatt .Attribute .Name true) }}
-{{ tabs .Depth }}} else if !errors.Is(err, http.ErrMissingFile) {
+{{ tabs .Depth }}} else if !errors.Is(err2, http.ErrMissingFile) {
 {{ tabs .Depth }}	err = goa.MergeErrors(err, goa.InvalidParamTypeError("{{ .Name }}", "{{ .Name }}", "file"))
 {{ tabs .Depth }}}
 {{ end }}`
