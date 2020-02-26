@@ -1072,13 +1072,13 @@ func (c *Client) {{ $funcName }}(ctx context.Context, path string{{ if .Params }
 {{ if .PayloadMultipart }}	w := multipart.NewWriter(&body)
 {{ $payload := .Payload.Definition }}
 {{ $o := .Payload.ToObject }}{{ range $name, $att := $o }}{{ if eq $att.Type.Kind 13 }}{{/*
-*/}}{{ $optional := not ($payload.IsRequired $name) }}	{{ if $optional }}if {{ printf "payload.%s" (goifyatt $att $name true) }} != nil{{ end }}{
-		_, file := filepath.Split({{ if $optional }}*{{ end }}{{ printf "payload.%s" (goifyatt $att $name true) }})
+*/}}	{{ if not ($payload.IsRequired $name) }}if {{ printf "payload.%s" (goifyatt $att $name true) }} != nil{{ end }}{
+		_, file := filepath.Split({{ if not ($payload.IsRequired $name) }}*{{ end }}{{ printf "payload.%s" (goifyatt $att $name true) }})
 		fw, err := w.CreateFormFile("{{ $name }}", file)
 		if err != nil {
 			return nil, err
 		}
-		fh, err := os.Open({{ if $optional }}*{{ end }}{{ printf "payload.%s" (goifyatt $att $name true) }})
+		fh, err := os.Open({{ if not ($payload.IsRequired $name) }}*{{ end }}{{ printf "payload.%s" (goifyatt $att $name true) }})
 		if err != nil {
 			return nil, err
 		}
@@ -1087,7 +1087,7 @@ func (c *Client) {{ $funcName }}(ctx context.Context, path string{{ if .Params }
 			return nil, err
 		}
 	}
-{{ else if $att.Type.IsPrimitive }}	{{ $optional := not ($payload.IsRequired $name) }}	{{ if $optional }}if {{ printf "payload.%s" (goifyatt $att $name true) }} != nil{{ end }}{
+{{ else if $att.Type.IsPrimitive }}	{{ if not ($payload.IsRequired $name) }}if {{ printf "payload.%s" (goifyatt $att $name true) }} != nil{{ end }}{
 		fw, err := w.CreateFormField("{{ $name }}")
 		if err != nil {
 			return nil, err
@@ -1098,7 +1098,7 @@ func (c *Client) {{ $funcName }}(ctx context.Context, path string{{ if .Params }
 			return nil, err
 		}
 	}
-{{ else }}	{{ $optional := not ($payload.IsRequired $name) }}	{{ if $optional }}if {{ printf "payload.%s" (goifyatt $att $name true) }} != nil{{ end }}{
+{{ else }}	{{ if not ($payload.IsRequired $name) }}if {{ printf "payload.%s" (goifyatt $att $name true) }} != nil{{ end }}{
 		tmp_{{ goifyatt $att $name true }} := payload.{{ goifyatt $att $name true }}
 		fw, err := w.CreateFormField("{{ $name }}")
 		if err != nil {
