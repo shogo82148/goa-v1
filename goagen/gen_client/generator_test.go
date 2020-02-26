@@ -575,15 +575,20 @@ var _ = Describe("Generate", func() {
 	Context("with a multipartform action with a user type payload", func() {
 		BeforeEach(func() {
 			codegen.TempCount = 0
+			elemType := &design.AttributeDefinition{Type: design.String}
 			testType := &design.UserTypeDefinition{
 				AttributeDefinition: &design.AttributeDefinition{
 					Type: design.Object{
 						"param": &design.AttributeDefinition{Type: design.Integer},
 						"time":  &design.AttributeDefinition{Type: design.DateTime},
 						"uuid":  &design.AttributeDefinition{Type: design.UUID},
+						"file":  &design.AttributeDefinition{Type: design.File},
+						"image": &design.AttributeDefinition{Type: design.File},
+						"name":  &design.AttributeDefinition{Type: &design.Array{ElemType: elemType}},
+						"addr":  &design.AttributeDefinition{Type: &design.Array{ElemType: elemType}},
 					},
 					Validation: &dslengine.ValidationDefinition{
-						Required: []string{"uuid"},
+						Required: []string{"uuid", "file", "name"},
 					},
 				},
 				TypeName: "TestType",
@@ -626,8 +631,16 @@ var _ = Describe("Generate", func() {
 			Ω(files).Should(HaveLen(9))
 			content, err := ioutil.ReadFile(filepath.Join(outDir, "client", "foo.go"))
 			Ω(err).ShouldNot(HaveOccurred())
+			Ω(string(content)).Should(ContainSubstring("if payload.Param != nil"))
+			Ω(string(content)).Should(ContainSubstring("if payload.Image != nil"))
+			Ω(string(content)).Should(ContainSubstring("if payload.Addr != nil"))
+			Ω(string(content)).ShouldNot(ContainSubstring("if payload.UUID != nil"))
+			Ω(string(content)).ShouldNot(ContainSubstring("if payload.File != nil"))
+			Ω(string(content)).ShouldNot(ContainSubstring("if payload.Name != nil"))
 			Ω(string(content)).Should(ContainSubstring("tmp_Param := *payload.Param"))
 			Ω(string(content)).Should(ContainSubstring("tmp_UUID := payload.UUID"))
+			Ω(string(content)).Should(ContainSubstring("fh, err := os.Open(payload.File)"))
+			Ω(string(content)).Should(ContainSubstring("fh, err := os.Open(*payload.Image)"))
 		})
 	})
 
