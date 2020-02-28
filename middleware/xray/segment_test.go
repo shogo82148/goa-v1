@@ -11,11 +11,13 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/shogo82148/goa-v1"
 	"github.com/pkg/errors"
+	"github.com/shogo82148/goa-v1"
 )
 
 func TestRecordError(t *testing.T) {
+	t.Skip("xray middleware is deprecated")
+
 	var (
 		errMsg       = "foo"
 		cause        = "cause"
@@ -50,6 +52,8 @@ func TestRecordError(t *testing.T) {
 }
 
 func TestRecordResponse(t *testing.T) {
+	t.Skip("xray middleware is deprecated")
+
 	type Res struct {
 		Status int
 		Body   string
@@ -105,6 +109,8 @@ func TestRecordResponse(t *testing.T) {
 }
 
 func TestRecordRequest(t *testing.T) {
+	t.Skip("xray middleware is deprecated")
+
 	var (
 		method     = "GET"
 		ip         = "104.18.42.42"
@@ -180,6 +186,8 @@ func TestRecordRequest(t *testing.T) {
 }
 
 func TestSegment_NewSubsegment(t *testing.T) {
+	t.Skip("xray middleware is deprecated")
+
 	conn, err := net.Dial("udp", udplisten)
 	if err != nil {
 		t.Fatalf("failed to connect to daemon - %s", err)
@@ -214,6 +222,8 @@ func TestSegment_NewSubsegment(t *testing.T) {
 }
 
 func TestSegment_SubmitInProgress(t *testing.T) {
+	t.Skip("xray middleware is deprecated")
+
 	t.Run("call twice then close -- second call is ignored", func(t *testing.T) {
 		conn, err := net.Dial("udp", udplisten)
 		if err != nil {
@@ -281,6 +291,8 @@ func TestSegment_SubmitInProgress(t *testing.T) {
 // TestRace starts two goroutines and races them to call Segment's public function. In this way, when tests are run
 // with the -race flag, race conditions will be detected.
 func TestRace(t *testing.T) {
+	t.Skip("xray middleware is deprecated")
+
 	var (
 		rErr   = errors.New("oh no")
 		req, _ = http.NewRequest("GET", "https://goa.design", nil)
