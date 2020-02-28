@@ -24,6 +24,8 @@ const (
 )
 
 func TestNew(t *testing.T) {
+	t.Skip("xray middleware is deprecated")
+
 	cases := map[string]struct {
 		Daemon  string
 		Success bool
@@ -46,6 +48,8 @@ func TestNew(t *testing.T) {
 }
 
 func TestMiddleware(t *testing.T) {
+	t.Skip("xray middleware is deprecated")
+
 	type (
 		Tra struct {
 			TraceID, SpanID, ParentID string

@@ -62,6 +62,8 @@ const (
 //   - 1.4 hours:   14 KB
 //
 // Besides those varying size limitations, a trace may be open for up to 7 days.
+//
+// DEPRECATED: please use official AWS X-Ray SDK https://github.com/aws/aws-xray-sdk-go
 func New(service, daemon string) (goa.Middleware, error) {
 	connection, err := periodicallyRedialingConn(context.Background(), time.Minute, func() (net.Conn, error) {
 		return net.Dial("udp", daemon)

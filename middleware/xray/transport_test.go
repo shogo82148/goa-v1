@@ -22,6 +22,8 @@ func (mrt *mockRoundTripper) RoundTrip(req *http.Request) (*http.Response, error
 }
 
 func TestTransportExample(t *testing.T) {
+	t.Skip("xray middleware is deprecated")
+
 	var (
 		responseBody = "good morning"
 	)
@@ -90,6 +92,8 @@ func TestTransportExample(t *testing.T) {
 }
 
 func TestTransportNoSegmentInContext(t *testing.T) {
+	t.Skip("xray middleware is deprecated")
+
 	var (
 		url, _ = url.Parse("https://goa.design/path?query#fragment")
 		req, _ = http.NewRequest("GET", url.String(), nil)
@@ -112,6 +116,8 @@ func TestTransportNoSegmentInContext(t *testing.T) {
 }
 
 func TestTransport(t *testing.T) {
+	t.Skip("xray middleware is deprecated")
+
 	type (
 		Tra struct {
 			TraceID, SpanID string

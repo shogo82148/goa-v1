@@ -13,6 +13,8 @@ import (
 )
 
 func TestWrapDoer(t *testing.T) {
+	t.Skip("xray middleware is deprecated")
+
 	RegisterTestingT(t)
 
 	var (
