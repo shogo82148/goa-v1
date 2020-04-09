@@ -192,23 +192,6 @@ func drainBody(b io.ReadCloser) (r1, r2 io.ReadCloser, err error) {
 	return ioutil.NopCloser(&buf), ioutil.NopCloser(bytes.NewReader(buf.Bytes())), nil
 }
 
-// headerIterator is a HTTP header iterator.
-type headerIterator func(name string, value []string)
-
-// filterHeaders iterates through the headers skipping hidden headers.
-// It calls the given iterator for each header name/value pair. The values are serialized as
-// strings.
-func filterHeaders(headers http.Header, iterator headerIterator) {
-	for k, v := range headers {
-		// Skip sensitive headers
-		if k == "Authorization" || k == "Cookie" {
-			iterator(k, []string{"*****"})
-			continue
-		}
-		iterator(k, v)
-	}
-}
-
 // shortID produces a "unique" 6 bytes long string.
 // Do not use as a reliable way to get unique IDs, instead use for things like logging.
 func shortID() string {
