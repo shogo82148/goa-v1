@@ -634,7 +634,7 @@ func extensionsFromDefinition(mdata dslengine.MetadataDefinition) map[string]int
 		if chunks[0] != "swagger" || chunks[1] != "extension" {
 			continue
 		}
-		if strings.HasPrefix(chunks[2], "x-") != true {
+		if !strings.HasPrefix(chunks[2], "x-") {
 			continue
 		}
 		val := value[0]

@@ -343,7 +343,7 @@ func (a *ActionDefinition) Validate() *dslengine.ValidationErrors {
 	verr.Merge(a.ValidateParams())
 	if a.Payload != nil {
 		verr.Merge(a.Payload.Validate("action payload", a))
-		if HasFile(a.Payload.Type) && a.PayloadMultipart != true {
+		if HasFile(a.Payload.Type) && !a.PayloadMultipart {
 			verr.Add(a, "Payload %s contains an invalid type, action payloads cannot contain a file", a.Payload.TypeName)
 		}
 	}
