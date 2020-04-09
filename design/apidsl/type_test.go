@@ -1,11 +1,11 @@
 package apidsl_test
 
 import (
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 	. "github.com/shogo82148/goa-v1/design"
 	. "github.com/shogo82148/goa-v1/design/apidsl"
 	"github.com/shogo82148/goa-v1/dslengine"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Type", func() {
@@ -23,7 +23,7 @@ var _ = Describe("Type", func() {
 	JustBeforeEach(func() {
 		Type(name, dsl)
 		dslengine.Run()
-		ut, _ = Design.Types[name]
+		ut = Design.Types[name]
 	})
 
 	Context("with no dsl and no name", func() {

@@ -775,8 +775,7 @@ func (r *ResourceDefinition) CanonicalAction() *ActionDefinition {
 	if name == "" {
 		name = "show"
 	}
-	ca, _ := r.Actions[name]
-	return ca
+	return r.Actions[name]
 }
 
 // URITemplate returns a URI template to this resource.
@@ -1819,9 +1818,7 @@ func (l *LinkDefinition) Attribute() *AttributeDefinition {
 	if p == nil {
 		return nil
 	}
-	att, _ := p[l.Name]
-
-	return att
+	return p[l.Name]
 }
 
 // MediaType returns the media type of the linked attribute.
