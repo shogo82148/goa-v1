@@ -163,7 +163,7 @@ func (a *APIDefinition) validateRoutes(verr *dslengine.ValidationErrors, routes 
 					for i, d := range diffs {
 						conflicts[i] = fmt.Sprintf(`"%s" from %s and "%s" from %s`, d[0].Name, d[0].Orig.Context(), d[1].Name, d[1].Orig.Context())
 					}
-					msg = fmt.Sprintf("%s", strings.Join(conflicts, ", "))
+					msg = strings.Join(conflicts, ", ")
 					verr.Add(route.Action,
 						`route "%s" conflicts with route "%s" of %s action %s. Make sure wildcards at the same positions have the same name. Conflicting wildcards are %s.`,
 						route.Route.FullPath(),
