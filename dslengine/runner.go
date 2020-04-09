@@ -185,11 +185,11 @@ func FailOnError(err error) {
 		if len(merr) == 0 {
 			return
 		}
-		fmt.Fprintf(os.Stderr, merr.Error())
+		fmt.Fprint(os.Stderr, merr.Error())
 		os.Exit(1)
 	}
 	if err != nil {
-		fmt.Fprintf(os.Stderr, err.Error())
+		fmt.Fprint(os.Stderr, err.Error())
 		os.Exit(1)
 	}
 }
