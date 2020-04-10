@@ -7,10 +7,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/shogo82148/goa-v1/goagen/codegen"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/goagen/codegen"
 )
 
 func abs(elems ...string) string {

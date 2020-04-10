@@ -512,7 +512,7 @@ func filepathHasPrefix(p, prefix string) bool {
 	if err != nil {
 		return false
 	}
-	return !strings.HasPrefix(rel, fmt.Sprintf("..%c", os.PathSeparator))
+	return rel != ".." && !strings.HasPrefix(rel, fmt.Sprintf("..%c", os.PathSeparator))
 }
 
 const (
