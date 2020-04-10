@@ -19,7 +19,6 @@ import (
 	"text/template"
 
 	"github.com/shogo82148/goa-v1/version"
-
 	"golang.org/x/tools/go/ast/astutil"
 )
 
@@ -113,7 +112,7 @@ func WorkspaceFor(source string) (*Workspace, error) {
 			if err != nil {
 				gopath = gp
 			}
-			if filepath.HasPrefix(sourcePath, gopath) {
+			if filepathHasPrefix(sourcePath, gopath) {
 				return &Workspace{
 					gopath:       gopaths,
 					isModuleMode: false,
@@ -346,7 +345,7 @@ func PackagePath(path string) (string, error) {
 			if gp, err := filepath.Abs(gopath); err == nil {
 				gopath = gp
 			}
-			if filepath.HasPrefix(absPath, gopath) {
+			if filepathHasPrefix(absPath, gopath) {
 				base := filepath.FromSlash(gopath + "/src")
 				rel, err := filepath.Rel(base, absPath)
 				return filepath.ToSlash(rel), err
@@ -505,6 +504,15 @@ func modulePath(mod []byte) string {
 		return string(line)
 	}
 	return "" // missing module path
+}
+
+// yet another implement of filepath.HasPrefix(Deprecated).
+func filepathHasPrefix(p, prefix string) bool {
+	rel, err := filepath.Rel(prefix, p)
+	if err != nil {
+		return false
+	}
+	return !strings.HasPrefix(rel, fmt.Sprintf("..%c", os.PathSeparator))
 }
 
 const (
