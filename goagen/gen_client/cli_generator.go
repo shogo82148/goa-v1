@@ -641,7 +641,10 @@ func main() {
 	app.PersistentFlags().StringVar(&typ, "token-type", "Bearer", "Token type used for authentication")
 {{ end }}
 	// Parse flags and setup signers
-	app.ParseFlags(os.Args)
+	if err := app.ParseFlags(os.Args); err != nil {
+		fmt.Fprint(os.Stderr, err.Error())
+		os.Exit(-1)
+	}
 {{ if .HasTokenSigners }}	source := &goaclient.StaticTokenSource{
 		StaticToken: &goaclient.StaticToken{Type: typ, Value: token},
 	}
