@@ -140,8 +140,7 @@ var _ = Describe("Metadata", func() {
 			Ω(rd.Metadata).To(BeNil())
 			Ω(mtd.Metadata).To(BeNil())
 
-			var mtdAttribute *AttributeDefinition
-			mtdAttribute = mtd.Type.ToObject()["Example Attribute"]
+			mtdAttribute := mtd.Type.ToObject()["Example Attribute"]
 			Ω(mtdAttribute.Metadata).To(BeNil())
 		})
 	})
