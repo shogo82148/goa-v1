@@ -13,6 +13,7 @@ func Catch(signals []os.Signal, then func()) {
 	}
 	signal.Notify(c, signals...)
 	<-c
+	signal.Stop(c)
 	if then != nil {
 		then()
 	}
