@@ -16,7 +16,7 @@ all: depend lint goagen
 .PHONY: depend
 depend:
 	GO111MODULE=on go mod download
-	GO111MODULE=off go install github.com/onsi/ginkgo/ginkgo
+	GO111MODULE=off go get github.com/onsi/ginkgo/ginkgo
 
 .PHONY: test
 test:
