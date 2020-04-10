@@ -7,7 +7,7 @@ import (
 
 // Catch signals and invoke then callback
 func Catch(signals []os.Signal, then func()) {
-	c := make(chan os.Signal)
+	c := make(chan os.Signal, 1)
 	if signals == nil {
 		signals = defaultSignals
 	}
