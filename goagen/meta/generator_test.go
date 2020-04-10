@@ -36,6 +36,7 @@ var _ = Describe("Run", func() {
 		var err error
 
 		outputWorkspace, err = codegen.NewWorkspace("output")
+		Ω(err).ShouldNot(HaveOccurred())
 		p, err := outputWorkspace.NewPackage("testOutput")
 		Ω(err).ShouldNot(HaveOccurred())
 		outputDir = p.Abs()
