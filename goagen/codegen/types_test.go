@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 	. "github.com/shogo82148/goa-v1/design"
 	. "github.com/shogo82148/goa-v1/design/apidsl"
 	"github.com/shogo82148/goa-v1/dslengine"
 	"github.com/shogo82148/goa-v1/goagen/codegen"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("code generation", func() {
@@ -686,7 +686,6 @@ var _ = Describe("GoTypeTransform", func() {
 	})
 
 	Context("transforming objects with recursive attributes", func() {
-		const attName = "att"
 		BeforeEach(func() {
 			inner := Type("inner", func() {
 				Attribute("foo", Integer)

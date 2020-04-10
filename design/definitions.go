@@ -775,8 +775,7 @@ func (r *ResourceDefinition) CanonicalAction() *ActionDefinition {
 	if name == "" {
 		name = "show"
 	}
-	ca, _ := r.Actions[name]
-	return ca
+	return r.Actions[name]
 }
 
 // URITemplate returns a URI template to this resource.
@@ -1259,9 +1258,7 @@ func (a *AttributeDefinition) Merge(other *AttributeDefinition) *AttributeDefini
 		if a.Validation == nil {
 			a.Validation = &dslengine.ValidationDefinition{}
 		}
-		for _, r := range other.Validation.Required {
-			a.Validation.Required = append(a.Validation.Required, r)
-		}
+		a.Validation.Required = append(a.Validation.Required, other.Validation.Required...)
 	}
 	return a
 }
@@ -1819,9 +1816,7 @@ func (l *LinkDefinition) Attribute() *AttributeDefinition {
 	if p == nil {
 		return nil
 	}
-	att, _ := p[l.Name]
-
-	return att
+	return p[l.Name]
 }
 
 // MediaType returns the media type of the linked attribute.

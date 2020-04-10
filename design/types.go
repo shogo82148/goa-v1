@@ -17,8 +17,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/shogo82148/goa-v1/dslengine"
 	"github.com/gofrs/uuid"
+	"github.com/shogo82148/goa-v1/dslengine"
 )
 
 // DefaultView is the name of the default view.
@@ -261,7 +261,7 @@ func (p Primitive) IsCompatible(val interface{}) bool {
 	if p == Any {
 		return true
 	}
-	switch val.(type) {
+	switch val := val.(type) {
 	case bool:
 		return p == Boolean
 	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
@@ -273,11 +273,11 @@ func (p Primitive) IsCompatible(val interface{}) bool {
 			return true
 		}
 		if p == DateTime {
-			_, err := time.Parse(time.RFC3339, val.(string))
+			_, err := time.Parse(time.RFC3339, val)
 			return err == nil
 		}
 		if p == UUID {
-			_, err := uuid.FromString(val.(string))
+			_, err := uuid.FromString(val)
 			return err == nil
 		}
 	}

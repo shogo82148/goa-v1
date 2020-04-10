@@ -80,7 +80,7 @@ func appendImports(i, a []*ImportSpec) []*ImportSpec {
 				break
 			}
 		}
-		if contains != true {
+		if !contains {
 			i = append(i, v)
 		}
 	}

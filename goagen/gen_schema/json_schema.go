@@ -338,12 +338,12 @@ func (s *JSONSchema) createMergeItems(other *JSONSchema) mergeItems {
 		{&s.DefaultValue, other.DefaultValue, s.DefaultValue == nil},
 		{&s.Title, other.Title, s.Title == ""},
 		{&s.Media, other.Media, s.Media == nil},
-		{&s.ReadOnly, other.ReadOnly, s.ReadOnly == false},
+		{&s.ReadOnly, other.ReadOnly, !s.ReadOnly},
 		{&s.PathStart, other.PathStart, s.PathStart == ""},
 		{&s.Enum, other.Enum, s.Enum == nil},
 		{&s.Format, other.Format, s.Format == ""},
 		{&s.Pattern, other.Pattern, s.Pattern == ""},
-		{&s.AdditionalProperties, other.AdditionalProperties, s.AdditionalProperties == false},
+		{&s.AdditionalProperties, other.AdditionalProperties, !s.AdditionalProperties},
 		{
 			a: s.Minimum, b: other.Minimum,
 			needed: minFloat(s.Minimum, other.Minimum),
@@ -395,13 +395,8 @@ func (s *JSONSchema) Merge(other *JSONSchema) {
 		}
 	}
 
-	for _, l := range other.Links {
-		s.Links = append(s.Links, l)
-	}
-
-	for _, r := range other.Required {
-		s.Required = append(s.Required, r)
-	}
+	s.Links = append(s.Links, other.Links...)
+	s.Required = append(s.Required, other.Required...)
 }
 
 // Dup creates a shallow clone of the given schema.

@@ -33,11 +33,10 @@ type (
 	// resulting HTTP response.
 	ControllersWriter struct {
 		*codegen.SourceFile
-		CtrlTmpl    *template.Template
-		MountTmpl   *template.Template
-		handleCORST *template.Template
-		Finalizer   *codegen.Finalizer
-		Validator   *codegen.Validator
+		CtrlTmpl  *template.Template
+		MountTmpl *template.Template
+		Finalizer *codegen.Finalizer
+		Validator *codegen.Validator
 	}
 
 	// SecurityWriter generate code for action-level security handlers.

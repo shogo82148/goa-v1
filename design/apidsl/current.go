@@ -42,40 +42,10 @@ func contactDefinition() (*design.ContactDefinition, bool) {
 	return a, ok
 }
 
-// licenseDefinition returns true and current context if it is an APIDefinition,
-// nil and false otherwise.
-func licenseDefinition() (*design.LicenseDefinition, bool) {
-	l, ok := dslengine.CurrentDefinition().(*design.LicenseDefinition)
-	if !ok {
-		dslengine.IncompatibleDSL()
-	}
-	return l, ok
-}
-
-// docsDefinition returns true and current context if it is a DocsDefinition,
-// nil and false otherwise.
-func docsDefinition() (*design.DocsDefinition, bool) {
-	a, ok := dslengine.CurrentDefinition().(*design.DocsDefinition)
-	if !ok {
-		dslengine.IncompatibleDSL()
-	}
-	return a, ok
-}
-
 // mediaTypeDefinition returns true and current context if it is a MediaTypeDefinition,
 // nil and false otherwise.
 func mediaTypeDefinition() (*design.MediaTypeDefinition, bool) {
 	m, ok := dslengine.CurrentDefinition().(*design.MediaTypeDefinition)
-	if !ok {
-		dslengine.IncompatibleDSL()
-	}
-	return m, ok
-}
-
-// typeDefinition returns true and current context if it is a UserTypeDefinition,
-// nil and false otherwise.
-func typeDefinition() (*design.UserTypeDefinition, bool) {
-	m, ok := dslengine.CurrentDefinition().(*design.UserTypeDefinition)
 	if !ok {
 		dslengine.IncompatibleDSL()
 	}

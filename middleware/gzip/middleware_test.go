@@ -9,10 +9,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/shogo82148/goa-v1"
-	gzm "github.com/shogo82148/goa-v1/middleware/gzip"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1"
+	gzm "github.com/shogo82148/goa-v1/middleware/gzip"
 )
 
 type TestResponseWriter struct {
@@ -48,7 +48,7 @@ var _ = Describe("Gzip", func() {
 		Ω(err).ShouldNot(HaveOccurred())
 		rw = &TestResponseWriter{ParentHeader: make(http.Header)}
 
-		ctx = goa.NewContext(nil, rw, req, nil)
+		ctx = goa.NewContext(req.Context(), rw, req, nil)
 		goa.ContextRequest(ctx).Payload = payload
 	})
 
@@ -244,7 +244,7 @@ var _ = Describe("NotGzip", func() {
 		Ω(err).ShouldNot(HaveOccurred())
 		rw = &TestResponseWriter{ParentHeader: make(http.Header)}
 
-		ctx = goa.NewContext(nil, rw, req, nil)
+		ctx = goa.NewContext(req.Context(), rw, req, nil)
 		goa.ContextRequest(ctx).Payload = payload
 	})
 
@@ -465,7 +465,7 @@ var _ = Describe("NotGzip", func() {
 		Ω(err).ShouldNot(HaveOccurred())
 		rw = &TestResponseWriter{ParentHeader: make(http.Header)}
 
-		ctx = goa.NewContext(nil, rw, req, nil)
+		ctx = goa.NewContext(req.Context(), rw, req, nil)
 		goa.ContextRequest(ctx).Payload = payload
 	})
 

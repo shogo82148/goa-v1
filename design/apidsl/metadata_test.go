@@ -1,11 +1,11 @@
 package apidsl_test
 
 import (
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 	. "github.com/shogo82148/goa-v1/design"
 	. "github.com/shogo82148/goa-v1/design/apidsl"
 	"github.com/shogo82148/goa-v1/dslengine"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Metadata", func() {
@@ -70,8 +70,7 @@ var _ = Describe("Metadata", func() {
 				Ω(rd.Responses["Example Response"].Metadata).To(Equal(expected))
 				Ω(mtd.Metadata).To(Equal(expected))
 
-				var mtdAttribute *AttributeDefinition
-				mtdAttribute = mtd.Type.ToObject()["Example Attribute"]
+				mtdAttribute := mtd.Type.ToObject()["Example Attribute"]
 				Ω(mtdAttribute.Metadata).To(Equal(expected))
 			})
 		})
@@ -91,8 +90,7 @@ var _ = Describe("Metadata", func() {
 				Ω(rd.Responses["Example Response"].Metadata).To(Equal(expected))
 				Ω(mtd.Metadata).To(Equal(expected))
 
-				var mtdAttribute *AttributeDefinition
-				mtdAttribute = mtd.Type.ToObject()["Example Attribute"]
+				mtdAttribute := mtd.Type.ToObject()["Example Attribute"]
 				Ω(mtdAttribute.Metadata).To(Equal(expected))
 			})
 		})
@@ -112,8 +110,7 @@ var _ = Describe("Metadata", func() {
 				Ω(rd.Responses["Example Response"].Metadata).To(Equal(expected))
 				Ω(mtd.Metadata).To(Equal(expected))
 
-				var mtdAttribute *AttributeDefinition
-				mtdAttribute = mtd.Type.ToObject()["Example Attribute"]
+				mtdAttribute := mtd.Type.ToObject()["Example Attribute"]
 				Ω(mtdAttribute.Metadata).To(Equal(expected))
 			})
 		})
@@ -143,8 +140,7 @@ var _ = Describe("Metadata", func() {
 			Ω(rd.Metadata).To(BeNil())
 			Ω(mtd.Metadata).To(BeNil())
 
-			var mtdAttribute *AttributeDefinition
-			mtdAttribute = mtd.Type.ToObject()["Example Attribute"]
+			mtdAttribute := mtd.Type.ToObject()["Example Attribute"]
 			Ω(mtdAttribute.Metadata).To(BeNil())
 		})
 	})

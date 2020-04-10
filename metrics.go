@@ -77,8 +77,11 @@ func (*NoOpSink) AddSampleWithLabels(key []string, val float32, labels []metrics
 // NewMetrics initializes goa's metrics instance with the supplied
 // configuration and metrics sink
 // This method is deprecated and SetMetrics should be used instead.
-func NewMetrics(conf *metrics.Config, sink metrics.MetricSink) (err error) {
+func NewMetrics(conf *metrics.Config, sink metrics.MetricSink) error {
 	m, err := metrics.NewGlobal(conf, sink)
+	if err != nil {
+		return err
+	}
 	SetMetrics(m)
 
 	return nil
