@@ -33,16 +33,13 @@ func NewGenerator(options ...Option) *Generator {
 
 // Generator is the application code generator.
 type Generator struct {
-	API            *design.APIDefinition // The API definition
-	OutDir         string                // Path to output directory
-	Target         string                // Name of generated package
-	ToolDirName    string                // Name of tool directory where CLI main is generated once
-	Tool           string                // Name of CLI tool
-	NoTool         bool                  // Whether to skip tool generation
-	genfiles       []string
-	encoders       []*genapp.EncoderTemplateData
-	decoders       []*genapp.EncoderTemplateData
-	encoderImports []string
+	API         *design.APIDefinition // The API definition
+	OutDir      string                // Path to output directory
+	Target      string                // Name of generated package
+	ToolDirName string                // Name of tool directory where CLI main is generated once
+	Tool        string                // Name of CLI tool
+	NoTool      bool                  // Whether to skip tool generation
+	genfiles    []string
 }
 
 // Generate is the generator entry point called by the meta generator.
