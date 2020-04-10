@@ -395,13 +395,8 @@ func (s *JSONSchema) Merge(other *JSONSchema) {
 		}
 	}
 
-	for _, l := range other.Links {
-		s.Links = append(s.Links, l)
-	}
-
-	for _, r := range other.Required {
-		s.Required = append(s.Required, r)
-	}
+	s.Links = append(s.Links, other.Links...)
+	s.Required = append(s.Required, other.Required...)
 }
 
 // Dup creates a shallow clone of the given schema.

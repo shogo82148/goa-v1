@@ -1258,9 +1258,7 @@ func (a *AttributeDefinition) Merge(other *AttributeDefinition) *AttributeDefini
 		if a.Validation == nil {
 			a.Validation = &dslengine.ValidationDefinition{}
 		}
-		for _, r := range other.Validation.Required {
-			a.Validation.Required = append(a.Validation.Required, r)
-		}
+		a.Validation.Required = append(a.Validation.Required, other.Validation.Required...)
 	}
 	return a
 }
