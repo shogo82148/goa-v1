@@ -33,7 +33,7 @@ func (eg *exampleGenerator) Generate(seen []string) interface{} {
 	if eg.hasEnumValidation() {
 		return eg.generateValidatedEnumExample()
 	}
-	// loop until a satisified example is generated
+	// loop until a satisfied example is generated
 	hasFormat, hasPattern, hasMinMax := eg.hasFormatValidation(), eg.hasPatternValidation(), eg.hasMinMaxValidation()
 	attempts := 0
 	for attempts < maxAttempts {
@@ -43,7 +43,7 @@ func (eg *exampleGenerator) Generate(seen []string) interface{} {
 		if hasFormat {
 			example = eg.generateFormatExample()
 		}
-		// now validate with the rest of matchers; if not satisified, redo
+		// now validate with the rest of matchers; if not satisfied, redo
 		if hasPattern {
 			if example == nil {
 				example = eg.generateValidatedPatternExample()
@@ -193,7 +193,7 @@ func (eg *exampleGenerator) checkPatternValidation(example interface{}) bool {
 	return true
 }
 
-// generateValidatedPatternExample generates a random value that satisifies the pattern. Note: if
+// generateValidatedPatternExample generates a random value that satisfies the pattern. Note: if
 // multiple patterns are given, only one of them is used. currently, it doesn't support multiple.
 func (eg *exampleGenerator) generateValidatedPatternExample() interface{} {
 	if !eg.hasPatternValidation() {
