@@ -187,12 +187,12 @@ func (service *Service) WithLogger(logger LogAdapter) {
 	service.Context = WithLogger(service.Context, logger)
 }
 
-// LogInfo logs the message and values at odd indeces using the keys at even indeces of the keyvals slice.
+// LogInfo logs the message and values at odd indexes using the keys at even indexes of the keyvals slice.
 func (service *Service) LogInfo(msg string, keyvals ...interface{}) {
 	LogInfo(service.Context, msg, keyvals...)
 }
 
-// LogError logs the error and values at odd indeces using the keys at even indeces of the keyvals slice.
+// LogError logs the error and values at odd indexes using the keys at even indexes of the keyvals slice.
 func (service *Service) LogError(msg string, keyvals ...interface{}) {
 	LogError(service.Context, msg, keyvals...)
 }
