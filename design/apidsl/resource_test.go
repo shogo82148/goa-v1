@@ -1,18 +1,18 @@
 package apidsl_test
 
 import (
-	. "github.com/shogo82148/goa-v1/design"
-	. "github.com/shogo82148/goa-v1/design/apidsl"
-	"github.com/shogo82148/goa-v1/dslengine"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/design/apidsl"
+	"github.com/shogo82148/goa-v1/dslengine"
 )
 
 var _ = Describe("Resource", func() {
 	var name string
 	var dsl func()
 
-	var res *ResourceDefinition
+	var res *design.ResourceDefinition
 
 	BeforeEach(func() {
 		dslengine.Reset()
@@ -21,7 +21,7 @@ var _ = Describe("Resource", func() {
 	})
 
 	JustBeforeEach(func() {
-		res = Resource(name, dsl)
+		res = apidsl.Resource(name, dsl)
 		dslengine.Run()
 	})
 
@@ -50,7 +50,7 @@ var _ = Describe("Resource", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Description(description)
+				apidsl.Description(description)
 			}
 		})
 
@@ -67,7 +67,7 @@ var _ = Describe("Resource", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Parent(parent)
+				apidsl.Parent(parent)
 			}
 		})
 
@@ -84,7 +84,7 @@ var _ = Describe("Resource", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Action(actionName, func() { Routing(PUT(":/id")) })
+				apidsl.Action(actionName, func() { apidsl.Routing(apidsl.PUT(":/id")) })
 			}
 		})
 
@@ -102,8 +102,8 @@ var _ = Describe("Resource", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Metadata("swagger:generate", "false")
-				Action(actionName, func() { Routing(PUT(":/id")) })
+				apidsl.Metadata("swagger:generate", "false")
+				apidsl.Action(actionName, func() { apidsl.Routing(apidsl.PUT(":/id")) })
 			}
 		})
 
@@ -120,8 +120,8 @@ var _ = Describe("Resource", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Metadata("swagger:generate", "false")
-				Files("path", "filename")
+				apidsl.Metadata("swagger:generate", "false")
+				apidsl.Files("path", "filename")
 			}
 		})
 
@@ -139,7 +139,7 @@ var _ = Describe("Resource", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				CanonicalActionName(can)
+				apidsl.CanonicalActionName(can)
 			}
 		})
 
@@ -156,8 +156,8 @@ var _ = Describe("Resource", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Action(can, func() { Routing(PUT(":/id")) })
-				CanonicalActionName(can)
+				apidsl.Action(can, func() { apidsl.Routing(apidsl.PUT(":/id")) })
+				apidsl.CanonicalActionName(can)
 			}
 		})
 
@@ -174,7 +174,7 @@ var _ = Describe("Resource", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				BasePath(basePath)
+				apidsl.BasePath(basePath)
 			}
 		})
 
@@ -191,9 +191,9 @@ var _ = Describe("Resource", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				BasePath(basePath)
-				Params(func() {
-					Param("paramID")
+				apidsl.BasePath(basePath)
+				apidsl.Params(func() {
+					apidsl.Param("paramID")
 				})
 			}
 		})
@@ -214,7 +214,7 @@ var _ = Describe("Resource", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				DefaultMedia(mediaType)
+				apidsl.DefaultMedia(mediaType)
 			}
 		})
 
@@ -231,7 +231,7 @@ var _ = Describe("Resource", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				DefaultMedia(mediaType, "compact")
+				apidsl.DefaultMedia(mediaType, "compact")
 			}
 		})
 
@@ -244,12 +244,12 @@ var _ = Describe("Resource", func() {
 	})
 
 	Context("with an invalid media type", func() {
-		var mediaType = &MediaTypeDefinition{Identifier: "application/foo"}
+		var mediaType = &design.MediaTypeDefinition{Identifier: "application/foo"}
 
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				DefaultMedia(mediaType)
+				apidsl.DefaultMedia(mediaType)
 			}
 		})
 
@@ -262,8 +262,8 @@ var _ = Describe("Resource", func() {
 		const typeName = "typeName"
 		const identifier = "application/vnd.raphael.goa.test"
 
-		var mediaType = &MediaTypeDefinition{
-			UserTypeDefinition: &UserTypeDefinition{
+		var mediaType = &design.MediaTypeDefinition{
+			UserTypeDefinition: &design.UserTypeDefinition{
 				TypeName: typeName,
 			},
 			Identifier: identifier,
@@ -272,7 +272,7 @@ var _ = Describe("Resource", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				DefaultMedia(mediaType)
+				apidsl.DefaultMedia(mediaType)
 			}
 		})
 
@@ -287,8 +287,8 @@ var _ = Describe("Resource", func() {
 		const typeName = "typeName"
 		const identifier = "application/vnd.raphael.goa.test+json"
 
-		var mediaType = &MediaTypeDefinition{
-			UserTypeDefinition: &UserTypeDefinition{
+		var mediaType = &design.MediaTypeDefinition{
+			UserTypeDefinition: &design.UserTypeDefinition{
 				TypeName: typeName,
 			},
 			Identifier: identifier,
@@ -297,7 +297,7 @@ var _ = Describe("Resource", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				DefaultMedia(mediaType)
+				apidsl.DefaultMedia(mediaType)
 			}
 		})
 
@@ -311,7 +311,7 @@ var _ = Describe("Resource", func() {
 	Context("with a trait that does not exist", func() {
 		BeforeEach(func() {
 			name = "foo"
-			dsl = func() { UseTrait("Authenticated") }
+			dsl = func() { apidsl.UseTrait("Authenticated") }
 		})
 
 		It("returns an error", func() {
@@ -325,10 +325,10 @@ var _ = Describe("Resource", func() {
 
 		BeforeEach(func() {
 			name = "foo"
-			dsl = func() { UseTrait(traitName) }
-			API("test", func() {
-				Trait(traitName, func() {
-					Description(description)
+			dsl = func() { apidsl.UseTrait(traitName) }
+			apidsl.API("test", func() {
+				apidsl.Trait(traitName, func() {
+					apidsl.Description(description)
 				})
 			})
 		})

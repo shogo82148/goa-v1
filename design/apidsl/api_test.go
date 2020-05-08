@@ -1,11 +1,11 @@
 package apidsl_test
 
 import (
-	. "github.com/shogo82148/goa-v1/design"
-	. "github.com/shogo82148/goa-v1/design/apidsl"
-	"github.com/shogo82148/goa-v1/dslengine"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/design/apidsl"
+	"github.com/shogo82148/goa-v1/dslengine"
 )
 
 var _ = Describe("API", func() {
@@ -19,7 +19,7 @@ var _ = Describe("API", func() {
 	})
 
 	JustBeforeEach(func() {
-		API(name, dsl)
+		apidsl.API(name, dsl)
 		dslengine.Run()
 	})
 
@@ -29,8 +29,8 @@ var _ = Describe("API", func() {
 		})
 
 		It("produces a valid API definition", func() {
-			Ω(Design.Validate()).ShouldNot(HaveOccurred())
-			Ω(Design.Name).Should(Equal(name))
+			Ω(design.Design.Validate()).ShouldNot(HaveOccurred())
+			Ω(design.Design.Name).Should(Equal(name))
 		})
 	})
 
@@ -40,7 +40,7 @@ var _ = Describe("API", func() {
 		})
 
 		It("produces an error", func() {
-			API(name, dsl)
+			apidsl.API(name, dsl)
 			Ω(dslengine.Errors).Should(HaveOccurred())
 		})
 	})
@@ -51,7 +51,7 @@ var _ = Describe("API", func() {
 		})
 
 		It("returns an error", func() {
-			API("news", dsl)
+			apidsl.API("news", dsl)
 			Ω(dslengine.Errors).Should(HaveOccurred())
 		})
 	})
@@ -59,7 +59,7 @@ var _ = Describe("API", func() {
 	Context("with valid DSL", func() {
 		JustBeforeEach(func() {
 			Ω(dslengine.Errors).ShouldNot(HaveOccurred())
-			Ω(Design.Validate()).ShouldNot(HaveOccurred())
+			Ω(design.Design.Validate()).ShouldNot(HaveOccurred())
 		})
 
 		Context("with a description", func() {
@@ -67,12 +67,12 @@ var _ = Describe("API", func() {
 
 			BeforeEach(func() {
 				dsl = func() {
-					Description(description)
+					apidsl.Description(description)
 				}
 			})
 
 			It("sets the API description", func() {
-				Ω(Design.Description).Should(Equal(description))
+				Ω(design.Design.Description).Should(Equal(description))
 			})
 		})
 
@@ -81,12 +81,12 @@ var _ = Describe("API", func() {
 
 			BeforeEach(func() {
 				dsl = func() {
-					Title(title)
+					apidsl.Title(title)
 				}
 			})
 
 			It("sets the API title", func() {
-				Ω(Design.Title).Should(Equal(title))
+				Ω(design.Design.Title).Should(Equal(title))
 			})
 		})
 
@@ -95,12 +95,12 @@ var _ = Describe("API", func() {
 
 			BeforeEach(func() {
 				dsl = func() {
-					Version(version)
+					apidsl.Version(version)
 				}
 			})
 
 			It("sets the API version", func() {
-				Ω(Design.Version).Should(Equal(version))
+				Ω(design.Design.Version).Should(Equal(version))
 			})
 		})
 
@@ -109,12 +109,12 @@ var _ = Describe("API", func() {
 
 			BeforeEach(func() {
 				dsl = func() {
-					TermsOfService(terms)
+					apidsl.TermsOfService(terms)
 				}
 			})
 
 			It("sets the API terms of service", func() {
-				Ω(Design.TermsOfService).Should(Equal(terms))
+				Ω(design.Design.TermsOfService).Should(Equal(terms))
 			})
 		})
 
@@ -125,16 +125,16 @@ var _ = Describe("API", func() {
 
 			BeforeEach(func() {
 				dsl = func() {
-					Contact(func() {
-						Name(contactName)
-						Email(contactEmail)
-						URL(contactURL)
+					apidsl.Contact(func() {
+						apidsl.Name(contactName)
+						apidsl.Email(contactEmail)
+						apidsl.URL(contactURL)
 					})
 				}
 			})
 
 			It("sets the contact information", func() {
-				Ω(Design.Contact).Should(Equal(&ContactDefinition{
+				Ω(design.Design.Contact).Should(Equal(&design.ContactDefinition{
 					Name:  contactName,
 					Email: contactEmail,
 					URL:   contactURL,
@@ -148,15 +148,15 @@ var _ = Describe("API", func() {
 
 			BeforeEach(func() {
 				dsl = func() {
-					License(func() {
-						Name(licenseName)
-						URL(licenseURL)
+					apidsl.License(func() {
+						apidsl.Name(licenseName)
+						apidsl.URL(licenseURL)
 					})
 				}
 			})
 
 			It("sets the API license information", func() {
-				Ω(Design.License).Should(Equal(&LicenseDefinition{
+				Ω(design.Design.License).Should(Equal(&design.LicenseDefinition{
 					Name: licenseName,
 					URL:  licenseURL,
 				}))
@@ -168,14 +168,14 @@ var _ = Describe("API", func() {
 
 			BeforeEach(func() {
 				dsl = func() {
-					Consumes("application/json")
+					apidsl.Consumes("application/json")
 				}
 			})
 
 			It("sets the API consumes", func() {
-				Ω(Design.Consumes).Should(HaveLen(1))
-				Ω(Design.Consumes[0].MIMETypes).Should(Equal([]string{consumesMT}))
-				Ω(Design.Consumes[0].PackagePath).Should(BeEmpty())
+				Ω(design.Design.Consumes).Should(HaveLen(1))
+				Ω(design.Design.Consumes[0].MIMETypes).Should(Equal([]string{consumesMT}))
+				Ω(design.Design.Consumes[0].PackagePath).Should(BeEmpty())
 			})
 
 			Context("using a custom encoding package", func() {
@@ -184,18 +184,18 @@ var _ = Describe("API", func() {
 
 				BeforeEach(func() {
 					dsl = func() {
-						Consumes("application/json", func() {
-							Package(pkgPath)
-							Function(fn)
+						apidsl.Consumes("application/json", func() {
+							apidsl.Package(pkgPath)
+							apidsl.Function(fn)
 						})
 					}
 				})
 
 				It("sets the API consumes", func() {
-					Ω(Design.Consumes).Should(HaveLen(1))
-					Ω(Design.Consumes[0].MIMETypes).Should(Equal([]string{consumesMT}))
-					Ω(Design.Consumes[0].PackagePath).Should(Equal(pkgPath))
-					Ω(Design.Consumes[0].Function).Should(Equal(fn))
+					Ω(design.Design.Consumes).Should(HaveLen(1))
+					Ω(design.Design.Consumes[0].MIMETypes).Should(Equal([]string{consumesMT}))
+					Ω(design.Design.Consumes[0].PackagePath).Should(Equal(pkgPath))
+					Ω(design.Design.Consumes[0].Function).Should(Equal(fn))
 				})
 			})
 		})
@@ -205,35 +205,35 @@ var _ = Describe("API", func() {
 
 			BeforeEach(func() {
 				dsl = func() {
-					BasePath(basePath)
+					apidsl.BasePath(basePath)
 				}
 			})
 
 			It("sets the API base path", func() {
-				Ω(Design.BasePath).Should(Equal(basePath))
+				Ω(design.Design.BasePath).Should(Equal(basePath))
 			})
 		})
 
 		Context("with Params", func() {
 			const param1Name = "accountID"
-			const param1Type = Integer
+			const param1Type = design.Integer
 			const param1Desc = "the account ID"
 			const param2Name = "id"
-			const param2Type = String
+			const param2Type = design.String
 			const param2Desc = "the widget ID"
 
 			BeforeEach(func() {
 				dsl = func() {
-					Params(func() {
-						Param(param1Name, param1Type, param1Desc)
-						Param(param2Name, param2Type, param2Desc)
+					apidsl.Params(func() {
+						apidsl.Param(param1Name, param1Type, param1Desc)
+						apidsl.Param(param2Name, param2Type, param2Desc)
 					})
 				}
 			})
 
 			It("sets the API base parameters", func() {
-				Ω(Design.Params.Type).Should(BeAssignableToTypeOf(Object{}))
-				params := Design.Params.Type.ToObject()
+				Ω(design.Design.Params.Type).Should(BeAssignableToTypeOf(design.Object{}))
+				params := design.Design.Params.Type.ToObject()
 				Ω(params).Should(HaveLen(2))
 				Ω(params).Should(HaveKey(param1Name))
 				Ω(params).Should(HaveKey(param2Name))
@@ -249,14 +249,14 @@ var _ = Describe("API", func() {
 				BeforeEach(func() {
 					prevDSL := dsl
 					dsl = func() {
-						BasePath(basePath)
+						apidsl.BasePath(basePath)
 						prevDSL()
 					}
 				})
 
 				It("sets both the base path and parameters", func() {
-					Ω(Design.Params.Type).Should(BeAssignableToTypeOf(Object{}))
-					params := Design.Params.Type.ToObject()
+					Ω(design.Design.Params.Type).Should(BeAssignableToTypeOf(design.Object{}))
+					params := design.Design.Params.Type.ToObject()
 					Ω(params).Should(HaveLen(2))
 					Ω(params).Should(HaveKey(param1Name))
 					Ω(params).Should(HaveKey(param2Name))
@@ -264,13 +264,13 @@ var _ = Describe("API", func() {
 					Ω(params[param2Name].Type).Should(Equal(param2Type))
 					Ω(params[param1Name].Description).Should(Equal(param1Desc))
 					Ω(params[param2Name].Description).Should(Equal(param2Desc))
-					Ω(Design.BasePath).Should(Equal(basePath))
+					Ω(design.Design.BasePath).Should(Equal(basePath))
 				})
 
 				Context("with conflicting resource and API base params", func() {
 					JustBeforeEach(func() {
-						Resource("foo", func() {
-							BasePath("/:accountID")
+						apidsl.Resource("foo", func() {
+							apidsl.BasePath("/:accountID")
 						})
 						dslengine.Run()
 					})
@@ -282,11 +282,11 @@ var _ = Describe("API", func() {
 
 				Context("with an absolute resource base path", func() {
 					JustBeforeEach(func() {
-						Resource("foo", func() {
-							Params(func() {
-								Param(param1Name, param1Type, param1Desc)
+						apidsl.Resource("foo", func() {
+							apidsl.Params(func() {
+								apidsl.Param(param1Name, param1Type, param1Desc)
 							})
-							BasePath("//:accountID")
+							apidsl.BasePath("//:accountID")
 						})
 						dslengine.Run()
 					})
@@ -309,34 +309,34 @@ var _ = Describe("API", func() {
 
 			BeforeEach(func() {
 				dsl = func() {
-					ResponseTemplate(respName, func() {
-						Description(respDesc)
-						Status(respStatus)
-						Media(respMediaType)
+					apidsl.ResponseTemplate(respName, func() {
+						apidsl.Description(respDesc)
+						apidsl.Status(respStatus)
+						apidsl.Media(respMediaType)
 					})
-					ResponseTemplate(respTName, func(mt string) {
-						Description(respTDesc)
-						Status(respTStatus)
-						Media(mt)
+					apidsl.ResponseTemplate(respTName, func(mt string) {
+						apidsl.Description(respTDesc)
+						apidsl.Status(respTStatus)
+						apidsl.Media(mt)
 					})
 				}
 			})
 
 			It("sets the API responses and response templates", func() {
-				Ω(Design.Responses).Should(HaveKey(respName))
-				Ω(Design.Responses[respName]).ShouldNot(BeNil())
-				expected := ResponseDefinition{
+				Ω(design.Design.Responses).Should(HaveKey(respName))
+				Ω(design.Design.Responses[respName]).ShouldNot(BeNil())
+				expected := design.ResponseDefinition{
 					Name:        respName,
 					Description: respDesc,
 					Status:      respStatus,
 					MediaType:   respMediaType,
 				}
-				actual := *Design.Responses[respName]
+				actual := *design.Design.Responses[respName]
 				Ω(actual).Should(Equal(expected))
 
-				Ω(Design.ResponseTemplates).Should(HaveLen(1))
-				Ω(Design.ResponseTemplates).Should(HaveKey(respTName))
-				Ω(Design.ResponseTemplates[respTName]).ShouldNot(BeNil())
+				Ω(design.Design.ResponseTemplates).Should(HaveLen(1))
+				Ω(design.Design.ResponseTemplates).Should(HaveKey(respTName))
+				Ω(design.Design.ResponseTemplates[respTName]).ShouldNot(BeNil())
 			})
 		})
 
@@ -345,18 +345,18 @@ var _ = Describe("API", func() {
 
 			BeforeEach(func() {
 				dsl = func() {
-					Trait(traitName, func() {
-						Headers(func() {
-							Header("Auth-Token")
-							Required("Auth-Token")
+					apidsl.Trait(traitName, func() {
+						apidsl.Headers(func() {
+							apidsl.Header("Auth-Token")
+							apidsl.Required("Auth-Token")
 						})
 					})
 				}
 			})
 
 			It("sets the API traits", func() {
-				Ω(Design.Traits).Should(HaveLen(1))
-				Ω(Design.Traits).Should(HaveKey(traitName))
+				Ω(design.Design.Traits).Should(HaveLen(1))
+				Ω(design.Design.Traits).Should(HaveKey(traitName))
 			})
 		})
 
@@ -365,34 +365,34 @@ var _ = Describe("API", func() {
 
 			BeforeEach(func() {
 				dsl = func() {
-					Trait(traitName, func() {
-						Attributes(func() {
-							Attribute("foo")
+					apidsl.Trait(traitName, func() {
+						apidsl.Attributes(func() {
+							apidsl.Attribute("foo")
 						})
 					})
 				}
 			})
 
 			JustBeforeEach(func() {
-				API(name, dsl)
-				MediaType("application/vnd.foo", func() {
-					UseTrait(traitName)
-					Attributes(func() {
-						Attribute("bar")
+				apidsl.API(name, dsl)
+				apidsl.MediaType("application/vnd.foo", func() {
+					apidsl.UseTrait(traitName)
+					apidsl.Attributes(func() {
+						apidsl.Attribute("bar")
 					})
-					View("default", func() {
-						Attribute("bar")
-						Attribute("foo")
+					apidsl.View("default", func() {
+						apidsl.Attribute("bar")
+						apidsl.Attribute("foo")
 					})
 				})
 				dslengine.Run()
 			})
 
 			It("sets the API traits", func() {
-				Ω(Design.Traits).Should(HaveLen(1))
-				Ω(Design.Traits).Should(HaveKey(traitName))
-				Ω(Design.MediaTypes).Should(HaveKey("application/vnd.foo"))
-				foo := Design.MediaTypes["application/vnd.foo"]
+				Ω(design.Design.Traits).Should(HaveLen(1))
+				Ω(design.Design.Traits).Should(HaveKey(traitName))
+				Ω(design.Design.MediaTypes).Should(HaveKey("application/vnd.foo"))
+				foo := design.Design.MediaTypes["application/vnd.foo"]
 				Ω(foo.Type.ToObject()).ShouldNot(BeNil())
 				o := foo.Type.ToObject()
 				Ω(o).Should(HaveKey("foo"))
@@ -406,41 +406,41 @@ var _ = Describe("API", func() {
 
 			BeforeEach(func() {
 				dsl = func() {
-					Trait(traitName1, func() {
-						Attributes(func() {
-							Attribute("foo")
+					apidsl.Trait(traitName1, func() {
+						apidsl.Attributes(func() {
+							apidsl.Attribute("foo")
 						})
 					})
-					Trait(traitName2, func() {
-						Attributes(func() {
-							Attribute("baz")
+					apidsl.Trait(traitName2, func() {
+						apidsl.Attributes(func() {
+							apidsl.Attribute("baz")
 						})
 					})
 				}
 			})
 
 			JustBeforeEach(func() {
-				API(name, dsl)
-				MediaType("application/vnd.foo", func() {
-					UseTrait(traitName1, traitName2)
-					Attributes(func() {
-						Attribute("bar")
+				apidsl.API(name, dsl)
+				apidsl.MediaType("application/vnd.foo", func() {
+					apidsl.UseTrait(traitName1, traitName2)
+					apidsl.Attributes(func() {
+						apidsl.Attribute("bar")
 					})
-					View("default", func() {
-						Attribute("bar")
-						Attribute("foo")
-						Attribute("baz")
+					apidsl.View("default", func() {
+						apidsl.Attribute("bar")
+						apidsl.Attribute("foo")
+						apidsl.Attribute("baz")
 					})
 				})
 				dslengine.Run()
 			})
 
 			It("sets the API traits", func() {
-				Ω(Design.Traits).Should(HaveLen(2))
-				Ω(Design.Traits).Should(HaveKey(traitName1))
-				Ω(Design.Traits).Should(HaveKey(traitName2))
-				Ω(Design.MediaTypes).Should(HaveKey("application/vnd.foo"))
-				foo := Design.MediaTypes["application/vnd.foo"]
+				Ω(design.Design.Traits).Should(HaveLen(2))
+				Ω(design.Design.Traits).Should(HaveKey(traitName1))
+				Ω(design.Design.Traits).Should(HaveKey(traitName2))
+				Ω(design.Design.MediaTypes).Should(HaveKey("application/vnd.foo"))
+				foo := design.Design.MediaTypes["application/vnd.foo"]
 				Ω(foo.Type.ToObject()).ShouldNot(BeNil())
 				o := foo.Type.ToObject()
 				Ω(o).Should(HaveKey("foo"))

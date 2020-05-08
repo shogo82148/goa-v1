@@ -1,14 +1,13 @@
 package goa_test
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
-	"context"
-
-	"github.com/shogo82148/goa-v1"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1"
 )
 
 var _ = Describe("NewMiddleware", func() {

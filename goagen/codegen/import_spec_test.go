@@ -1,31 +1,31 @@
 package codegen_test
 
 import (
-	. "github.com/shogo82148/goa-v1/design"
-	"github.com/shogo82148/goa-v1/dslengine"
-	"github.com/shogo82148/goa-v1/goagen/codegen"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/dslengine"
+	"github.com/shogo82148/goa-v1/goagen/codegen"
 )
 
 var _ = Describe("AttributeImports", func() {
 	Context("given an attribute definition with fields", func() {
-		var att *AttributeDefinition
+		var att *design.AttributeDefinition
 		var st string
-		var object Object
+		var object design.Object
 
 		Context("of object", func() {
 
 			It("produces the import slice", func() {
 				var imports []*codegen.ImportSpec
-				object = Object{
-					"foo": &AttributeDefinition{Type: String},
-					"bar": &AttributeDefinition{Type: Integer},
+				object = design.Object{
+					"foo": &design.AttributeDefinition{Type: design.String},
+					"bar": &design.AttributeDefinition{Type: design.Integer},
 				}
 				object["foo"].Metadata = dslengine.MetadataDefinition{
 					"struct:field:type": []string{"json.RawMessage", "encoding/json"},
 				}
-				att = new(AttributeDefinition)
+				att = new(design.AttributeDefinition)
 				att.Type = object
 				imports = codegen.AttributeImports(att, imports, nil)
 
@@ -43,23 +43,23 @@ var _ = Describe("AttributeImports", func() {
 
 			It("produces the import slice", func() {
 				var imports []*codegen.ImportSpec
-				o := Object{
-					"foo": &AttributeDefinition{Type: String},
+				o := design.Object{
+					"foo": &design.AttributeDefinition{Type: design.String},
 				}
 				o["foo"].Metadata = dslengine.MetadataDefinition{
 					"struct:field:type": []string{"json.RawMessage", "encoding/json"},
 				}
-				child := &AttributeDefinition{Type: o}
+				child := &design.AttributeDefinition{Type: o}
 
-				po := Object{"child": child}
+				po := design.Object{"child": child}
 				po["child"].Metadata = dslengine.MetadataDefinition{
 					"struct:field:type": []string{"json.RawMessage", "encoding/json"},
 				}
-				parent := &AttributeDefinition{Type: po}
+				parent := &design.AttributeDefinition{Type: po}
 
 				o["parent"] = parent
 
-				att = new(AttributeDefinition)
+				att = new(design.AttributeDefinition)
 				att.Type = po
 				imports = codegen.AttributeImports(att, imports, nil)
 
@@ -79,17 +79,17 @@ var _ = Describe("AttributeImports", func() {
 
 			It("produces the import slice", func() {
 				var imports []*codegen.ImportSpec
-				elemType := &AttributeDefinition{Type: Integer}
+				elemType := &design.AttributeDefinition{Type: design.Integer}
 				elemType.Metadata = dslengine.MetadataDefinition{
 					"struct:field:type": []string{"json.RawMessage", "encoding/json"},
 				}
-				keyType := &AttributeDefinition{Type: Integer}
+				keyType := &design.AttributeDefinition{Type: design.Integer}
 				elemType.Metadata = dslengine.MetadataDefinition{
 					"struct:field:type": []string{"json.RawMessage", "encoding/json"},
 				}
-				hash := &Hash{KeyType: keyType, ElemType: elemType}
+				hash := &design.Hash{KeyType: keyType, ElemType: elemType}
 
-				att = new(AttributeDefinition)
+				att = new(design.AttributeDefinition)
 				att.Type = hash
 				imports = codegen.AttributeImports(att, imports, nil)
 
@@ -108,13 +108,13 @@ var _ = Describe("AttributeImports", func() {
 		Context("of array", func() {
 			It("produces the import slice", func() {
 				var imports []*codegen.ImportSpec
-				elemType := &AttributeDefinition{Type: Integer}
+				elemType := &design.AttributeDefinition{Type: design.Integer}
 				elemType.Metadata = dslengine.MetadataDefinition{
 					"struct:field:type": []string{"json.RawMessage", "encoding/json"},
 				}
-				array := &Array{ElemType: elemType}
+				array := &design.Array{ElemType: elemType}
 
-				att = new(AttributeDefinition)
+				att = new(design.AttributeDefinition)
 				att.Type = array
 				imports = codegen.AttributeImports(att, imports, nil)
 
@@ -132,15 +132,15 @@ var _ = Describe("AttributeImports", func() {
 
 			It("produces the import slice", func() {
 				var imports []*codegen.ImportSpec
-				object = Object{
-					"bar": &AttributeDefinition{Type: String},
+				object = design.Object{
+					"bar": &design.AttributeDefinition{Type: design.String},
 				}
 				object["bar"].Metadata = dslengine.MetadataDefinition{
 					"struct:field:type": []string{"json.RawMessage", "encoding/json"},
 				}
 
-				u := &UserTypeDefinition{
-					AttributeDefinition: &AttributeDefinition{Type: object},
+				u := &design.UserTypeDefinition{
+					AttributeDefinition: &design.AttributeDefinition{Type: object},
 				}
 
 				att = u.AttributeDefinition
@@ -159,15 +159,15 @@ var _ = Describe("AttributeImports", func() {
 		Context("of MediaTypeDefinition", func() {
 			It("produces the import slice", func() {
 				var imports []*codegen.ImportSpec
-				elemType := &AttributeDefinition{Type: Integer}
+				elemType := &design.AttributeDefinition{Type: design.Integer}
 				elemType.Metadata = dslengine.MetadataDefinition{
 					"struct:field:type": []string{"json.RawMessage", "encoding/json"},
 				}
-				array := &Array{ElemType: elemType}
-				u := &UserTypeDefinition{
-					AttributeDefinition: &AttributeDefinition{Type: array},
+				array := &design.Array{ElemType: elemType}
+				u := &design.UserTypeDefinition{
+					AttributeDefinition: &design.AttributeDefinition{Type: array},
 				}
-				m := &MediaTypeDefinition{
+				m := &design.MediaTypeDefinition{
 					UserTypeDefinition: u,
 				}
 

@@ -3,17 +3,17 @@ package apidsl_test
 import (
 	"strconv"
 
-	. "github.com/shogo82148/goa-v1/design"
-	. "github.com/shogo82148/goa-v1/design/apidsl"
-	"github.com/shogo82148/goa-v1/dslengine"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/design/apidsl"
+	"github.com/shogo82148/goa-v1/dslengine"
 )
 
 var _ = Describe("Action", func() {
 	var name string
 	var dsl func()
-	var action *ActionDefinition
+	var action *design.ActionDefinition
 
 	BeforeEach(func() {
 		dslengine.Reset()
@@ -22,11 +22,11 @@ var _ = Describe("Action", func() {
 	})
 
 	JustBeforeEach(func() {
-		Resource("res", func() {
-			Action(name, dsl)
+		apidsl.Resource("res", func() {
+			apidsl.Action(name, dsl)
 		})
 		dslengine.Run()
-		if r, ok := Design.Resources["res"]; ok {
+		if r, ok := design.Design.Resources["res"]; ok {
 			action = r.Actions[name]
 		}
 	})
@@ -42,11 +42,11 @@ var _ = Describe("Action", func() {
 	})
 
 	Context("with a name and DSL defining a route", func() {
-		var route = GET("/:id")
+		var route = apidsl.GET("/:id")
 
 		BeforeEach(func() {
 			name = "foo"
-			dsl = func() { Routing(route) }
+			dsl = func() { apidsl.Routing(route) }
 		})
 
 		It("produces a valid action definition with the route and default status of 200 set", func() {
@@ -62,7 +62,7 @@ var _ = Describe("Action", func() {
 		Context("with an empty params DSL", func() {
 			BeforeEach(func() {
 				olddsl := dsl
-				dsl = func() { olddsl(); Params(func() {}) }
+				dsl = func() { olddsl(); apidsl.Params(func() {}) }
 				name = "foo"
 			})
 
@@ -73,8 +73,8 @@ var _ = Describe("Action", func() {
 
 		Context("with a metadata", func() {
 			BeforeEach(func() {
-				metadatadsl := func() { Metadata("swagger:extension:x-get", `{"foo":"bar"}`) }
-				route = GET("/:id", metadatadsl)
+				metadatadsl := func() { apidsl.Metadata("swagger:extension:x-get", `{"foo":"bar"}`) }
+				route = apidsl.GET("/:id", metadatadsl)
 				name = "foo"
 			})
 
@@ -98,8 +98,8 @@ var _ = Describe("Action", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Routing(GET("/:id"))
-				Payload(String)
+				apidsl.Routing(apidsl.GET("/:id"))
+				apidsl.Payload(design.String)
 			}
 		})
 
@@ -108,7 +108,7 @@ var _ = Describe("Action", func() {
 			Ω(action).ShouldNot(BeNil())
 			Ω(action.Validate()).ShouldNot(HaveOccurred())
 			Ω(action.Payload).ShouldNot(BeNil())
-			Ω(action.Payload.Type).Should(Equal(String))
+			Ω(action.Payload.Type).Should(Equal(design.String))
 		})
 	})
 
@@ -118,16 +118,16 @@ var _ = Describe("Action", func() {
 		const headerName = "Foo"
 
 		BeforeEach(func() {
-			Type(typeName, func() {
-				Attribute("name")
+			apidsl.Type(typeName, func() {
+				apidsl.Attribute("name")
 			})
 			name = "foo"
 			dsl = func() {
-				Description(description)
-				Routing(GET("/:id"))
-				Headers(func() { Header(headerName) })
-				Payload(typeName)
-				Response(NoContent)
+				apidsl.Description(description)
+				apidsl.Routing(apidsl.GET("/:id"))
+				apidsl.Headers(func() { apidsl.Header(headerName) })
+				apidsl.Payload(typeName)
+				apidsl.Response(design.NoContent)
 			}
 		})
 
@@ -142,9 +142,9 @@ var _ = Describe("Action", func() {
 			Ω(action.Responses).Should(HaveLen(1))
 			Ω(action.Responses).Should(HaveKey("NoContent"))
 			Ω(action.Headers).ShouldNot(BeNil())
-			Ω(action.Headers.Type).Should(BeAssignableToTypeOf(Object{}))
-			Ω(action.Headers.Type.(Object)).Should(HaveLen(1))
-			Ω(action.Headers.Type.(Object)).Should(HaveKey(headerName))
+			Ω(action.Headers.Type).Should(BeAssignableToTypeOf(design.Object{}))
+			Ω(action.Headers.Type.(design.Object)).Should(HaveLen(1))
+			Ω(action.Headers.Type.(design.Object)).Should(HaveKey(headerName))
 		})
 	})
 
@@ -154,19 +154,19 @@ var _ = Describe("Action", func() {
 		const headerName2 = "Foo2"
 
 		BeforeEach(func() {
-			Type(typeName, func() {
-				Attribute("name")
+			apidsl.Type(typeName, func() {
+				apidsl.Attribute("name")
 			})
 			name = "foo"
 			dsl = func() {
-				Routing(GET("/:id"))
-				Headers(func() {
-					Header(headerName)
-					Required(headerName)
+				apidsl.Routing(apidsl.GET("/:id"))
+				apidsl.Headers(func() {
+					apidsl.Header(headerName)
+					apidsl.Required(headerName)
 				})
-				Headers(func() {
-					Header(headerName2)
-					Required(headerName2)
+				apidsl.Headers(func() {
+					apidsl.Header(headerName2)
+					apidsl.Required(headerName2)
 				})
 			}
 		})
@@ -177,11 +177,11 @@ var _ = Describe("Action", func() {
 			Ω(action.Validate()).ShouldNot(HaveOccurred())
 			Ω(action.Name).Should(Equal(name))
 			Ω(action.Headers).ShouldNot(BeNil())
-			Ω(action.Headers.Type.(Object)).Should(HaveKey(headerName))
-			Ω(action.Headers.Type).Should(BeAssignableToTypeOf(Object{}))
-			Ω(action.Headers.Type.(Object)).Should(HaveLen(2))
-			Ω(action.Headers.Type.(Object)).Should(HaveKey(headerName))
-			Ω(action.Headers.Type.(Object)).Should(HaveKey(headerName2))
+			Ω(action.Headers.Type.(design.Object)).Should(HaveKey(headerName))
+			Ω(action.Headers.Type).Should(BeAssignableToTypeOf(design.Object{}))
+			Ω(action.Headers.Type.(design.Object)).Should(HaveLen(2))
+			Ω(action.Headers.Type.(design.Object)).Should(HaveKey(headerName))
+			Ω(action.Headers.Type.(design.Object)).Should(HaveKey(headerName2))
 			Ω(action.Headers.Validation).ShouldNot(BeNil())
 			Ω(action.Headers.Validation.Required).Should(Equal([]string{headerName, headerName2}))
 		})
@@ -191,14 +191,14 @@ var _ = Describe("Action", func() {
 		const mtID = "application/vnd.app.foo+json"
 
 		BeforeEach(func() {
-			MediaType(mtID, func() {
-				Attributes(func() { Attribute("foo") })
-				View("default", func() { Attribute("foo") })
+			apidsl.MediaType(mtID, func() {
+				apidsl.Attributes(func() { apidsl.Attribute("foo") })
+				apidsl.View("default", func() { apidsl.Attribute("foo") })
 			})
 			name = "foo"
 			dsl = func() {
-				Routing(GET("/:id"))
-				Response(OK, mtID)
+				apidsl.Routing(apidsl.GET("/:id"))
+				apidsl.Response(design.OK, mtID)
 			}
 		})
 
@@ -222,14 +222,14 @@ var _ = Describe("Action", func() {
 
 		BeforeEach(func() {
 			name = "foo"
-			API("test", func() {
-				ResponseTemplate(tmplName, func(status, name string) {
+			apidsl.API("test", func() {
+				apidsl.ResponseTemplate(tmplName, func(status, name string) {
 					st, err := strconv.Atoi(status)
 					if err != nil {
 						dslengine.ReportError(err.Error())
 						return
 					}
-					Status(st)
+					apidsl.Status(st)
 				})
 			})
 		})
@@ -237,9 +237,9 @@ var _ = Describe("Action", func() {
 		Context("called correctly", func() {
 			BeforeEach(func() {
 				dsl = func() {
-					Routing(GET("/:id"))
-					Response(tmplName, strconv.Itoa(respStatus), respName, func() {
-						Media(respMediaType)
+					apidsl.Routing(apidsl.GET("/:id"))
+					apidsl.Response(tmplName, strconv.Itoa(respStatus), respName, func() {
+						apidsl.Media(respMediaType)
 					})
 				}
 			})
@@ -260,9 +260,9 @@ var _ = Describe("Action", func() {
 		Context("called incorrectly", func() {
 			BeforeEach(func() {
 				dsl = func() {
-					Routing(GET("/id"))
-					Response(tmplName, "not an integer", respName, func() {
-						Media(respMediaType)
+					apidsl.Routing(apidsl.GET("/id"))
+					apidsl.Response(tmplName, "not an integer", respName, func() {
+						apidsl.Media(respMediaType)
 					})
 				}
 			})
@@ -279,12 +279,12 @@ var _ = Describe("Payload", func() {
 		BeforeEach(func() {
 			dslengine.Reset()
 
-			Resource("foo", func() {
-				Action("bar", func() {
-					Routing(GET(""))
-					Payload(func() {
-						Member("name")
-						Required("name")
+			apidsl.Resource("foo", func() {
+				apidsl.Action("bar", func() {
+					apidsl.Routing(apidsl.GET(""))
+					apidsl.Payload(func() {
+						apidsl.Member("name")
+						apidsl.Required("name")
 					})
 				})
 			})
@@ -296,10 +296,10 @@ var _ = Describe("Payload", func() {
 
 		It("generates the payload type", func() {
 			Ω(dslengine.Errors).ShouldNot(HaveOccurred())
-			Ω(Design).ShouldNot(BeNil())
-			Ω(Design.Resources).Should(HaveKey("foo"))
-			Ω(Design.Resources["foo"].Actions).Should(HaveKey("bar"))
-			Ω(Design.Resources["foo"].Actions["bar"].Payload).ShouldNot(BeNil())
+			Ω(design.Design).ShouldNot(BeNil())
+			Ω(design.Design.Resources).Should(HaveKey("foo"))
+			Ω(design.Design.Resources["foo"].Actions).Should(HaveKey("bar"))
+			Ω(design.Design.Resources["foo"].Actions["bar"].Payload).ShouldNot(BeNil())
 		})
 	})
 
@@ -307,10 +307,10 @@ var _ = Describe("Payload", func() {
 		BeforeEach(func() {
 			dslengine.Reset()
 
-			Resource("foo", func() {
-				Action("bar", func() {
-					Routing(GET(""))
-					Payload(ArrayOf(Integer))
+			apidsl.Resource("foo", func() {
+				apidsl.Action("bar", func() {
+					apidsl.Routing(apidsl.GET(""))
+					apidsl.Payload(apidsl.ArrayOf(design.Integer))
 				})
 			})
 		})
@@ -321,14 +321,14 @@ var _ = Describe("Payload", func() {
 
 		It("sets the payload type", func() {
 			Ω(dslengine.Errors).ShouldNot(HaveOccurred())
-			Ω(Design).ShouldNot(BeNil())
-			Ω(Design.Resources).Should(HaveKey("foo"))
-			Ω(Design.Resources["foo"].Actions).Should(HaveKey("bar"))
-			Ω(Design.Resources["foo"].Actions["bar"].Payload).ShouldNot(BeNil())
-			Ω(Design.Resources["foo"].Actions["bar"].Payload.Type).ShouldNot(BeNil())
-			Ω(Design.Resources["foo"].Actions["bar"].Payload.Type.IsArray()).Should(BeTrue())
-			Ω(Design.Resources["foo"].Actions["bar"].Payload.Type.ToArray().ElemType).ShouldNot(BeNil())
-			Ω(Design.Resources["foo"].Actions["bar"].Payload.Type.ToArray().ElemType.Type).Should(Equal(Integer))
+			Ω(design.Design).ShouldNot(BeNil())
+			Ω(design.Design.Resources).Should(HaveKey("foo"))
+			Ω(design.Design.Resources["foo"].Actions).Should(HaveKey("bar"))
+			Ω(design.Design.Resources["foo"].Actions["bar"].Payload).ShouldNot(BeNil())
+			Ω(design.Design.Resources["foo"].Actions["bar"].Payload.Type).ShouldNot(BeNil())
+			Ω(design.Design.Resources["foo"].Actions["bar"].Payload.Type.IsArray()).Should(BeTrue())
+			Ω(design.Design.Resources["foo"].Actions["bar"].Payload.Type.ToArray().ElemType).ShouldNot(BeNil())
+			Ω(design.Design.Resources["foo"].Actions["bar"].Payload.Type.ToArray().ElemType.Type).Should(Equal(design.Integer))
 		})
 	})
 
@@ -336,10 +336,10 @@ var _ = Describe("Payload", func() {
 		BeforeEach(func() {
 			dslengine.Reset()
 
-			Resource("foo", func() {
-				Action("bar", func() {
-					Routing(GET(""))
-					Payload(HashOf(String, Integer))
+			apidsl.Resource("foo", func() {
+				apidsl.Action("bar", func() {
+					apidsl.Routing(apidsl.GET(""))
+					apidsl.Payload(apidsl.HashOf(design.String, design.Integer))
 				})
 			})
 		})
@@ -350,16 +350,16 @@ var _ = Describe("Payload", func() {
 
 		It("sets the payload type", func() {
 			Ω(dslengine.Errors).ShouldNot(HaveOccurred())
-			Ω(Design).ShouldNot(BeNil())
-			Ω(Design.Resources).Should(HaveKey("foo"))
-			Ω(Design.Resources["foo"].Actions).Should(HaveKey("bar"))
-			Ω(Design.Resources["foo"].Actions["bar"].Payload).ShouldNot(BeNil())
-			Ω(Design.Resources["foo"].Actions["bar"].Payload.Type).ShouldNot(BeNil())
-			Ω(Design.Resources["foo"].Actions["bar"].Payload.Type.IsHash()).Should(BeTrue())
-			Ω(Design.Resources["foo"].Actions["bar"].Payload.Type.ToHash().ElemType).ShouldNot(BeNil())
-			Ω(Design.Resources["foo"].Actions["bar"].Payload.Type.ToHash().KeyType).ShouldNot(BeNil())
-			Ω(Design.Resources["foo"].Actions["bar"].Payload.Type.ToHash().ElemType.Type).Should(Equal(Integer))
-			Ω(Design.Resources["foo"].Actions["bar"].Payload.Type.ToHash().KeyType.Type).Should(Equal(String))
+			Ω(design.Design).ShouldNot(BeNil())
+			Ω(design.Design.Resources).Should(HaveKey("foo"))
+			Ω(design.Design.Resources["foo"].Actions).Should(HaveKey("bar"))
+			Ω(design.Design.Resources["foo"].Actions["bar"].Payload).ShouldNot(BeNil())
+			Ω(design.Design.Resources["foo"].Actions["bar"].Payload.Type).ShouldNot(BeNil())
+			Ω(design.Design.Resources["foo"].Actions["bar"].Payload.Type.IsHash()).Should(BeTrue())
+			Ω(design.Design.Resources["foo"].Actions["bar"].Payload.Type.ToHash().ElemType).ShouldNot(BeNil())
+			Ω(design.Design.Resources["foo"].Actions["bar"].Payload.Type.ToHash().KeyType).ShouldNot(BeNil())
+			Ω(design.Design.Resources["foo"].Actions["bar"].Payload.Type.ToHash().ElemType.Type).Should(Equal(design.Integer))
+			Ω(design.Design.Resources["foo"].Actions["bar"].Payload.Type.ToHash().KeyType.Type).Should(Equal(design.String))
 		})
 	})
 
