@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"context"
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
@@ -12,14 +13,12 @@ import (
 	"time"
 
 	"github.com/shogo82148/goa-v1"
-
-	"context"
 )
 
 // LogRequest creates a request logger middleware.
 // This middleware is aware of the RequestID middleware and if registered after it leverages the
 // request ID for logging.
-// If verbose is true then the middlware logs the request and response bodies.
+// If verbose is true then the middleware logs the request and response bodies.
 func LogRequest(verbose bool, sensitiveHeaders ...string) goa.Middleware {
 	var suppressed map[string]struct{}
 	if len(sensitiveHeaders) > 0 {

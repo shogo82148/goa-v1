@@ -2,20 +2,18 @@ package middleware_test
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
 	"regexp"
 	"strings"
 
-	pErrors "github.com/pkg/errors"
-
-	"context"
-
-	"github.com/shogo82148/goa-v1"
-	"github.com/shogo82148/goa-v1/middleware"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	pErrors "github.com/pkg/errors"
+	"github.com/shogo82148/goa-v1"
+	"github.com/shogo82148/goa-v1/middleware"
 )
 
 // errorResponse contains the details of a error response. It implements ServiceError.
@@ -185,7 +183,7 @@ var _ = Describe("ErrorHandler", func() {
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(decoded.Error()).Should(Equal(cause.Error()))
 		})
-		It("logs pkg errors stacktaces", func() {
+		It("logs pkg errors stacktrace", func() {
 			var decoded errorResponse
 			err := service.Decoder.Decode(&decoded, bytes.NewBuffer(rw.Body), "application/json")
 			Ω(err).ShouldNot(HaveOccurred())
