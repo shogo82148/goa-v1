@@ -1,27 +1,27 @@
 package apidsl_test
 
 import (
-	. "github.com/shogo82148/goa-v1/design"
-	. "github.com/shogo82148/goa-v1/design/apidsl"
-	"github.com/shogo82148/goa-v1/dslengine"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/design/apidsl"
+	"github.com/shogo82148/goa-v1/dslengine"
 )
 
 // TestCD is a test container definition.
 type TestCD struct {
-	*AttributeDefinition
+	*design.AttributeDefinition
 }
 
 // Attribute returns a dummy attribute.
-func (t *TestCD) Attribute() *AttributeDefinition {
+func (t *TestCD) Attribute() *design.AttributeDefinition {
 	return t.AttributeDefinition
 }
 
 // DSL implements Source
 func (t *TestCD) DSL() func() {
 	return func() {
-		Attribute("foo")
+		apidsl.Attribute("foo")
 	}
 }
 
@@ -49,11 +49,11 @@ func (t *TestCD) IterateSets(it dslengine.SetIterator) {
 func (t *TestCD) Reset() {}
 
 var _ = Describe("ContainerDefinition", func() {
-	var att *AttributeDefinition
+	var att *design.AttributeDefinition
 	var testCD *TestCD
 	BeforeEach(func() {
 		dslengine.Reset()
-		att = &AttributeDefinition{Type: Object{}}
+		att = &design.AttributeDefinition{Type: design.Object{}}
 		testCD = &TestCD{AttributeDefinition: att}
 		dslengine.Register(testCD)
 	})
@@ -74,7 +74,7 @@ var _ = Describe("Attribute", func() {
 	var description string
 	var dsl func()
 
-	var parent *AttributeDefinition
+	var parent *design.AttributeDefinition
 
 	BeforeEach(func() {
 		dslengine.Reset()
@@ -85,25 +85,25 @@ var _ = Describe("Attribute", func() {
 	})
 
 	JustBeforeEach(func() {
-		Type("type", func() {
+		apidsl.Type("type", func() {
 			if dsl == nil {
 				if dataType == nil {
-					Attribute(name)
+					apidsl.Attribute(name)
 				} else if description == "" {
-					Attribute(name, dataType)
+					apidsl.Attribute(name, dataType)
 				} else {
-					Attribute(name, dataType, description)
+					apidsl.Attribute(name, dataType, description)
 				}
 			} else if dataType == nil {
-				Attribute(name, dsl)
+				apidsl.Attribute(name, dsl)
 			} else if description == "" {
-				Attribute(name, dataType, dsl)
+				apidsl.Attribute(name, dataType, dsl)
 			} else {
-				Attribute(name, dataType, description, dsl)
+				apidsl.Attribute(name, dataType, description, dsl)
 			}
 		})
 		dslengine.Run()
-		if t, ok := Design.Types["type"]; ok {
+		if t, ok := design.Design.Types["type"]; ok {
 			parent = t.AttributeDefinition
 		}
 	})
@@ -116,80 +116,80 @@ var _ = Describe("Attribute", func() {
 		It("produces an attribute of type string", func() {
 			t := parent.Type
 			Ω(t).ShouldNot(BeNil())
-			Ω(t).Should(BeAssignableToTypeOf(Object{}))
-			o := t.(Object)
+			Ω(t).Should(BeAssignableToTypeOf(design.Object{}))
+			o := t.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(name))
-			Ω(o[name].Type).Should(Equal(String))
+			Ω(o[name].Type).Should(Equal(design.String))
 		})
 	})
 
 	Context("with a name and datatype", func() {
 		BeforeEach(func() {
 			name = "foo"
-			dataType = Integer
+			dataType = design.Integer
 		})
 
 		It("produces an attribute of given type", func() {
 			t := parent.Type
 			Ω(t).ShouldNot(BeNil())
-			Ω(t).Should(BeAssignableToTypeOf(Object{}))
-			o := t.(Object)
+			Ω(t).Should(BeAssignableToTypeOf(design.Object{}))
+			o := t.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(name))
-			Ω(o[name].Type).Should(Equal(Integer))
+			Ω(o[name].Type).Should(Equal(design.Integer))
 		})
 	})
 
 	Context("with a name and uuid datatype", func() {
 		BeforeEach(func() {
 			name = "foo"
-			dataType = UUID
+			dataType = design.UUID
 		})
 
 		It("produces an attribute of uuid type", func() {
 			t := parent.Type
 			Ω(t).ShouldNot(BeNil())
-			Ω(t).Should(BeAssignableToTypeOf(Object{}))
-			o := t.(Object)
+			Ω(t).Should(BeAssignableToTypeOf(design.Object{}))
+			o := t.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(name))
-			Ω(o[name].Type).Should(Equal(UUID))
+			Ω(o[name].Type).Should(Equal(design.UUID))
 		})
 	})
 
 	Context("with a name and date datatype", func() {
 		BeforeEach(func() {
 			name = "foo"
-			dataType = DateTime
+			dataType = design.DateTime
 		})
 
 		It("produces an attribute of date type", func() {
 			t := parent.Type
 			Ω(t).ShouldNot(BeNil())
-			Ω(t).Should(BeAssignableToTypeOf(Object{}))
-			o := t.(Object)
+			Ω(t).Should(BeAssignableToTypeOf(design.Object{}))
+			o := t.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(name))
-			Ω(o[name].Type).Should(Equal(DateTime))
+			Ω(o[name].Type).Should(Equal(design.DateTime))
 		})
 	})
 
 	Context("with a name, datatype and description", func() {
 		BeforeEach(func() {
 			name = "foo"
-			dataType = Integer
+			dataType = design.Integer
 			description = "bar"
 		})
 
 		It("produces an attribute of given type and given description", func() {
 			t := parent.Type
 			Ω(t).ShouldNot(BeNil())
-			Ω(t).Should(BeAssignableToTypeOf(Object{}))
-			o := t.(Object)
+			Ω(t).Should(BeAssignableToTypeOf(design.Object{}))
+			o := t.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(name))
-			Ω(o[name].Type).Should(Equal(Integer))
+			Ω(o[name].Type).Should(Equal(design.Integer))
 			Ω(o[name].Description).Should(Equal(description))
 		})
 	})
@@ -197,17 +197,17 @@ var _ = Describe("Attribute", func() {
 	Context("with a name and a DSL defining a 'readOnly' attribute", func() {
 		BeforeEach(func() {
 			name = "foo"
-			dsl = func() { ReadOnly() }
+			dsl = func() { apidsl.ReadOnly() }
 		})
 
 		It("produces an attribute of type string set to readOnly", func() {
 			t := parent.Type
 			Ω(t).ShouldNot(BeNil())
-			Ω(t).Should(BeAssignableToTypeOf(Object{}))
-			o := t.(Object)
+			Ω(t).Should(BeAssignableToTypeOf(design.Object{}))
+			o := t.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(name))
-			Ω(o[name].Type).Should(Equal(String))
+			Ω(o[name].Type).Should(Equal(design.String))
 			Ω(o[name].IsReadOnly()).Should(BeTrue())
 		})
 	})
@@ -215,17 +215,17 @@ var _ = Describe("Attribute", func() {
 	Context("with a name and a DSL defining an enum validation", func() {
 		BeforeEach(func() {
 			name = "foo"
-			dsl = func() { Enum("one", "two") }
+			dsl = func() { apidsl.Enum("one", "two") }
 		})
 
 		It("produces an attribute of type string with a validation", func() {
 			t := parent.Type
 			Ω(t).ShouldNot(BeNil())
-			Ω(t).Should(BeAssignableToTypeOf(Object{}))
-			o := t.(Object)
+			Ω(t).Should(BeAssignableToTypeOf(design.Object{}))
+			o := t.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(name))
-			Ω(o[name].Type).Should(Equal(String))
+			Ω(o[name].Type).Should(Equal(design.String))
 			Ω(o[name].Validation).ShouldNot(BeNil())
 			Ω(o[name].Validation.Values).Should(Equal([]interface{}{"one", "two"}))
 		})
@@ -234,18 +234,18 @@ var _ = Describe("Attribute", func() {
 	Context("with a name, type datetime and a DSL defining a default value", func() {
 		BeforeEach(func() {
 			name = "foo"
-			dataType = DateTime
-			dsl = func() { Default("1978-06-30T10:00:00+09:00") }
+			dataType = design.DateTime
+			dsl = func() { apidsl.Default("1978-06-30T10:00:00+09:00") }
 		})
 
 		It("produces an attribute of type string with a default value", func() {
 			t := parent.Type
 			Ω(t).ShouldNot(BeNil())
-			Ω(t).Should(BeAssignableToTypeOf(Object{}))
-			o := t.(Object)
+			Ω(t).Should(BeAssignableToTypeOf(design.Object{}))
+			o := t.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(name))
-			Ω(o[name].Type).Should(Equal(DateTime))
+			Ω(o[name].Type).Should(Equal(design.DateTime))
 			Ω(o[name].Validation).Should(BeNil())
 			Ω(o[name].DefaultValue).Should(Equal(interface{}("1978-06-30T10:00:00+09:00")))
 		})
@@ -254,18 +254,18 @@ var _ = Describe("Attribute", func() {
 	Context("with a name, type integer and a DSL defining an enum validation", func() {
 		BeforeEach(func() {
 			name = "foo"
-			dataType = Integer
-			dsl = func() { Enum(1, 2) }
+			dataType = design.Integer
+			dsl = func() { apidsl.Enum(1, 2) }
 		})
 
 		It("produces an attribute of type integer with a validation", func() {
 			t := parent.Type
 			Ω(t).ShouldNot(BeNil())
-			Ω(t).Should(BeAssignableToTypeOf(Object{}))
-			o := t.(Object)
+			Ω(t).Should(BeAssignableToTypeOf(design.Object{}))
+			o := t.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(name))
-			Ω(o[name].Type).Should(Equal(Integer))
+			Ω(o[name].Type).Should(Equal(design.Integer))
 			Ω(o[name].Validation).ShouldNot(BeNil())
 			Ω(o[name].Validation.Values).Should(Equal([]interface{}{1, 2}))
 		})
@@ -274,19 +274,19 @@ var _ = Describe("Attribute", func() {
 	Context("with a name, type integer, a description and a DSL defining an enum validation", func() {
 		BeforeEach(func() {
 			name = "foo"
-			dataType = String
+			dataType = design.String
 			description = "bar"
-			dsl = func() { Enum("one", "two") }
+			dsl = func() { apidsl.Enum("one", "two") }
 		})
 
 		It("produces an attribute of type integer with a validation and the description", func() {
 			t := parent.Type
 			Ω(t).ShouldNot(BeNil())
-			Ω(t).Should(BeAssignableToTypeOf(Object{}))
-			o := t.(Object)
+			Ω(t).Should(BeAssignableToTypeOf(design.Object{}))
+			o := t.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(name))
-			Ω(o[name].Type).Should(Equal(String))
+			Ω(o[name].Type).Should(Equal(design.String))
 			Ω(o[name].Validation).ShouldNot(BeNil())
 			Ω(o[name].Validation.Values).Should(Equal([]interface{}{"one", "two"}))
 		})
@@ -295,53 +295,53 @@ var _ = Describe("Attribute", func() {
 	Context("with a name and type uuid", func() {
 		BeforeEach(func() {
 			name = "birthdate"
-			dataType = UUID
+			dataType = design.UUID
 		})
 
 		It("produces an attribute of type date with a validation and the description", func() {
 			t := parent.Type
 			Ω(t).ShouldNot(BeNil())
-			Ω(t).Should(BeAssignableToTypeOf(Object{}))
-			o := t.(Object)
+			Ω(t).Should(BeAssignableToTypeOf(design.Object{}))
+			o := t.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(name))
-			Ω(o[name].Type).Should(Equal(UUID))
+			Ω(o[name].Type).Should(Equal(design.UUID))
 		})
 	})
 
 	Context("with a name and type date", func() {
 		BeforeEach(func() {
 			name = "birthdate"
-			dataType = DateTime
+			dataType = design.DateTime
 		})
 
 		It("produces an attribute of type date with a validation and the description", func() {
 			t := parent.Type
 			Ω(t).ShouldNot(BeNil())
-			Ω(t).Should(BeAssignableToTypeOf(Object{}))
-			o := t.(Object)
+			Ω(t).Should(BeAssignableToTypeOf(design.Object{}))
+			o := t.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(name))
-			Ω(o[name].Type).Should(Equal(DateTime))
+			Ω(o[name].Type).Should(Equal(design.DateTime))
 		})
 	})
 
 	Context("with a name and a type defined by name", func() {
-		var Foo *UserTypeDefinition
+		var Foo *design.UserTypeDefinition
 
 		BeforeEach(func() {
 			name = "fooatt"
 			dataType = "foo"
-			Foo = Type("foo", func() {
-				Attribute("bar")
+			Foo = apidsl.Type("foo", func() {
+				apidsl.Attribute("bar")
 			})
 		})
 
 		It("produces an attribute of the corresponding type", func() {
 			t := parent.Type
 			Ω(t).ShouldNot(BeNil())
-			Ω(t).Should(BeAssignableToTypeOf(Object{}))
-			o := t.(Object)
+			Ω(t).Should(BeAssignableToTypeOf(design.Object{}))
+			o := t.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(name))
 			Ω(o[name].Type).Should(Equal(Foo))
@@ -353,12 +353,12 @@ var _ = Describe("Attribute", func() {
 
 		BeforeEach(func() {
 			name = "foo"
-			dsl = func() { Attribute(childAtt) }
+			dsl = func() { apidsl.Attribute(childAtt) }
 		})
 
 		Context("on an attribute that is not an object", func() {
 			BeforeEach(func() {
-				dataType = Integer
+				dataType = design.Integer
 			})
 
 			It("fails", func() {
@@ -370,29 +370,29 @@ var _ = Describe("Attribute", func() {
 			It("sets the type to Object", func() {
 				t := parent.Type
 				Ω(t).ShouldNot(BeNil())
-				Ω(t).Should(BeAssignableToTypeOf(Object{}))
-				o := t.(Object)
+				Ω(t).Should(BeAssignableToTypeOf(design.Object{}))
+				o := t.(design.Object)
 				Ω(o).Should(HaveLen(1))
 				Ω(o).Should(HaveKey(name))
-				Ω(o[name].Type).Should(BeAssignableToTypeOf(Object{}))
+				Ω(o[name].Type).Should(BeAssignableToTypeOf(design.Object{}))
 			})
 		})
 
 		Context("on an attribute of type Object", func() {
 			BeforeEach(func() {
-				dataType = Object{}
+				dataType = design.Object{}
 			})
 
 			It("initializes the object attributes", func() {
 				Ω(dslengine.Errors).ShouldNot(HaveOccurred())
 				t := parent.Type
 				Ω(t).ShouldNot(BeNil())
-				Ω(t).Should(BeAssignableToTypeOf(Object{}))
-				o := t.(Object)
+				Ω(t).Should(BeAssignableToTypeOf(design.Object{}))
+				o := t.(design.Object)
 				Ω(o).Should(HaveLen(1))
 				Ω(o).Should(HaveKey(name))
-				Ω(o[name].Type).Should(BeAssignableToTypeOf(Object{}))
-				co := o[name].Type.(Object)
+				Ω(o[name].Type).Should(BeAssignableToTypeOf(design.Object{}))
+				co := o[name].Type.(design.Object)
 				Ω(co).Should(HaveLen(1))
 				Ω(co).Should(HaveKey(childAtt))
 			})

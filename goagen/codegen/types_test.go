@@ -6,8 +6,8 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/shogo82148/goa-v1/design"
-	. "github.com/shogo82148/goa-v1/design/apidsl"
+	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/design/apidsl"
 	"github.com/shogo82148/goa-v1/dslengine"
 	"github.com/shogo82148/goa-v1/goagen/codegen"
 )
@@ -138,7 +138,7 @@ var _ = Describe("code generation", func() {
 				})
 			})
 
-			Context("with consecutives invalid identifiers", func() {
+			Context("with connectives invalid identifiers", func() {
 				BeforeEach(func() {
 					firstUpper = false
 					str = "[[fields___type]]"
@@ -149,7 +149,7 @@ var _ = Describe("code generation", func() {
 				})
 			})
 
-			Context("with consecutives invalid identifiers", func() {
+			Context("with connectives invalid identifiers", func() {
 				BeforeEach(func() {
 					firstUpper = true
 					str = "[[fields___type]]"
@@ -177,13 +177,13 @@ var _ = Describe("code generation", func() {
 
 	Describe("GoTypeDef", func() {
 		Context("given an attribute definition with fields", func() {
-			var att *AttributeDefinition
-			var object Object
+			var att *design.AttributeDefinition
+			var object design.Object
 			var required *dslengine.ValidationDefinition
 			var st string
 
 			JustBeforeEach(func() {
-				att = new(AttributeDefinition)
+				att = new(design.AttributeDefinition)
 				att.Type = object
 				if required != nil {
 					att.Validation = required
@@ -193,12 +193,12 @@ var _ = Describe("code generation", func() {
 
 			Context("of primitive types", func() {
 				BeforeEach(func() {
-					object = Object{
-						"foo": &AttributeDefinition{Type: Integer},
-						"bar": &AttributeDefinition{Type: String},
-						"baz": &AttributeDefinition{Type: DateTime},
-						"qux": &AttributeDefinition{Type: UUID},
-						"quz": &AttributeDefinition{Type: Any},
+					object = design.Object{
+						"foo": &design.AttributeDefinition{Type: design.Integer},
+						"bar": &design.AttributeDefinition{Type: design.String},
+						"baz": &design.AttributeDefinition{Type: design.DateTime},
+						"qux": &design.AttributeDefinition{Type: design.UUID},
+						"quz": &design.AttributeDefinition{Type: design.Any},
 					}
 					required = nil
 				})
@@ -299,11 +299,11 @@ var _ = Describe("code generation", func() {
 
 			Context("of hash of primitive types", func() {
 				BeforeEach(func() {
-					elemType := &AttributeDefinition{Type: Integer}
-					keyType := &AttributeDefinition{Type: Integer}
-					hash := &Hash{KeyType: keyType, ElemType: elemType}
-					object = Object{
-						"foo": &AttributeDefinition{Type: hash},
+					elemType := &design.AttributeDefinition{Type: design.Integer}
+					keyType := &design.AttributeDefinition{Type: design.Integer}
+					hash := &design.Hash{KeyType: keyType, ElemType: elemType}
+					object = design.Object{
+						"foo": &design.AttributeDefinition{Type: hash},
 					}
 					required = nil
 				})
@@ -315,10 +315,10 @@ var _ = Describe("code generation", func() {
 
 			Context("of array of primitive types", func() {
 				BeforeEach(func() {
-					elemType := &AttributeDefinition{Type: Integer}
-					array := &Array{ElemType: elemType}
-					object = Object{
-						"foo": &AttributeDefinition{Type: array},
+					elemType := &design.AttributeDefinition{Type: design.Integer}
+					array := &design.Array{ElemType: elemType}
+					object = design.Object{
+						"foo": &design.AttributeDefinition{Type: array},
 					}
 					required = nil
 				})
@@ -330,17 +330,17 @@ var _ = Describe("code generation", func() {
 
 			Context("of hash of objects", func() {
 				BeforeEach(func() {
-					elem := Object{
-						"elemAtt": &AttributeDefinition{Type: Integer},
+					elem := design.Object{
+						"elemAtt": &design.AttributeDefinition{Type: design.Integer},
 					}
-					key := Object{
-						"keyAtt": &AttributeDefinition{Type: String},
+					key := design.Object{
+						"keyAtt": &design.AttributeDefinition{Type: design.String},
 					}
-					elemType := &AttributeDefinition{Type: elem}
-					keyType := &AttributeDefinition{Type: key}
-					hash := &Hash{KeyType: keyType, ElemType: elemType}
-					object = Object{
-						"foo": &AttributeDefinition{Type: hash},
+					elemType := &design.AttributeDefinition{Type: elem}
+					keyType := &design.AttributeDefinition{Type: key}
+					hash := &design.Hash{KeyType: keyType, ElemType: elemType}
+					object = design.Object{
+						"foo": &design.AttributeDefinition{Type: hash},
 					}
 					required = nil
 				})
@@ -359,13 +359,13 @@ var _ = Describe("code generation", func() {
 
 			Context("of array of objects", func() {
 				BeforeEach(func() {
-					obj := Object{
-						"bar": &AttributeDefinition{Type: Integer},
+					obj := design.Object{
+						"bar": &design.AttributeDefinition{Type: design.Integer},
 					}
-					elemType := &AttributeDefinition{Type: obj}
-					array := &Array{ElemType: elemType}
-					object = Object{
-						"foo": &AttributeDefinition{Type: array},
+					elemType := &design.AttributeDefinition{Type: obj}
+					array := &design.Array{ElemType: elemType}
+					object = design.Object{
+						"foo": &design.AttributeDefinition{Type: array},
 					}
 					required = nil
 				})
@@ -399,8 +399,8 @@ var _ = Describe("code generation", func() {
 
 			Context("that are required", func() {
 				BeforeEach(func() {
-					object = Object{
-						"foo": &AttributeDefinition{Type: Integer},
+					object = design.Object{
+						"foo": &design.AttributeDefinition{Type: design.Integer},
 					}
 					required = &dslengine.ValidationDefinition{
 						Required: []string{"foo"},
@@ -418,18 +418,18 @@ var _ = Describe("code generation", func() {
 		})
 
 		Context("given an array", func() {
-			var elemType *AttributeDefinition
+			var elemType *design.AttributeDefinition
 			var source string
 
 			JustBeforeEach(func() {
-				array := &Array{ElemType: elemType}
-				att := &AttributeDefinition{Type: array}
+				array := &design.Array{ElemType: elemType}
+				att := &design.AttributeDefinition{Type: array}
 				source = codegen.GoTypeDef(att, 0, true, false)
 			})
 
 			Context("of primitive type", func() {
 				BeforeEach(func() {
-					elemType = &AttributeDefinition{Type: Integer}
+					elemType = &design.AttributeDefinition{Type: design.Integer}
 				})
 
 				It("produces the array go code", func() {
@@ -440,11 +440,11 @@ var _ = Describe("code generation", func() {
 
 			Context("of object type", func() {
 				BeforeEach(func() {
-					object := Object{
-						"foo": &AttributeDefinition{Type: Integer},
-						"bar": &AttributeDefinition{Type: String},
+					object := design.Object{
+						"foo": &design.AttributeDefinition{Type: design.Integer},
+						"bar": &design.AttributeDefinition{Type: design.String},
 					}
-					elemType = &AttributeDefinition{Type: object}
+					elemType = &design.AttributeDefinition{Type: object}
 				})
 
 				It("produces the array go code", func() {
@@ -454,13 +454,13 @@ var _ = Describe("code generation", func() {
 		})
 
 		Context("when generating an all-optional private struct, given an attribute definition with fields", func() {
-			var att *AttributeDefinition
-			var object Object
+			var att *design.AttributeDefinition
+			var object design.Object
 			var required *dslengine.ValidationDefinition
 			var st string
 
 			JustBeforeEach(func() {
-				att = new(AttributeDefinition)
+				att = new(design.AttributeDefinition)
 				att.Type = object
 				if required != nil {
 					att.Validation = required
@@ -470,12 +470,12 @@ var _ = Describe("code generation", func() {
 
 			Context("of primitive types", func() {
 				BeforeEach(func() {
-					object = Object{
-						"foo": &AttributeDefinition{Type: Integer},
-						"bar": &AttributeDefinition{Type: String},
-						"baz": &AttributeDefinition{Type: DateTime},
-						"qux": &AttributeDefinition{Type: UUID},
-						"quz": &AttributeDefinition{Type: Any},
+					object = design.Object{
+						"foo": &design.AttributeDefinition{Type: design.Integer},
+						"bar": &design.AttributeDefinition{Type: design.String},
+						"baz": &design.AttributeDefinition{Type: design.DateTime},
+						"qux": &design.AttributeDefinition{Type: design.UUID},
+						"quz": &design.AttributeDefinition{Type: design.Any},
 					}
 					required = nil
 				})
@@ -512,11 +512,11 @@ var _ = Describe("code generation", func() {
 
 			Context("of hash of primitive types", func() {
 				BeforeEach(func() {
-					elemType := &AttributeDefinition{Type: Integer}
-					keyType := &AttributeDefinition{Type: Integer}
-					hash := &Hash{KeyType: keyType, ElemType: elemType}
-					object = Object{
-						"foo": &AttributeDefinition{Type: hash},
+					elemType := &design.AttributeDefinition{Type: design.Integer}
+					keyType := &design.AttributeDefinition{Type: design.Integer}
+					hash := &design.Hash{KeyType: keyType, ElemType: elemType}
+					object = design.Object{
+						"foo": &design.AttributeDefinition{Type: hash},
 					}
 					required = nil
 				})
@@ -528,10 +528,10 @@ var _ = Describe("code generation", func() {
 
 			Context("of array of primitive types", func() {
 				BeforeEach(func() {
-					elemType := &AttributeDefinition{Type: Integer}
-					array := &Array{ElemType: elemType}
-					object = Object{
-						"foo": &AttributeDefinition{Type: array},
+					elemType := &design.AttributeDefinition{Type: design.Integer}
+					array := &design.Array{ElemType: elemType}
+					object = design.Object{
+						"foo": &design.AttributeDefinition{Type: array},
 					}
 					required = nil
 				})
@@ -543,8 +543,8 @@ var _ = Describe("code generation", func() {
 
 			Context("that are required", func() {
 				BeforeEach(func() {
-					object = Object{
-						"foo": &AttributeDefinition{Type: Integer},
+					object = design.Object{
+						"foo": &design.AttributeDefinition{Type: design.Integer},
 					}
 					required = &dslengine.ValidationDefinition{
 						Required: []string{"foo"},
@@ -563,7 +563,7 @@ var _ = Describe("code generation", func() {
 })
 
 var _ = Describe("GoTypeTransform", func() {
-	var source, target *UserTypeDefinition
+	var source, target *design.UserTypeDefinition
 	var targetPkg, funcName string
 
 	var transform string
@@ -580,11 +580,11 @@ var _ = Describe("GoTypeTransform", func() {
 	Context("transforming simple objects", func() {
 		const attName = "att"
 		BeforeEach(func() {
-			source = Type("Source", func() {
-				Attribute(attName)
+			source = apidsl.Type("Source", func() {
+				apidsl.Attribute(attName)
 			})
-			target = Type("Target", func() {
-				Attribute(attName)
+			target = apidsl.Type("Target", func() {
+				apidsl.Attribute(attName)
 			})
 			funcName = "Transform"
 		})
@@ -602,14 +602,14 @@ var _ = Describe("GoTypeTransform", func() {
 	Context("transforming objects with attributes with map key metadata", func() {
 		const mapKey = "key"
 		BeforeEach(func() {
-			source = Type("Source", func() {
-				Attribute("foo", func() {
-					Metadata(codegen.TransformMapKey, mapKey)
+			source = apidsl.Type("Source", func() {
+				apidsl.Attribute("foo", func() {
+					apidsl.Metadata(codegen.TransformMapKey, mapKey)
 				})
 			})
-			target = Type("Target", func() {
-				Attribute("bar", func() {
-					Metadata(codegen.TransformMapKey, mapKey)
+			target = apidsl.Type("Target", func() {
+				apidsl.Attribute("bar", func() {
+					apidsl.Metadata(codegen.TransformMapKey, mapKey)
 				})
 			})
 			funcName = "Transform"
@@ -628,11 +628,11 @@ var _ = Describe("GoTypeTransform", func() {
 	Context("transforming objects with array attributes", func() {
 		const attName = "att"
 		BeforeEach(func() {
-			source = Type("Source", func() {
-				Attribute(attName, ArrayOf(Integer))
+			source = apidsl.Type("Source", func() {
+				apidsl.Attribute(attName, apidsl.ArrayOf(design.Integer))
 			})
-			target = Type("Target", func() {
-				Attribute(attName, ArrayOf(Integer))
+			target = apidsl.Type("Target", func() {
+				apidsl.Attribute(attName, apidsl.ArrayOf(design.Integer))
 			})
 			funcName = "Transform"
 		})
@@ -653,15 +653,15 @@ var _ = Describe("GoTypeTransform", func() {
 	Context("transforming objects with hash attributes", func() {
 		const attName = "att"
 		BeforeEach(func() {
-			elem := Type("elem", func() {
-				Attribute("foo", Integer)
-				Attribute("bar")
+			elem := apidsl.Type("elem", func() {
+				apidsl.Attribute("foo", design.Integer)
+				apidsl.Attribute("bar")
 			})
-			source = Type("Source", func() {
-				Attribute(attName, HashOf(String, elem))
+			source = apidsl.Type("Source", func() {
+				apidsl.Attribute(attName, apidsl.HashOf(design.String, elem))
 			})
-			target = Type("Target", func() {
-				Attribute(attName, HashOf(String, elem))
+			target = apidsl.Type("Target", func() {
+				apidsl.Attribute(attName, apidsl.HashOf(design.String, elem))
 			})
 			funcName = "Transform"
 		})
@@ -687,27 +687,27 @@ var _ = Describe("GoTypeTransform", func() {
 
 	Context("transforming objects with recursive attributes", func() {
 		BeforeEach(func() {
-			inner := Type("inner", func() {
-				Attribute("foo", Integer)
+			inner := apidsl.Type("inner", func() {
+				apidsl.Attribute("foo", design.Integer)
 			})
-			outer := Type("outer", func() {
-				Attribute("in", inner)
+			outer := apidsl.Type("outer", func() {
+				apidsl.Attribute("in", inner)
 			})
-			array := Type("array", func() {
-				Attribute("elem", ArrayOf(outer))
+			array := apidsl.Type("array", func() {
+				apidsl.Attribute("elem", apidsl.ArrayOf(outer))
 			})
-			hash := Type("hash", func() {
-				Attribute("elem", HashOf(Integer, outer))
+			hash := apidsl.Type("hash", func() {
+				apidsl.Attribute("elem", apidsl.HashOf(design.Integer, outer))
 			})
-			source = Type("Source", func() {
-				Attribute("outer", outer)
-				Attribute("array", array)
-				Attribute("hash", hash)
+			source = apidsl.Type("Source", func() {
+				apidsl.Attribute("outer", outer)
+				apidsl.Attribute("array", array)
+				apidsl.Attribute("hash", hash)
 			})
-			target = Type("Target", func() {
-				Attribute("outer", outer)
-				Attribute("array", array)
-				Attribute("hash", hash)
+			target = apidsl.Type("Target", func() {
+				apidsl.Attribute("outer", outer)
+				apidsl.Attribute("array", array)
+				apidsl.Attribute("hash", hash)
 			})
 			funcName = "Transform"
 		})
@@ -746,7 +746,7 @@ var _ = Describe("GoTypeTransform", func() {
 var _ = Describe("GoTypeDesc", func() {
 	Context("With a type with a description", func() {
 		var description string
-		var ut *UserTypeDefinition
+		var ut *design.UserTypeDefinition
 
 		var desc string
 
@@ -755,7 +755,7 @@ var _ = Describe("GoTypeDesc", func() {
 		})
 
 		JustBeforeEach(func() {
-			ut = &UserTypeDefinition{AttributeDefinition: &AttributeDefinition{Description: description}}
+			ut = &design.UserTypeDefinition{AttributeDefinition: &design.AttributeDefinition{Description: description}}
 			desc = codegen.GoTypeDesc(ut, false)
 		})
 

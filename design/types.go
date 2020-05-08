@@ -805,7 +805,7 @@ func (m *MediaTypeDefinition) IterateViews(it ViewIterator) error {
 }
 
 // Project creates a MediaTypeDefinition containing the fields defined in the given view.  The
-// resuling media type only defines the default view and its identifier is modified to indicate that
+// resulting media type only defines the default view and its identifier is modified to indicate that
 // it was projected by adding the view as id parameter.  links is a user type of type Object where
 // each key corresponds to a linked media type as defined by the media type "links" attribute.
 func (m *MediaTypeDefinition) Project(view string) (*MediaTypeDefinition, *UserTypeDefinition, error) {

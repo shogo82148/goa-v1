@@ -5,14 +5,14 @@ import (
 	"encoding/json"
 
 	"github.com/go-openapi/loads"
-	_ "github.com/shogo82148/goa-v1/goagen/gen_swagger/internal/design"
-	. "github.com/shogo82148/goa-v1/design"
-	. "github.com/shogo82148/goa-v1/design/apidsl"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/design/apidsl"
 	"github.com/shogo82148/goa-v1/dslengine"
 	genschema "github.com/shogo82148/goa-v1/goagen/gen_schema"
 	genswagger "github.com/shogo82148/goa-v1/goagen/gen_swagger"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	_ "github.com/shogo82148/goa-v1/goagen/gen_swagger/internal/design"
 )
 
 // validateSwagger validates that the given swagger object represents a valid Swagger spec.
@@ -51,7 +51,7 @@ var _ = Describe("New", func() {
 	JustBeforeEach(func() {
 		err := dslengine.Run()
 		Ω(err).ShouldNot(HaveOccurred())
-		swagger, newErr = genswagger.New(Design)
+		swagger, newErr = genswagger.New(design.Design)
 	})
 
 	Context("with a valid API definition", func() {
@@ -73,30 +73,30 @@ var _ = Describe("New", func() {
 		)
 
 		BeforeEach(func() {
-			API("test", func() {
-				Title(title)
-				Metadata("swagger:tag:" + tag)
-				Metadata("swagger:tag:"+tag+":desc", "Tag desc.")
-				Metadata("swagger:tag:"+tag+":url", "http://example.com/tag")
-				Metadata("swagger:tag:"+tag+":url:desc", "Huge docs")
-				Description(description)
-				TermsOfService(terms)
-				Contact(func() {
-					Email(contactEmail)
-					Name(contactName)
-					URL(contactURL)
+			apidsl.API("test", func() {
+				apidsl.Title(title)
+				apidsl.Metadata("swagger:tag:" + tag)
+				apidsl.Metadata("swagger:tag:"+tag+":desc", "Tag desc.")
+				apidsl.Metadata("swagger:tag:"+tag+":url", "http://example.com/tag")
+				apidsl.Metadata("swagger:tag:"+tag+":url:desc", "Huge docs")
+				apidsl.Description(description)
+				apidsl.TermsOfService(terms)
+				apidsl.Contact(func() {
+					apidsl.Email(contactEmail)
+					apidsl.Name(contactName)
+					apidsl.URL(contactURL)
 				})
-				License(func() {
-					Name(license)
-					URL(licenseURL)
+				apidsl.License(func() {
+					apidsl.Name(license)
+					apidsl.URL(licenseURL)
 				})
-				Docs(func() {
-					Description(docDesc)
-					URL(docURL)
+				apidsl.Docs(func() {
+					apidsl.Description(docDesc)
+					apidsl.URL(docURL)
 				})
-				Host(host)
-				Scheme(scheme)
-				BasePath(basePath)
+				apidsl.Host(host)
+				apidsl.Scheme(scheme)
+				apidsl.BasePath(basePath)
 			})
 		})
 
@@ -108,12 +108,12 @@ var _ = Describe("New", func() {
 					Title:          title,
 					Description:    description,
 					TermsOfService: terms,
-					Contact: &ContactDefinition{
+					Contact: &design.ContactDefinition{
 						Name:  contactName,
 						Email: contactEmail,
 						URL:   contactURL,
 					},
-					License: &LicenseDefinition{
+					License: &design.LicenseDefinition{
 						Name: license,
 						URL:  licenseURL,
 					},
@@ -153,24 +153,24 @@ var _ = Describe("New", func() {
 			)
 
 			BeforeEach(func() {
-				base := Design.DSLFunc
-				Design.DSLFunc = func() {
+				base := design.Design.DSLFunc
+				design.Design.DSLFunc = func() {
 					base()
-					BasePath(basePath)
-					Params(func() {
-						Param(strParam, String, func() {
-							Description(description)
-							Format("email")
+					apidsl.BasePath(basePath)
+					apidsl.Params(func() {
+						apidsl.Param(strParam, design.String, func() {
+							apidsl.Description(description)
+							apidsl.Format("email")
 						})
-						Param(intParam, Integer, func() {
-							Minimum(intMin)
+						apidsl.Param(intParam, design.Integer, func() {
+							apidsl.Minimum(intMin)
 						})
-						Param(numParam, Number, func() {
-							Maximum(floatMax)
+						apidsl.Param(numParam, design.Number, func() {
+							apidsl.Maximum(floatMax)
 						})
-						Param(boolParam, Boolean)
-						Param(queryParam, func() {
-							Enum(enum1, enum2)
+						apidsl.Param(boolParam, design.Boolean)
+						apidsl.Param(queryParam, func() {
+							apidsl.Enum(enum1, enum2)
 						})
 					})
 				}
@@ -216,15 +216,15 @@ var _ = Describe("New", func() {
 
 		Context("with required payload", func() {
 			BeforeEach(func() {
-				p := Type("RequiredPayload", func() {
-					Member("m1", String)
+				p := apidsl.Type("RequiredPayload", func() {
+					apidsl.Member("m1", design.String)
 				})
-				Resource("res", func() {
-					Action("act", func() {
-						Routing(
-							PUT("/"),
+				apidsl.Resource("res", func() {
+					apidsl.Action("act", func() {
+						apidsl.Routing(
+							apidsl.PUT("/"),
 						)
-						Payload(p)
+						apidsl.Payload(p)
 					})
 				})
 			})
@@ -238,13 +238,13 @@ var _ = Describe("New", func() {
 
 		Context("with a payload of type Any", func() {
 			BeforeEach(func() {
-				Resource("res", func() {
-					Action("act", func() {
-						Routing(
-							PUT("/"),
+				apidsl.Resource("res", func() {
+					apidsl.Action("act", func() {
+						apidsl.Routing(
+							apidsl.PUT("/"),
 						)
-						Payload(Any, func() {
-							Example("example")
+						apidsl.Payload(design.Any, func() {
+							apidsl.Example("example")
 						})
 					})
 				})
@@ -260,15 +260,15 @@ var _ = Describe("New", func() {
 
 		Context("with optional payload", func() {
 			BeforeEach(func() {
-				p := Type("OptionalPayload", func() {
-					Member("m1", String)
+				p := apidsl.Type("OptionalPayload", func() {
+					apidsl.Member("m1", design.String)
 				})
-				Resource("res", func() {
-					Action("act", func() {
-						Routing(
-							PUT("/"),
+				apidsl.Resource("res", func() {
+					apidsl.Action("act", func() {
+						apidsl.Routing(
+							apidsl.PUT("/"),
 						)
-						OptionalPayload(p)
+						apidsl.OptionalPayload(p)
 					})
 				})
 			})
@@ -283,16 +283,16 @@ var _ = Describe("New", func() {
 
 		Context("with multipart/form-data payload", func() {
 			BeforeEach(func() {
-				f := Type("MultipartPayload", func() {
-					Attribute("image", File, "Binary image data")
+				f := apidsl.Type("MultipartPayload", func() {
+					apidsl.Attribute("image", design.File, "Binary image data")
 				})
-				Resource("res", func() {
-					Action("act", func() {
-						Routing(
-							PUT("/"),
+				apidsl.Resource("res", func() {
+					apidsl.Action("act", func() {
+						apidsl.Routing(
+							apidsl.PUT("/"),
 						)
-						MultipartForm()
-						Payload(f)
+						apidsl.MultipartForm()
+						apidsl.Payload(f)
 					})
 				})
 			})
@@ -332,21 +332,21 @@ var _ = Describe("New", func() {
 
 		Context("with recursive payload", func() {
 			BeforeEach(func() {
-				p := Type("RecursivePayload", func() {
-					Member("m1", "RecursivePayload")
-					Member("m2", ArrayOf("RecursivePayload"))
-					Member("m3", HashOf(String, "RecursivePayload"))
-					Member("m4", func() {
-						Member("m5", String)
-						Member("m6", "RecursivePayload")
+				p := apidsl.Type("RecursivePayload", func() {
+					apidsl.Member("m1", "RecursivePayload")
+					apidsl.Member("m2", apidsl.ArrayOf("RecursivePayload"))
+					apidsl.Member("m3", apidsl.HashOf(design.String, "RecursivePayload"))
+					apidsl.Member("m4", func() {
+						apidsl.Member("m5", design.String)
+						apidsl.Member("m6", "RecursivePayload")
 					})
 				})
-				Resource("res", func() {
-					Action("act", func() {
-						Routing(
-							PUT("/"),
+				apidsl.Resource("res", func() {
+					apidsl.Action("act", func() {
+						apidsl.Routing(
+							apidsl.PUT("/"),
 						)
-						Payload(p)
+						apidsl.Payload(p)
 					})
 				})
 			})
@@ -364,26 +364,26 @@ var _ = Describe("New", func() {
 			)
 
 			BeforeEach(func() {
-				PayloadWithZeroValueValidations := Type("PayloadWithZeroValueValidations", func() {
-					Attribute(strParam, String, func() {
-						MinLength(0)
-						MaxLength(0)
+				PayloadWithZeroValueValidations := apidsl.Type("PayloadWithZeroValueValidations", func() {
+					apidsl.Attribute(strParam, design.String, func() {
+						apidsl.MinLength(0)
+						apidsl.MaxLength(0)
 					})
 				})
-				Resource("res", func() {
-					Action("act", func() {
-						Routing(
-							PUT("/"),
+				apidsl.Resource("res", func() {
+					apidsl.Action("act", func() {
+						apidsl.Routing(
+							apidsl.PUT("/"),
 						)
-						Params(func() {
-							Param(intParam, Integer, func() {
-								Minimum(intMin)
+						apidsl.Params(func() {
+							apidsl.Param(intParam, design.Integer, func() {
+								apidsl.Minimum(intMin)
 							})
-							Param(numParam, Number, func() {
-								Maximum(floatMax)
+							apidsl.Param(numParam, design.Number, func() {
+								apidsl.Maximum(floatMax)
 							})
 						})
-						Payload(PayloadWithZeroValueValidations)
+						apidsl.Payload(PayloadWithZeroValueValidations)
 					})
 				})
 			})
@@ -408,18 +408,18 @@ var _ = Describe("New", func() {
 			)
 
 			BeforeEach(func() {
-				PayloadWithValidations := Type("Payload", func() {
-					Attribute(arrParam, ArrayOf(String), func() {
-						MinLength(minVal)
-						MaxLength(maxVal)
+				PayloadWithValidations := apidsl.Type("Payload", func() {
+					apidsl.Attribute(arrParam, apidsl.ArrayOf(design.String), func() {
+						apidsl.MinLength(minVal)
+						apidsl.MaxLength(maxVal)
 					})
 				})
-				Resource("res", func() {
-					Action("act", func() {
-						Routing(
-							PUT("/"),
+				apidsl.Resource("res", func() {
+					apidsl.Action("act", func() {
+						apidsl.Routing(
+							apidsl.PUT("/"),
 						)
-						Payload(PayloadWithValidations)
+						apidsl.Payload(PayloadWithValidations)
 					})
 				})
 			})
@@ -441,17 +441,17 @@ var _ = Describe("New", func() {
 			)
 
 			BeforeEach(func() {
-				PayloadWithValidations := Type("Payload", func() {
-					Attribute(strParam, String)
+				PayloadWithValidations := apidsl.Type("Payload", func() {
+					apidsl.Attribute(strParam, design.String)
 				})
-				Resource("res", func() {
-					Action("act", func() {
-						Routing(
-							PUT("/"),
+				apidsl.Resource("res", func() {
+					apidsl.Action("act", func() {
+						apidsl.Routing(
+							apidsl.PUT("/"),
 						)
-						Payload(ArrayOf(PayloadWithValidations), func() {
-							MinLength(minVal)
-							MaxLength(maxVal)
+						apidsl.Payload(apidsl.ArrayOf(PayloadWithValidations), func() {
+							apidsl.MinLength(minVal)
+							apidsl.MaxLength(maxVal)
 						})
 					})
 				})
@@ -475,62 +475,62 @@ var _ = Describe("New", func() {
 			const headerName = "headerName"
 
 			BeforeEach(func() {
-				account := MediaType("application/vnd.goa.test.account", func() {
-					Description("Account")
-					Attributes(func() {
-						Attribute("id", Integer)
-						Attribute("href", String)
+				account := apidsl.MediaType("application/vnd.goa.test.account", func() {
+					apidsl.Description("Account")
+					apidsl.Attributes(func() {
+						apidsl.Attribute("id", design.Integer)
+						apidsl.Attribute("href", design.String)
 					})
-					View("default", func() {
-						Attribute("id")
-						Attribute("href")
+					apidsl.View("default", func() {
+						apidsl.Attribute("id")
+						apidsl.Attribute("href")
 					})
-					View("link", func() {
-						Attribute("id")
-						Attribute("href")
+					apidsl.View("link", func() {
+						apidsl.Attribute("id")
+						apidsl.Attribute("href")
 					})
 				})
-				mt := MediaType("application/vnd.goa.test.bottle", func() {
-					Description("A bottle of wine")
-					Attributes(func() {
-						Attribute("id", Integer, "ID of bottle")
-						Attribute("href", String, "API href of bottle")
-						Attribute("account", account, "Owner account")
-						Links(func() {
-							Link("account") // Defines a link to the Account media type
+				mt := apidsl.MediaType("application/vnd.goa.test.bottle", func() {
+					apidsl.Description("A bottle of wine")
+					apidsl.Attributes(func() {
+						apidsl.Attribute("id", design.Integer, "ID of bottle")
+						apidsl.Attribute("href", design.String, "API href of bottle")
+						apidsl.Attribute("account", account, "Owner account")
+						apidsl.Links(func() {
+							apidsl.Link("account") // Defines a link to the Account media type
 						})
-						Required("id", "href")
+						apidsl.Required("id", "href")
 					})
-					View("default", func() {
-						Attribute("id")
-						Attribute("href")
-						Attribute("links") // Default view renders links
+					apidsl.View("default", func() {
+						apidsl.Attribute("id")
+						apidsl.Attribute("href")
+						apidsl.Attribute("links") // Default view renders links
 					})
-					View("extended", func() {
-						Attribute("id")
-						Attribute("href")
-						Attribute("account") // Extended view renders account inline
-						Attribute("links")   // Extended view also renders links
+					apidsl.View("extended", func() {
+						apidsl.Attribute("id")
+						apidsl.Attribute("href")
+						apidsl.Attribute("account") // Extended view renders account inline
+						apidsl.Attribute("links")   // Extended view also renders links
 					})
 				})
-				base := Design.DSLFunc
-				Design.DSLFunc = func() {
+				base := design.Design.DSLFunc
+				design.Design.DSLFunc = func() {
 					base()
-					ResponseTemplate(okName, func() {
-						Description(okDesc)
-						Status(404)
-						Media(mt)
-						Headers(func() {
-							Header(headerName, func() {
-								Format("hostname")
+					apidsl.ResponseTemplate(okName, func() {
+						apidsl.Description(okDesc)
+						apidsl.Status(404)
+						apidsl.Media(mt)
+						apidsl.Headers(func() {
+							apidsl.Header(headerName, func() {
+								apidsl.Format("hostname")
 							})
 						})
 					})
-					ResponseTemplate(notFoundName, func() {
-						Description(notFoundDesc)
-						Status(404)
+					apidsl.ResponseTemplate(notFoundName, func() {
+						apidsl.Description(notFoundDesc)
+						apidsl.Status(404)
 
-						Media(notFoundMt)
+						apidsl.Media(notFoundMt)
 					})
 				}
 			})
@@ -557,129 +557,129 @@ var _ = Describe("New", func() {
 				maxItems5   = 5
 			)
 			BeforeEach(func() {
-				Country := MediaType("application/vnd.goa.example.origin", func() {
-					Description("Origin of bottle")
-					Attributes(func() {
-						Attribute("id")
-						Attribute("href")
-						Attribute("country")
+				Country := apidsl.MediaType("application/vnd.goa.example.origin", func() {
+					apidsl.Description("Origin of bottle")
+					apidsl.Attributes(func() {
+						apidsl.Attribute("id")
+						apidsl.Attribute("href")
+						apidsl.Attribute("country")
 					})
-					View("default", func() {
-						Attribute("id")
-						Attribute("href")
-						Attribute("country")
+					apidsl.View("default", func() {
+						apidsl.Attribute("id")
+						apidsl.Attribute("href")
+						apidsl.Attribute("country")
 					})
-					View("tiny", func() {
-						Attribute("id")
+					apidsl.View("tiny", func() {
+						apidsl.Attribute("id")
 					})
 				})
-				BottleMedia := MediaType("application/vnd.goa.example.bottle", func() {
-					Description("A bottle of wine")
-					Attributes(func() {
-						Attribute("id", Integer, "ID of bottle")
-						Attribute("href", String, "API href of bottle")
-						Attribute("origin", Country, "Details on wine origin")
-						Links(func() {
-							Link("origin", "tiny")
+				BottleMedia := apidsl.MediaType("application/vnd.goa.example.bottle", func() {
+					apidsl.Description("A bottle of wine")
+					apidsl.Attributes(func() {
+						apidsl.Attribute("id", design.Integer, "ID of bottle")
+						apidsl.Attribute("href", design.String, "API href of bottle")
+						apidsl.Attribute("origin", Country, "Details on wine origin")
+						apidsl.Links(func() {
+							apidsl.Link("origin", "tiny")
 						})
-						Required("id", "href")
+						apidsl.Required("id", "href")
 					})
-					View("default", func() {
-						Attribute("id")
-						Attribute("href")
-						Attribute("links")
+					apidsl.View("default", func() {
+						apidsl.Attribute("id")
+						apidsl.Attribute("href")
+						apidsl.Attribute("links")
 					})
-					View("extended", func() {
-						Attribute("id")
-						Attribute("href")
-						Attribute("origin")
-						Attribute("links")
+					apidsl.View("extended", func() {
+						apidsl.Attribute("id")
+						apidsl.Attribute("href")
+						apidsl.Attribute("origin")
+						apidsl.Attribute("links")
 					})
 				})
-				UpdatePayload := Type("UpdatePayload", func() {
-					Description("Type of create and upload action payloads")
-					Attribute("name", String, "name of bottle")
-					Attribute("origin", Country, "Details on wine origin")
-					Required("name")
+				UpdatePayload := apidsl.Type("UpdatePayload", func() {
+					apidsl.Description("Type of create and upload action payloads")
+					apidsl.Attribute("name", design.String, "name of bottle")
+					apidsl.Attribute("origin", Country, "Details on wine origin")
+					apidsl.Required("name")
 				})
-				Resource("res", func() {
-					Metadata("swagger:tag:res")
-					Description("A wine bottle")
-					DefaultMedia(BottleMedia)
-					BasePath("/bottles")
-					UseTrait("Authenticated")
+				apidsl.Resource("res", func() {
+					apidsl.Metadata("swagger:tag:res")
+					apidsl.Description("A wine bottle")
+					apidsl.DefaultMedia(BottleMedia)
+					apidsl.BasePath("/bottles")
+					apidsl.UseTrait("Authenticated")
 
-					Action("Update", func() {
-						Metadata("swagger:tag:Update")
-						Metadata("swagger:summary", "a summary")
-						Description("Update account")
-						Docs(func() {
-							Description("docs")
-							URL("http://cellarapi.com/docs/actions/update")
+					apidsl.Action("Update", func() {
+						apidsl.Metadata("swagger:tag:Update")
+						apidsl.Metadata("swagger:summary", "a summary")
+						apidsl.Description("Update account")
+						apidsl.Docs(func() {
+							apidsl.Description("docs")
+							apidsl.URL("http://cellarapi.com/docs/actions/update")
 						})
-						Routing(
-							PUT("/:id"),
-							PUT("//orgs/:org/accounts/:id"),
+						apidsl.Routing(
+							apidsl.PUT("/:id"),
+							apidsl.PUT("//orgs/:org/accounts/:id"),
 						)
-						Params(func() {
-							Param("org", String)
-							Param("id", Integer)
-							Param("sort", func() {
-								Enum("asc", "desc")
+						apidsl.Params(func() {
+							apidsl.Param("org", design.String)
+							apidsl.Param("id", design.Integer)
+							apidsl.Param("sort", func() {
+								apidsl.Enum("asc", "desc")
 							})
 						})
-						Headers(func() {
-							Header("Authorization", String)
-							Header("X-Account", Integer)
-							Header("OptionalBoolWithDefault", Boolean, "defaults true", func() {
-								Default(true)
+						apidsl.Headers(func() {
+							apidsl.Header("Authorization", design.String)
+							apidsl.Header("X-Account", design.Integer)
+							apidsl.Header("OptionalBoolWithDefault", design.Boolean, "defaults true", func() {
+								apidsl.Default(true)
 							})
-							Header("OptionalRegex", String, func() {
-								Pattern(`[a-z]\d+`)
-								MinLength(minLength1)
-								MaxLength(maxLength10)
+							apidsl.Header("OptionalRegex", design.String, func() {
+								apidsl.Pattern(`[a-z]\d+`)
+								apidsl.MinLength(minLength1)
+								apidsl.MaxLength(maxLength10)
 							})
-							Header("OptionalInt", Integer, func() {
-								Minimum(minimum_2)
-								Maximum(maximum2)
+							apidsl.Header("OptionalInt", design.Integer, func() {
+								apidsl.Minimum(minimum_2)
+								apidsl.Maximum(maximum2)
 							})
-							Header("OptionalArray", ArrayOf(String), func() {
+							apidsl.Header("OptionalArray", apidsl.ArrayOf(design.String), func() {
 								// interpreted as MinItems & MaxItems:
-								MinLength(minItems1)
-								MaxLength(maxItems5)
+								apidsl.MinLength(minItems1)
+								apidsl.MaxLength(maxItems5)
 							})
-							Header("OverrideRequiredHeader")
-							Header("OverrideOptionalHeader")
-							Required("Authorization", "X-Account", "OverrideOptionalHeader")
+							apidsl.Header("OverrideRequiredHeader")
+							apidsl.Header("OverrideOptionalHeader")
+							apidsl.Required("Authorization", "X-Account", "OverrideOptionalHeader")
 						})
-						Payload(UpdatePayload)
-						Response(OK, func() {
-							Media(CollectionOf(BottleMedia), "extended")
+						apidsl.Payload(UpdatePayload)
+						apidsl.Response(design.OK, func() {
+							apidsl.Media(apidsl.CollectionOf(BottleMedia), "extended")
 						})
-						Response(NoContent)
-						Response(NotFound, ErrorMedia)
-						Response(BadRequest, ErrorMedia)
+						apidsl.Response(design.NoContent)
+						apidsl.Response(design.NotFound, design.ErrorMedia)
+						apidsl.Response(design.BadRequest, design.ErrorMedia)
 					})
 
-					Action("hidden", func() {
-						Description("Does not show up in Swagger spec")
-						Metadata("swagger:generate", "false")
-						Routing(GET("/hidden"))
-						Response(OK)
+					apidsl.Action("hidden", func() {
+						apidsl.Description("Does not show up in Swagger spec")
+						apidsl.Metadata("swagger:generate", "false")
+						apidsl.Routing(apidsl.GET("/hidden"))
+						apidsl.Response(design.OK)
 					})
 				})
-				base := Design.DSLFunc
-				Design.DSLFunc = func() {
+				base := design.Design.DSLFunc
+				design.Design.DSLFunc = func() {
 					base()
-					Trait("Authenticated", func() {
-						Headers(func() {
-							Header("header")
-							Header("OverrideRequiredHeader", String, "to be overridden in Action and not marked Required")
-							Header("OverrideOptionalHeader", String, "to be overridden in Action and marked Required")
-							Header("OptionalResourceHeaderWithEnum", func() {
-								Enum("a", "b")
+					apidsl.Trait("Authenticated", func() {
+						apidsl.Headers(func() {
+							apidsl.Header("header")
+							apidsl.Header("OverrideRequiredHeader", design.String, "to be overridden in Action and not marked Required")
+							apidsl.Header("OverrideOptionalHeader", design.String, "to be overridden in Action and marked Required")
+							apidsl.Header("OptionalResourceHeaderWithEnum", func() {
+								apidsl.Enum("a", "b")
 							})
-							Required("header", "OverrideRequiredHeader")
+							apidsl.Required("header", "OverrideRequiredHeader")
 						})
 					})
 				}
@@ -748,40 +748,40 @@ var _ = Describe("New", func() {
 			)
 
 			BeforeEach(func() {
-				Resource("res", func() {
-					Metadata("swagger:tag:res")
-					Metadata("struct:tag:json", "resource")
-					Metadata("swagger:extension:x-resource", extension)
-					Metadata("swagger:extension:x-string", stringExtension)
-					Action("act", func() {
-						Metadata("swagger:tag:Update")
-						Metadata("struct:tag:json", "action")
-						Metadata("swagger:extension:x-action", extension)
-						Security("password", func() {
-							Metadata("swagger:extension:x-security", extension)
+				apidsl.Resource("res", func() {
+					apidsl.Metadata("swagger:tag:res")
+					apidsl.Metadata("struct:tag:json", "resource")
+					apidsl.Metadata("swagger:extension:x-resource", extension)
+					apidsl.Metadata("swagger:extension:x-string", stringExtension)
+					apidsl.Action("act", func() {
+						apidsl.Metadata("swagger:tag:Update")
+						apidsl.Metadata("struct:tag:json", "action")
+						apidsl.Metadata("swagger:extension:x-action", extension)
+						apidsl.Security("password", func() {
+							apidsl.Metadata("swagger:extension:x-security", extension)
 						})
-						Routing(
-							PUT("/", func() {
-								Metadata("swagger:extension:x-put", extension)
+						apidsl.Routing(
+							apidsl.PUT("/", func() {
+								apidsl.Metadata("swagger:extension:x-put", extension)
 							}),
 						)
-						Params(func() {
-							Param("param", func() {
-								Metadata("swagger:extension:x-param", extension)
+						apidsl.Params(func() {
+							apidsl.Param("param", func() {
+								apidsl.Metadata("swagger:extension:x-param", extension)
 							})
 						})
-						Response(NoContent, func() {
-							Metadata("swagger:extension:x-response", extension)
+						apidsl.Response(design.NoContent, func() {
+							apidsl.Metadata("swagger:extension:x-response", extension)
 						})
 					})
 				})
-				base := Design.DSLFunc
-				Design.DSLFunc = func() {
+				base := design.Design.DSLFunc
+				design.Design.DSLFunc = func() {
 					base()
-					Metadata("swagger:tag:" + gat)
-					Metadata("struct:tag:json", "api")
-					Metadata("swagger:extension:x-api", extension)
-					BasicAuthSecurity("password")
+					apidsl.Metadata("swagger:tag:" + gat)
+					apidsl.Metadata("struct:tag:json", "api")
+					apidsl.Metadata("swagger:extension:x-api", extension)
+					apidsl.BasicAuthSecurity("password")
 				}
 			})
 

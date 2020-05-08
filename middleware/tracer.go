@@ -19,7 +19,7 @@ var (
 )
 
 type (
-	// IDFunc is a function that produces span and trace IDs for cosumption by
+	// IDFunc is a function that produces span and trace IDs for consumption by
 	// tracing systems such as Zipkin or AWS X-Ray.
 	IDFunc func() string
 

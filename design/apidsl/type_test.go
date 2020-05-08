@@ -3,8 +3,8 @@ package apidsl_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/shogo82148/goa-v1/design"
-	. "github.com/shogo82148/goa-v1/design/apidsl"
+	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/design/apidsl"
 	"github.com/shogo82148/goa-v1/dslengine"
 )
 
@@ -12,7 +12,7 @@ var _ = Describe("Type", func() {
 	var name string
 	var dsl func()
 
-	var ut *UserTypeDefinition
+	var ut *design.UserTypeDefinition
 
 	BeforeEach(func() {
 		dslengine.Reset()
@@ -21,15 +21,15 @@ var _ = Describe("Type", func() {
 	})
 
 	JustBeforeEach(func() {
-		Type(name, dsl)
+		apidsl.Type(name, dsl)
 		dslengine.Run()
-		ut = Design.Types[name]
+		ut = design.Design.Types[name]
 	})
 
 	Context("with no dsl and no name", func() {
 		It("produces an invalid type definition", func() {
 			Ω(ut).ShouldNot(BeNil())
-			Ω(ut.Validate("test", Design)).Should(HaveOccurred())
+			Ω(ut.Validate("test", design.Design)).Should(HaveOccurred())
 		})
 	})
 
@@ -40,7 +40,7 @@ var _ = Describe("Type", func() {
 
 		It("produces a valid type definition", func() {
 			Ω(ut).ShouldNot(BeNil())
-			Ω(ut.Validate("test", Design)).ShouldNot(HaveOccurred())
+			Ω(ut.Validate("test", design.Design)).ShouldNot(HaveOccurred())
 		})
 	})
 
@@ -50,16 +50,16 @@ var _ = Describe("Type", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Attribute(attName)
+				apidsl.Attribute(attName)
 			}
 		})
 
 		It("sets the attributes", func() {
 			Ω(ut).ShouldNot(BeNil())
-			Ω(ut.Validate("test", Design)).ShouldNot(HaveOccurred())
+			Ω(ut.Validate("test", design.Design)).ShouldNot(HaveOccurred())
 			Ω(ut.AttributeDefinition).ShouldNot(BeNil())
-			Ω(ut.Type).Should(BeAssignableToTypeOf(Object{}))
-			o := ut.Type.(Object)
+			Ω(ut.Type).Should(BeAssignableToTypeOf(design.Object{}))
+			o := ut.Type.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(attName))
 		})
@@ -70,19 +70,19 @@ var _ = Describe("Type", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Attribute(attName, UUID)
+				apidsl.Attribute(attName, design.UUID)
 			}
 		})
 
 		It("produces an attribute of date type", func() {
 			Ω(ut).ShouldNot(BeNil())
-			Ω(ut.Validate("test", Design)).ShouldNot(HaveOccurred())
+			Ω(ut.Validate("test", design.Design)).ShouldNot(HaveOccurred())
 			Ω(ut.AttributeDefinition).ShouldNot(BeNil())
-			Ω(ut.Type).Should(BeAssignableToTypeOf(Object{}))
-			o := ut.Type.(Object)
+			Ω(ut.Type).Should(BeAssignableToTypeOf(design.Object{}))
+			o := ut.Type.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(attName))
-			Ω(o[attName].Type).Should(Equal(UUID))
+			Ω(o[attName].Type).Should(Equal(design.UUID))
 		})
 	})
 
@@ -91,19 +91,19 @@ var _ = Describe("Type", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Attribute(attName, DateTime)
+				apidsl.Attribute(attName, design.DateTime)
 			}
 		})
 
 		It("produces an attribute of date type", func() {
 			Ω(ut).ShouldNot(BeNil())
-			Ω(ut.Validate("test", Design)).ShouldNot(HaveOccurred())
+			Ω(ut.Validate("test", design.Design)).ShouldNot(HaveOccurred())
 			Ω(ut.AttributeDefinition).ShouldNot(BeNil())
-			Ω(ut.Type).Should(BeAssignableToTypeOf(Object{}))
-			o := ut.Type.(Object)
+			Ω(ut.Type).Should(BeAssignableToTypeOf(design.Object{}))
+			o := ut.Type.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(attName))
-			Ω(o[attName].Type).Should(Equal(DateTime))
+			Ω(o[attName].Type).Should(Equal(design.DateTime))
 		})
 	})
 })
@@ -111,15 +111,15 @@ var _ = Describe("Type", func() {
 var _ = Describe("ArrayOf", func() {
 	Context("used on a global variable", func() {
 		var (
-			ut *UserTypeDefinition
-			ar *Array
+			ut *design.UserTypeDefinition
+			ar *design.Array
 		)
 		BeforeEach(func() {
 			dslengine.Reset()
-			ut = Type("example", func() {
-				Attribute("id")
+			ut = apidsl.Type("example", func() {
+				apidsl.Attribute("id")
 			})
-			ar = ArrayOf(ut)
+			ar = apidsl.ArrayOf(ut)
 			Ω(dslengine.Errors).ShouldNot(HaveOccurred())
 		})
 
@@ -130,7 +130,7 @@ var _ = Describe("ArrayOf", func() {
 
 		It("produces a array type", func() {
 			Ω(ar).ShouldNot(BeNil())
-			Ω(ar.Kind()).Should(Equal(ArrayKind))
+			Ω(ar.Kind()).Should(Equal(design.ArrayKind))
 			Ω(ar.ElemType.Type).Should(Equal(ut))
 		})
 	})
@@ -138,35 +138,35 @@ var _ = Describe("ArrayOf", func() {
 	Context("with a DSL", func() {
 		var (
 			pattern = "foo"
-			ar      *Array
+			ar      *design.Array
 		)
 
 		BeforeEach(func() {
 			dslengine.Reset()
-			ar = ArrayOf(String, func() {
-				Pattern(pattern)
+			ar = apidsl.ArrayOf(design.String, func() {
+				apidsl.Pattern(pattern)
 			})
 			Ω(dslengine.Errors).ShouldNot(HaveOccurred())
 		})
 
 		It("records the validations", func() {
 			Ω(ar).ShouldNot(BeNil())
-			Ω(ar.Kind()).Should(Equal(ArrayKind))
-			Ω(ar.ElemType.Type).Should(Equal(String))
+			Ω(ar.Kind()).Should(Equal(design.ArrayKind))
+			Ω(ar.ElemType.Type).Should(Equal(design.String))
 			Ω(ar.ElemType.Validation).ShouldNot(BeNil())
 			Ω(ar.ElemType.Validation.Pattern).Should(Equal(pattern))
 		})
 	})
 
 	Context("defined with the type name", func() {
-		var ar *UserTypeDefinition
+		var ar *design.UserTypeDefinition
 		BeforeEach(func() {
 			dslengine.Reset()
-			Type("name", func() {
-				Attribute("id")
+			apidsl.Type("name", func() {
+				apidsl.Attribute("id")
 			})
-			ar = Type("names", func() {
-				Attribute("ut", ArrayOf("name"))
+			ar = apidsl.Type("names", func() {
+				apidsl.Attribute("ut", apidsl.ArrayOf("name"))
 			})
 		})
 
@@ -183,24 +183,24 @@ var _ = Describe("ArrayOf", func() {
 			Ω(ar.Type.ToObject()).Should(HaveKey("ut"))
 			ut := ar.Type.ToObject()["ut"]
 			Ω(ut.Type).ShouldNot(BeNil())
-			Ω(ut.Type).Should(BeAssignableToTypeOf(&Array{}))
+			Ω(ut.Type).Should(BeAssignableToTypeOf(&design.Array{}))
 			et := ut.Type.ToArray().ElemType
 			Ω(et).ShouldNot(BeNil())
-			Ω(et.Type).Should(BeAssignableToTypeOf(&UserTypeDefinition{}))
-			Ω(et.Type.(*UserTypeDefinition).TypeName).Should(Equal("name"))
+			Ω(et.Type).Should(BeAssignableToTypeOf(&design.UserTypeDefinition{}))
+			Ω(et.Type.(*design.UserTypeDefinition).TypeName).Should(Equal("name"))
 		})
 	})
 
 	Context("defined with a media type name", func() {
-		var mt *MediaTypeDefinition
+		var mt *design.MediaTypeDefinition
 		BeforeEach(func() {
 			dslengine.Reset()
-			mt = MediaType("application/vnd.test", func() {
-				Attributes(func() {
-					Attribute("ut", ArrayOf("application/vnd.test"))
+			mt = apidsl.MediaType("application/vnd.test", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("ut", apidsl.ArrayOf("application/vnd.test"))
 				})
-				View("default", func() {
-					Attribute("ut")
+				apidsl.View("default", func() {
+					apidsl.Attribute("ut")
 				})
 			})
 		})
@@ -218,11 +218,11 @@ var _ = Describe("ArrayOf", func() {
 			Ω(mt.Type.ToObject()).Should(HaveKey("ut"))
 			ut := mt.Type.ToObject()["ut"]
 			Ω(ut.Type).ShouldNot(BeNil())
-			Ω(ut.Type).Should(BeAssignableToTypeOf(&Array{}))
+			Ω(ut.Type).Should(BeAssignableToTypeOf(&design.Array{}))
 			et := ut.Type.ToArray().ElemType
 			Ω(et).ShouldNot(BeNil())
-			Ω(et.Type).Should(BeAssignableToTypeOf(&MediaTypeDefinition{}))
-			Ω(et.Type.(*MediaTypeDefinition).TypeName).Should(Equal("Test"))
+			Ω(et.Type).Should(BeAssignableToTypeOf(&design.MediaTypeDefinition{}))
+			Ω(et.Type.(*design.MediaTypeDefinition).TypeName).Should(Equal("Test"))
 		})
 	})
 })
@@ -230,19 +230,19 @@ var _ = Describe("ArrayOf", func() {
 var _ = Describe("HashOf", func() {
 	Context("used on a global variable", func() {
 		var (
-			kt *UserTypeDefinition
-			vt *UserTypeDefinition
-			ha *Hash
+			kt *design.UserTypeDefinition
+			vt *design.UserTypeDefinition
+			ha *design.Hash
 		)
 		BeforeEach(func() {
 			dslengine.Reset()
-			kt = Type("key", func() {
-				Attribute("id")
+			kt = apidsl.Type("key", func() {
+				apidsl.Attribute("id")
 			})
-			vt = Type("val", func() {
-				Attribute("id")
+			vt = apidsl.Type("val", func() {
+				apidsl.Attribute("id")
 			})
-			ha = HashOf(kt, vt)
+			ha = apidsl.HashOf(kt, vt)
 			Ω(dslengine.Errors).ShouldNot(HaveOccurred())
 		})
 
@@ -253,7 +253,7 @@ var _ = Describe("HashOf", func() {
 
 		It("produces a hash type", func() {
 			Ω(ha).ShouldNot(BeNil())
-			Ω(ha.Kind()).Should(Equal(HashKind))
+			Ω(ha.Kind()).Should(Equal(design.HashKind))
 			Ω(ha.KeyType.Type).Should(Equal(kt))
 			Ω(ha.ElemType.Type).Should(Equal(vt))
 		})
@@ -263,12 +263,12 @@ var _ = Describe("HashOf", func() {
 		var (
 			kp = "foo"
 			vp = "bar"
-			ha *Hash
+			ha *design.Hash
 		)
 
 		BeforeEach(func() {
 			dslengine.Reset()
-			ha = HashOf(String, String, func() { Pattern(kp) }, func() { Pattern(vp) })
+			ha = apidsl.HashOf(design.String, design.String, func() { apidsl.Pattern(kp) }, func() { apidsl.Pattern(vp) })
 			Ω(dslengine.Errors).ShouldNot(HaveOccurred())
 		})
 
@@ -279,11 +279,11 @@ var _ = Describe("HashOf", func() {
 
 		It("records the validations", func() {
 			Ω(ha).ShouldNot(BeNil())
-			Ω(ha.Kind()).Should(Equal(HashKind))
-			Ω(ha.KeyType.Type).Should(Equal(String))
+			Ω(ha.Kind()).Should(Equal(design.HashKind))
+			Ω(ha.KeyType.Type).Should(Equal(design.String))
 			Ω(ha.KeyType.Validation).ShouldNot(BeNil())
 			Ω(ha.KeyType.Validation.Pattern).Should(Equal(kp))
-			Ω(ha.ElemType.Type).Should(Equal(String))
+			Ω(ha.ElemType.Type).Should(Equal(design.String))
 			Ω(ha.ElemType.Validation).ShouldNot(BeNil())
 			Ω(ha.ElemType.Validation.Pattern).Should(Equal(vp))
 		})

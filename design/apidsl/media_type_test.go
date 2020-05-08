@@ -1,18 +1,18 @@
 package apidsl_test
 
 import (
-	. "github.com/shogo82148/goa-v1/design"
-	. "github.com/shogo82148/goa-v1/design/apidsl"
-	"github.com/shogo82148/goa-v1/dslengine"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/design/apidsl"
+	"github.com/shogo82148/goa-v1/dslengine"
 )
 
 var _ = Describe("MediaType", func() {
 	var name string
 	var dslFunc func()
 
-	var mt *MediaTypeDefinition
+	var mt *design.MediaTypeDefinition
 
 	BeforeEach(func() {
 		dslengine.Reset()
@@ -21,7 +21,7 @@ var _ = Describe("MediaType", func() {
 	})
 
 	JustBeforeEach(func() {
-		mt = MediaType(name, dslFunc)
+		mt = apidsl.MediaType(name, dslFunc)
 		dslengine.Run()
 	})
 
@@ -49,10 +49,10 @@ var _ = Describe("MediaType", func() {
 		BeforeEach(func() {
 			name = "application/foo"
 			dslFunc = func() {
-				Attributes(func() {
-					Attribute(attName)
+				apidsl.Attributes(func() {
+					apidsl.Attribute(attName)
 				})
-				View("default", func() { Attribute(attName) })
+				apidsl.View("default", func() { apidsl.Attribute(attName) })
 			}
 		})
 
@@ -60,8 +60,8 @@ var _ = Describe("MediaType", func() {
 			Ω(mt).ShouldNot(BeNil())
 			Ω(mt.Validate()).ShouldNot(HaveOccurred())
 			Ω(mt.AttributeDefinition).ShouldNot(BeNil())
-			Ω(mt.Type).Should(BeAssignableToTypeOf(Object{}))
-			o := mt.Type.(Object)
+			Ω(mt.Type).Should(BeAssignableToTypeOf(design.Object{}))
+			o := mt.Type.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(attName))
 		})
@@ -74,11 +74,11 @@ var _ = Describe("MediaType", func() {
 		BeforeEach(func() {
 			name = "application/foo"
 			dslFunc = func() {
-				ContentType(contentType)
-				Attributes(func() {
-					Attribute(attName)
+				apidsl.ContentType(contentType)
+				apidsl.Attributes(func() {
+					apidsl.Attribute(attName)
 				})
-				View("default", func() { Attribute(attName) })
+				apidsl.View("default", func() { apidsl.Attribute(attName) })
 			}
 		})
 
@@ -95,11 +95,11 @@ var _ = Describe("MediaType", func() {
 		BeforeEach(func() {
 			name = "application/foo"
 			dslFunc = func() {
-				Description(description)
-				Attributes(func() {
-					Attribute("attName")
+				apidsl.Description(description)
+				apidsl.Attributes(func() {
+					apidsl.Attribute("attName")
 				})
-				View("default", func() { Attribute("attName") })
+				apidsl.View("default", func() { apidsl.Attribute("attName") })
 			}
 		})
 
@@ -114,51 +114,51 @@ var _ = Describe("MediaType", func() {
 		const linkName = "link"
 		var link1Name, link2Name string
 		var link2View string
-		var mt1, mt2 *MediaTypeDefinition
+		var mt1, mt2 *design.MediaTypeDefinition
 
 		BeforeEach(func() {
 			name = "foo"
 			link1Name = "l1"
 			link2Name = "l2"
 			link2View = "l2v"
-			mt1 = NewMediaTypeDefinition("application/mt1", "application/mt1", func() {
-				Attributes(func() {
-					Attribute("foo")
+			mt1 = design.NewMediaTypeDefinition("application/mt1", "application/mt1", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("foo")
 				})
-				View("default", func() {
-					Attribute("foo")
+				apidsl.View("default", func() {
+					apidsl.Attribute("foo")
 				})
-				View("link", func() {
-					Attribute("foo")
-				})
-			})
-			mt2 = NewMediaTypeDefinition("application/mt2", "application/mt2", func() {
-				Attributes(func() {
-					Attribute("foo")
-				})
-				View("l2v", func() {
-					Attribute("foo")
-				})
-				View("default", func() {
-					Attribute("foo")
+				apidsl.View("link", func() {
+					apidsl.Attribute("foo")
 				})
 			})
-			Design.MediaTypes = make(map[string]*MediaTypeDefinition)
-			Design.MediaTypes["application/mt1"] = mt1
-			Design.MediaTypes["application/mt2"] = mt2
+			mt2 = design.NewMediaTypeDefinition("application/mt2", "application/mt2", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("foo")
+				})
+				apidsl.View("l2v", func() {
+					apidsl.Attribute("foo")
+				})
+				apidsl.View("default", func() {
+					apidsl.Attribute("foo")
+				})
+			})
+			design.Design.MediaTypes = make(map[string]*design.MediaTypeDefinition)
+			design.Design.MediaTypes["application/mt1"] = mt1
+			design.Design.MediaTypes["application/mt2"] = mt2
 			dslFunc = func() {
-				Attributes(func() {
-					Attributes(func() {
-						Attribute(link1Name, mt1)
-						Attribute(link2Name, mt2)
+				apidsl.Attributes(func() {
+					apidsl.Attributes(func() {
+						apidsl.Attribute(link1Name, mt1)
+						apidsl.Attribute(link2Name, mt2)
 					})
-					Links(func() {
-						Link(link1Name)
-						Link(link2Name, link2View)
+					apidsl.Links(func() {
+						apidsl.Link(link1Name)
+						apidsl.Link(link2Name, link2View)
 					})
-					View("default", func() {
-						Attribute(link1Name)
-						Attribute(link2Name)
+					apidsl.View("default", func() {
+						apidsl.Attribute(link1Name)
+						apidsl.Attribute(link2Name)
 					})
 				})
 			}
@@ -187,14 +187,14 @@ var _ = Describe("MediaType", func() {
 		BeforeEach(func() {
 			name = "application/foo"
 			dslFunc = func() {
-				Attributes(func() {
-					Attribute(viewAtt)
+				apidsl.Attributes(func() {
+					apidsl.Attribute(viewAtt)
 				})
-				View(viewName, func() {
-					Attribute(viewAtt)
+				apidsl.View(viewName, func() {
+					apidsl.Attribute(viewAtt)
 				})
-				View("default", func() {
-					Attribute(viewAtt)
+				apidsl.View("default", func() {
+					apidsl.Attribute(viewAtt)
 				})
 			}
 		})
@@ -209,31 +209,31 @@ var _ = Describe("MediaType", func() {
 			Ω(v.Name).Should(Equal(viewName))
 			Ω(v.Parent).Should(Equal(mt))
 			Ω(v.AttributeDefinition).ShouldNot(BeNil())
-			Ω(v.AttributeDefinition.Type).Should(BeAssignableToTypeOf(Object{}))
-			o := v.AttributeDefinition.Type.(Object)
+			Ω(v.AttributeDefinition.Type).Should(BeAssignableToTypeOf(design.Object{}))
+			o := v.AttributeDefinition.Type.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(viewAtt))
 			Ω(o[viewAtt]).ShouldNot(BeNil())
-			Ω(o[viewAtt].Type).Should(Equal(String))
+			Ω(o[viewAtt].Type).Should(Equal(design.String))
 		})
 	})
 })
 
 var _ = Describe("Duplicate media types", func() {
-	var duplicate *MediaTypeDefinition
+	var duplicate *design.MediaTypeDefinition
 	const id = "application/foo"
 	const attName = "bar"
 	var dslFunc = func() {
-		Attributes(func() {
-			Attribute(attName)
+		apidsl.Attributes(func() {
+			apidsl.Attribute(attName)
 		})
-		View("default", func() { Attribute(attName) })
+		apidsl.View("default", func() { apidsl.Attribute(attName) })
 	}
 
 	BeforeEach(func() {
 		dslengine.Reset()
-		MediaType(id, dslFunc)
-		duplicate = MediaType(id, dslFunc)
+		apidsl.MediaType(id, dslFunc)
+		duplicate = apidsl.MediaType(id, dslFunc)
 	})
 
 	It("produces an error", func() {
@@ -243,11 +243,11 @@ var _ = Describe("Duplicate media types", func() {
 
 	Context("with a response definition using the duplicate", func() {
 		BeforeEach(func() {
-			Resource("foo", func() {
-				Action("show", func() {
-					Routing(GET(""))
-					Response(OK, func() {
-						Media(duplicate)
+			apidsl.Resource("foo", func() {
+				apidsl.Action("show", func() {
+					apidsl.Routing(apidsl.GET(""))
+					apidsl.Response(design.OK, func() {
+						apidsl.Media(duplicate)
 					})
 				})
 			})
@@ -261,16 +261,16 @@ var _ = Describe("Duplicate media types", func() {
 
 var _ = Describe("CollectionOf", func() {
 	Context("used on a global variable", func() {
-		var col *MediaTypeDefinition
+		var col *design.MediaTypeDefinition
 		BeforeEach(func() {
 			dslengine.Reset()
-			mt := MediaType("application/vnd.example", func() {
-				Attribute("id")
-				View("default", func() {
-					Attribute("id")
+			mt := apidsl.MediaType("application/vnd.example", func() {
+				apidsl.Attribute("id")
+				apidsl.View("default", func() {
+					apidsl.Attribute("id")
 				})
 			})
-			col = CollectionOf(mt)
+			col = apidsl.CollectionOf(mt)
 			Ω(dslengine.Errors).ShouldNot(HaveOccurred())
 		})
 
@@ -283,21 +283,21 @@ var _ = Describe("CollectionOf", func() {
 			Ω(col).ShouldNot(BeNil())
 			Ω(col.Identifier).Should(Equal("application/vnd.example; type=collection"))
 			Ω(col.TypeName).ShouldNot(BeEmpty())
-			Ω(Design.MediaTypes).Should(HaveKey(col.Identifier))
+			Ω(design.Design.MediaTypes).Should(HaveKey(col.Identifier))
 		})
 	})
 
 	Context("defined with a collection identifier", func() {
-		var col *MediaTypeDefinition
+		var col *design.MediaTypeDefinition
 		BeforeEach(func() {
 			dslengine.Reset()
-			mt := MediaType("application/vnd.example", func() {
-				Attribute("id")
-				View("default", func() {
-					Attribute("id")
+			mt := apidsl.MediaType("application/vnd.example", func() {
+				apidsl.Attribute("id")
+				apidsl.View("default", func() {
+					apidsl.Attribute("id")
 				})
 			})
-			col = CollectionOf(mt, "application/vnd.examples")
+			col = apidsl.CollectionOf(mt, "application/vnd.examples")
 			Ω(dslengine.Errors).ShouldNot(HaveOccurred())
 		})
 
@@ -310,24 +310,24 @@ var _ = Describe("CollectionOf", func() {
 			Ω(col).ShouldNot(BeNil())
 			Ω(col.Identifier).Should(Equal("application/vnd.examples"))
 			Ω(col.TypeName).ShouldNot(BeEmpty())
-			Ω(Design.MediaTypes).Should(HaveKey(col.Identifier))
+			Ω(design.Design.MediaTypes).Should(HaveKey(col.Identifier))
 		})
 	})
 
 	Context("defined with the media type identifier", func() {
-		var col *MediaTypeDefinition
+		var col *design.MediaTypeDefinition
 		BeforeEach(func() {
 			dslengine.Reset()
-			MediaType("application/vnd.example+json", func() {
-				Attribute("id")
-				View("default", func() {
-					Attribute("id")
+			apidsl.MediaType("application/vnd.example+json", func() {
+				apidsl.Attribute("id")
+				apidsl.View("default", func() {
+					apidsl.Attribute("id")
 				})
 			})
-			col = MediaType("application/vnd.parent+json", func() {
-				Attribute("mt", CollectionOf("application/vnd.example"))
-				View("default", func() {
-					Attribute("mt")
+			col = apidsl.MediaType("application/vnd.parent+json", func() {
+				apidsl.Attribute("mt", apidsl.CollectionOf("application/vnd.example"))
+				apidsl.View("default", func() {
+					apidsl.Attribute("mt")
 				})
 			})
 		})
@@ -346,12 +346,12 @@ var _ = Describe("CollectionOf", func() {
 			Ω(col.Type.ToObject()).Should(HaveKey("mt"))
 			mt := col.Type.ToObject()["mt"]
 			Ω(mt.Type).ShouldNot(BeNil())
-			Ω(mt.Type).Should(BeAssignableToTypeOf(&MediaTypeDefinition{}))
+			Ω(mt.Type).Should(BeAssignableToTypeOf(&design.MediaTypeDefinition{}))
 			Ω(mt.Type.Name()).Should(Equal("array"))
 			et := mt.Type.ToArray().ElemType
 			Ω(et).ShouldNot(BeNil())
-			Ω(et.Type).Should(BeAssignableToTypeOf(&MediaTypeDefinition{}))
-			Ω(et.Type.(*MediaTypeDefinition).Identifier).Should(Equal("application/vnd.example+json"))
+			Ω(et.Type).Should(BeAssignableToTypeOf(&design.MediaTypeDefinition{}))
+			Ω(et.Type.(*design.MediaTypeDefinition).Identifier).Should(Equal("application/vnd.example+json"))
 		})
 	})
 })
@@ -360,33 +360,33 @@ var _ = Describe("Example", func() {
 	Context("defined examples in a media type", func() {
 		BeforeEach(func() {
 			dslengine.Reset()
-			ProjectedMediaTypes = make(MediaTypeRoot)
+			design.ProjectedMediaTypes = make(design.MediaTypeRoot)
 		})
 		It("produces a media type with examples", func() {
-			mt := MediaType("application/vnd.example+json", func() {
-				Attributes(func() {
-					Attribute("test1", String, "test1 desc", func() {
-						Example("test1")
+			mt := apidsl.MediaType("application/vnd.example+json", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("test1", design.String, "test1 desc", func() {
+						apidsl.Example("test1")
 					})
-					Attribute("test2", String, "test2 desc", func() {
-						NoExample()
+					apidsl.Attribute("test2", design.String, "test2 desc", func() {
+						apidsl.NoExample()
 					})
-					Attribute("test3", Integer, "test3 desc", func() {
-						Minimum(1)
+					apidsl.Attribute("test3", design.Integer, "test3 desc", func() {
+						apidsl.Minimum(1)
 					})
-					Attribute("test4", String, func() {
-						Format("email")
-						Pattern("@")
+					apidsl.Attribute("test4", design.String, func() {
+						apidsl.Format("email")
+						apidsl.Pattern("@")
 					})
-					Attribute("test5", Any)
+					apidsl.Attribute("test5", design.Any)
 
-					Attribute("test-failure1", Integer, func() {
-						Minimum(0)
-						Maximum(0)
+					apidsl.Attribute("test-failure1", design.Integer, func() {
+						apidsl.Minimum(0)
+						apidsl.Maximum(0)
 					})
 				})
-				View("default", func() {
-					Attribute("test1")
+				apidsl.View("default", func() {
+					apidsl.Attribute("test1")
 				})
 			})
 
@@ -409,37 +409,37 @@ var _ = Describe("Example", func() {
 		})
 
 		It("produces a media type with HashOf examples", func() {
-			ut := Type("example", func() {
-				Attribute("test1", Integer)
-				Attribute("test2", Any)
+			ut := apidsl.Type("example", func() {
+				apidsl.Attribute("test1", design.Integer)
+				apidsl.Attribute("test2", design.Any)
 			})
 
-			mt := MediaType("application/vnd.example+json", func() {
-				Attributes(func() {
-					Attribute("test1", HashOf(String, Integer))
-					Attribute("test2", HashOf(Any, String))
-					Attribute("test3", HashOf(String, Any))
-					Attribute("test4", HashOf(Any, Any))
+			mt := apidsl.MediaType("application/vnd.example+json", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("test1", apidsl.HashOf(design.String, design.Integer))
+					apidsl.Attribute("test2", apidsl.HashOf(design.Any, design.String))
+					apidsl.Attribute("test3", apidsl.HashOf(design.String, design.Any))
+					apidsl.Attribute("test4", apidsl.HashOf(design.Any, design.Any))
 
-					Attribute("test-with-user-type-1", HashOf(String, ut))
-					Attribute("test-with-user-type-2", HashOf(Any, ut))
+					apidsl.Attribute("test-with-user-type-1", apidsl.HashOf(design.String, ut))
+					apidsl.Attribute("test-with-user-type-2", apidsl.HashOf(design.Any, ut))
 
-					Attribute("test-with-array-1", HashOf(String, ArrayOf(Integer)))
-					Attribute("test-with-array-2", HashOf(String, ArrayOf(Any)))
-					Attribute("test-with-array-3", HashOf(String, ArrayOf(ut)))
-					Attribute("test-with-array-4", HashOf(Any, ArrayOf(String)))
-					Attribute("test-with-array-5", HashOf(Any, ArrayOf(Any)))
-					Attribute("test-with-array-6", HashOf(Any, ArrayOf(ut)))
+					apidsl.Attribute("test-with-array-1", apidsl.HashOf(design.String, apidsl.ArrayOf(design.Integer)))
+					apidsl.Attribute("test-with-array-2", apidsl.HashOf(design.String, apidsl.ArrayOf(design.Any)))
+					apidsl.Attribute("test-with-array-3", apidsl.HashOf(design.String, apidsl.ArrayOf(ut)))
+					apidsl.Attribute("test-with-array-4", apidsl.HashOf(design.Any, apidsl.ArrayOf(design.String)))
+					apidsl.Attribute("test-with-array-5", apidsl.HashOf(design.Any, apidsl.ArrayOf(design.Any)))
+					apidsl.Attribute("test-with-array-6", apidsl.HashOf(design.Any, apidsl.ArrayOf(ut)))
 
-					Attribute("test-with-example-1", HashOf(String, Boolean), func() {
-						Example(map[string]bool{})
+					apidsl.Attribute("test-with-example-1", apidsl.HashOf(design.String, design.Boolean), func() {
+						apidsl.Example(map[string]bool{})
 					})
-					Attribute("test-with-example-2", HashOf(Any, Boolean), func() {
-						Example(map[string]int{})
+					apidsl.Attribute("test-with-example-2", apidsl.HashOf(design.Any, design.Boolean), func() {
+						apidsl.Example(map[string]int{})
 					})
 				})
-				View("default", func() {
-					Attribute("test1")
+				apidsl.View("default", func() {
+					apidsl.Attribute("test1")
 				})
 			})
 
@@ -491,31 +491,31 @@ var _ = Describe("Example", func() {
 		})
 
 		It("produces a media type with examples in cyclical dependencies", func() {
-			mt := MediaType("vnd.application/foo", func() {
-				Attributes(func() {
-					Attribute("foo", "vnd.application/bar")
-					Attribute("others", Integer, func() {
-						Minimum(3)
-						Maximum(3)
+			mt := apidsl.MediaType("vnd.application/foo", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("foo", "vnd.application/bar")
+					apidsl.Attribute("others", design.Integer, func() {
+						apidsl.Minimum(3)
+						apidsl.Maximum(3)
 					})
 				})
-				View("default", func() {
-					Attribute("foo")
-					Attribute("others")
+				apidsl.View("default", func() {
+					apidsl.Attribute("foo")
+					apidsl.Attribute("others")
 				})
 			})
 
-			mt2 := MediaType("vnd.application/bar", func() {
-				Attributes(func() {
-					Attribute("bar", mt)
-					Attribute("others", Integer, func() {
-						Minimum(1)
-						Maximum(2)
+			mt2 := apidsl.MediaType("vnd.application/bar", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("bar", mt)
+					apidsl.Attribute("others", design.Integer, func() {
+						apidsl.Minimum(1)
+						apidsl.Maximum(2)
 					})
 				})
-				View("default", func() {
-					Attribute("bar")
-					Attribute("others")
+				apidsl.View("default", func() {
+					apidsl.Attribute("bar")
+					apidsl.Attribute("others")
 				})
 			})
 
@@ -546,43 +546,43 @@ var _ = Describe("Example", func() {
 		})
 
 		It("produces media type examples from the linked media type", func() {
-			mt := MediaType("application/vnd.example+json", func() {
-				Attributes(func() {
-					Attribute("test1", String, "test1 desc", func() {
-						Example("test1")
+			mt := apidsl.MediaType("application/vnd.example+json", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("test1", design.String, "test1 desc", func() {
+						apidsl.Example("test1")
 					})
-					Attribute("test2", String, "test2 desc", func() {
-						NoExample()
+					apidsl.Attribute("test2", design.String, "test2 desc", func() {
+						apidsl.NoExample()
 					})
-					Attribute("test3", Integer, "test3 desc", func() {
-						Minimum(1)
+					apidsl.Attribute("test3", design.Integer, "test3 desc", func() {
+						apidsl.Minimum(1)
 					})
 				})
-				View("default", func() {
-					Attribute("test1")
-					Attribute("test2")
-					Attribute("test3")
+				apidsl.View("default", func() {
+					apidsl.Attribute("test1")
+					apidsl.Attribute("test2")
+					apidsl.Attribute("test3")
 				})
 			})
 
-			pmt := MediaType("application/vnd.example.parent+json", func() {
-				Attributes(func() {
-					Attribute("test1", String, "test1 desc", func() {
-						Example("test1")
+			pmt := apidsl.MediaType("application/vnd.example.parent+json", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("test1", design.String, "test1 desc", func() {
+						apidsl.Example("test1")
 					})
-					Attribute("test2", String, "test2 desc", func() {
-						NoExample()
+					apidsl.Attribute("test2", design.String, "test2 desc", func() {
+						apidsl.NoExample()
 					})
-					Attribute("test3", Integer, "test3 desc", func() {
-						Minimum(1)
+					apidsl.Attribute("test3", design.Integer, "test3 desc", func() {
+						apidsl.Minimum(1)
 					})
-					Attribute("test4", mt, "test4 desc")
+					apidsl.Attribute("test4", mt, "test4 desc")
 				})
-				View("default", func() {
-					Attribute("test1")
-					Attribute("test2")
-					Attribute("test3")
-					Attribute("test4")
+				apidsl.View("default", func() {
+					apidsl.Attribute("test1")
+					apidsl.Attribute("test2")
+					apidsl.Attribute("test3")
+					apidsl.Attribute("test4")
 				})
 			})
 
@@ -614,43 +614,43 @@ var _ = Describe("Example", func() {
 		})
 
 		It("produces media type examples from the linked media type collection with custom examples", func() {
-			mt := MediaType("application/vnd.example+json", func() {
-				Attributes(func() {
-					Attribute("test1", String, "test1 desc", func() {
-						Example("test1")
+			mt := apidsl.MediaType("application/vnd.example+json", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("test1", design.String, "test1 desc", func() {
+						apidsl.Example("test1")
 					})
-					Attribute("test2", String, "test2 desc", func() {
-						NoExample()
+					apidsl.Attribute("test2", design.String, "test2 desc", func() {
+						apidsl.NoExample()
 					})
-					Attribute("test3", Integer, "test3 desc", func() {
-						Minimum(1)
+					apidsl.Attribute("test3", design.Integer, "test3 desc", func() {
+						apidsl.Minimum(1)
 					})
 				})
-				View("default", func() {
-					Attribute("test1")
-					Attribute("test2")
-					Attribute("test3")
+				apidsl.View("default", func() {
+					apidsl.Attribute("test1")
+					apidsl.Attribute("test2")
+					apidsl.Attribute("test3")
 				})
 			})
 
-			pmt := MediaType("application/vnd.example.parent+json", func() {
-				Attributes(func() {
-					Attribute("test1", String, "test1 desc", func() {
-						Example("test1")
+			pmt := apidsl.MediaType("application/vnd.example.parent+json", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("test1", design.String, "test1 desc", func() {
+						apidsl.Example("test1")
 					})
-					Attribute("test2", String, "test2 desc", func() {
-						NoExample()
+					apidsl.Attribute("test2", design.String, "test2 desc", func() {
+						apidsl.NoExample()
 					})
-					Attribute("test3", String, "test3 desc", func() {
-						Pattern("^1$")
+					apidsl.Attribute("test3", design.String, "test3 desc", func() {
+						apidsl.Pattern("^1$")
 					})
-					Attribute("test4", CollectionOf(mt), "test4 desc")
+					apidsl.Attribute("test4", apidsl.CollectionOf(mt), "test4 desc")
 				})
-				View("default", func() {
-					Attribute("test1")
-					Attribute("test2")
-					Attribute("test3")
-					Attribute("test4")
+				apidsl.View("default", func() {
+					apidsl.Attribute("test1")
+					apidsl.Attribute("test2")
+					apidsl.Attribute("test3")
+					apidsl.Attribute("test4")
 				})
 			})
 
@@ -684,29 +684,29 @@ var _ = Describe("Example", func() {
 		})
 
 		It("produces media type examples from the linked media type without custom examples", func() {
-			mt := MediaType("application/vnd.example.child+json", func() {
-				Attributes(func() {
-					Attribute("test1", String, "test1 desc")
+			mt := apidsl.MediaType("application/vnd.example.child+json", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("test1", design.String, "test1 desc")
 				})
-				View("default", func() {
-					Attribute("test1")
+				apidsl.View("default", func() {
+					apidsl.Attribute("test1")
 				})
 			})
 
-			pmt := MediaType("application/vnd.example.parent+json", func() {
-				Attributes(func() {
-					Attribute("test1", String, "test1 desc", func() {
-						Example("test1")
+			pmt := apidsl.MediaType("application/vnd.example.parent+json", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("test1", design.String, "test1 desc", func() {
+						apidsl.Example("test1")
 					})
-					Attribute("test2", String, "test2 desc", func() {
-						NoExample()
+					apidsl.Attribute("test2", design.String, "test2 desc", func() {
+						apidsl.NoExample()
 					})
-					Attribute("test3", mt, "test3 desc")
+					apidsl.Attribute("test3", mt, "test3 desc")
 				})
-				View("default", func() {
-					Attribute("test1")
-					Attribute("test2")
-					Attribute("test3")
+				apidsl.View("default", func() {
+					apidsl.Attribute("test1")
+					apidsl.Attribute("test2")
+					apidsl.Attribute("test3")
 				})
 			})
 
@@ -728,27 +728,27 @@ var _ = Describe("Example", func() {
 		})
 
 		It("produces media type examples from the linked media type collection without custom examples", func() {
-			mt := MediaType("application/vnd.example.child+json", func() {
-				Attributes(func() {
-					Attribute("test1", String, "test1 desc")
+			mt := apidsl.MediaType("application/vnd.example.child+json", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("test1", design.String, "test1 desc")
 				})
-				View("default", func() {
-					Attribute("test1")
+				apidsl.View("default", func() {
+					apidsl.Attribute("test1")
 				})
 			})
 
-			pmt := MediaType("application/vnd.example.parent+json", func() {
-				Attributes(func() {
-					Attribute("test1", String, "test1 desc", func() {
-						Example("test1")
+			pmt := apidsl.MediaType("application/vnd.example.parent+json", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("test1", design.String, "test1 desc", func() {
+						apidsl.Example("test1")
 					})
-					Attribute("test2", String, "test2 desc", func() {
-						NoExample()
+					apidsl.Attribute("test2", design.String, "test2 desc", func() {
+						apidsl.NoExample()
 					})
-					Attribute("test3", CollectionOf(mt), "test3 desc")
+					apidsl.Attribute("test3", apidsl.CollectionOf(mt), "test3 desc")
 				})
-				View("default", func() {
-					Attribute("test1")
+				apidsl.View("default", func() {
+					apidsl.Attribute("test1")
 				})
 			})
 
@@ -773,35 +773,35 @@ var _ = Describe("Example", func() {
 		})
 
 		It("produces a media type with appropriate MinLength and MaxLength examples", func() {
-			ut := Type("example", func() {
-				Attribute("test1", Integer, func() {
-					Minimum(-200)
-					Maximum(-100)
+			ut := apidsl.Type("example", func() {
+				apidsl.Attribute("test1", design.Integer, func() {
+					apidsl.Minimum(-200)
+					apidsl.Maximum(-100)
 				})
 			})
 
-			mt := MediaType("application/vnd.example+json", func() {
-				Attributes(func() {
-					Attribute("test1", ArrayOf(Any), func() {
-						MinLength(0)
-						MaxLength(10)
+			mt := apidsl.MediaType("application/vnd.example+json", func() {
+				apidsl.Attributes(func() {
+					apidsl.Attribute("test1", apidsl.ArrayOf(design.Any), func() {
+						apidsl.MinLength(0)
+						apidsl.MaxLength(10)
 					})
-					Attribute("test2", ArrayOf(Any), func() {
-						MinLength(1000)
-						MaxLength(2000)
+					apidsl.Attribute("test2", apidsl.ArrayOf(design.Any), func() {
+						apidsl.MinLength(1000)
+						apidsl.MaxLength(2000)
 					})
-					Attribute("test3", ArrayOf(Any), func() {
-						MinLength(1000)
-						MaxLength(1000)
+					apidsl.Attribute("test3", apidsl.ArrayOf(design.Any), func() {
+						apidsl.MinLength(1000)
+						apidsl.MaxLength(1000)
 					})
 
-					Attribute("test-failure1", ArrayOf(ut), func() {
-						MinLength(0)
-						MaxLength(0)
+					apidsl.Attribute("test-failure1", apidsl.ArrayOf(ut), func() {
+						apidsl.MinLength(0)
+						apidsl.MaxLength(0)
 					})
 				})
-				View("default", func() {
-					Attribute("test1")
+				apidsl.View("default", func() {
+					apidsl.Attribute("test1")
 				})
 			})
 

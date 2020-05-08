@@ -5,15 +5,15 @@ import (
 	"mime"
 	"sync"
 
-	. "github.com/shogo82148/goa-v1/design"
-	. "github.com/shogo82148/goa-v1/design/apidsl"
-	"github.com/shogo82148/goa-v1/dslengine"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/design/apidsl"
+	"github.com/shogo82148/goa-v1/dslengine"
 )
 
 var _ = Describe("IsObject", func() {
-	var dt DataType
+	var dt design.DataType
 	var isObject bool
 
 	JustBeforeEach(func() {
@@ -22,7 +22,7 @@ var _ = Describe("IsObject", func() {
 
 	Context("with a primitive", func() {
 		BeforeEach(func() {
-			dt = String
+			dt = design.String
 		})
 
 		It("returns false", func() {
@@ -32,7 +32,7 @@ var _ = Describe("IsObject", func() {
 
 	Context("with an array", func() {
 		BeforeEach(func() {
-			dt = &Array{ElemType: &AttributeDefinition{Type: String}}
+			dt = &design.Array{ElemType: &design.AttributeDefinition{Type: design.String}}
 		})
 
 		It("returns false", func() {
@@ -42,9 +42,9 @@ var _ = Describe("IsObject", func() {
 
 	Context("with a hash", func() {
 		BeforeEach(func() {
-			dt = &Hash{
-				KeyType:  &AttributeDefinition{Type: String},
-				ElemType: &AttributeDefinition{Type: String},
+			dt = &design.Hash{
+				KeyType:  &design.AttributeDefinition{Type: design.String},
+				ElemType: &design.AttributeDefinition{Type: design.String},
 			}
 		})
 
@@ -55,7 +55,7 @@ var _ = Describe("IsObject", func() {
 
 	Context("with a nil user type type", func() {
 		BeforeEach(func() {
-			dt = &UserTypeDefinition{AttributeDefinition: &AttributeDefinition{Type: nil}}
+			dt = &design.UserTypeDefinition{AttributeDefinition: &design.AttributeDefinition{Type: nil}}
 		})
 
 		It("returns false", func() {
@@ -65,7 +65,7 @@ var _ = Describe("IsObject", func() {
 
 	Context("with an object", func() {
 		BeforeEach(func() {
-			dt = Object{}
+			dt = design.Object{}
 		})
 
 		It("returns true", func() {
@@ -75,46 +75,46 @@ var _ = Describe("IsObject", func() {
 })
 
 var _ = Describe("Project", func() {
-	var mt *MediaTypeDefinition
+	var mt *design.MediaTypeDefinition
 	var view string
 
-	var projected *MediaTypeDefinition
-	var links *UserTypeDefinition
+	var projected *design.MediaTypeDefinition
+	var links *design.UserTypeDefinition
 	var prErr error
 
 	JustBeforeEach(func() {
-		ProjectedMediaTypes = make(map[string]*MediaTypeDefinition)
+		design.ProjectedMediaTypes = make(map[string]*design.MediaTypeDefinition)
 		projected, links, prErr = mt.Project(view)
 	})
 
 	Context("with a media type with a default and a tiny view", func() {
 		BeforeEach(func() {
-			mt = &MediaTypeDefinition{
-				UserTypeDefinition: &UserTypeDefinition{
-					AttributeDefinition: &AttributeDefinition{
-						Type: Object{
-							"att1": &AttributeDefinition{Type: Integer},
-							"att2": &AttributeDefinition{Type: String},
+			mt = &design.MediaTypeDefinition{
+				UserTypeDefinition: &design.UserTypeDefinition{
+					AttributeDefinition: &design.AttributeDefinition{
+						Type: design.Object{
+							"att1": &design.AttributeDefinition{Type: design.Integer},
+							"att2": &design.AttributeDefinition{Type: design.String},
 						},
 					},
 					TypeName: "Foo",
 				},
 				Identifier: "vnd.application/foo",
-				Views: map[string]*ViewDefinition{
+				Views: map[string]*design.ViewDefinition{
 					"default": {
 						Name: "default",
-						AttributeDefinition: &AttributeDefinition{
-							Type: Object{
-								"att1": &AttributeDefinition{Type: String},
-								"att2": &AttributeDefinition{Type: String},
+						AttributeDefinition: &design.AttributeDefinition{
+							Type: design.Object{
+								"att1": &design.AttributeDefinition{Type: design.String},
+								"att2": &design.AttributeDefinition{Type: design.String},
 							},
 						},
 					},
 					"tiny": {
 						Name: "tiny",
-						AttributeDefinition: &AttributeDefinition{
-							Type: Object{
-								"att2": &AttributeDefinition{Type: String},
+						AttributeDefinition: &design.AttributeDefinition{
+							Type: design.Object{
+								"att2": &design.AttributeDefinition{Type: design.String},
 							},
 						},
 					},
@@ -153,12 +153,12 @@ var _ = Describe("Project", func() {
 			It("returns a media type with the default view attributes", func() {
 				Ω(prErr).ShouldNot(HaveOccurred())
 				Ω(projected).ShouldNot(BeNil())
-				Ω(projected.Type).Should(BeAssignableToTypeOf(Object{}))
+				Ω(projected.Type).Should(BeAssignableToTypeOf(design.Object{}))
 				Ω(projected.Type.ToObject()).Should(HaveKey("att1"))
 				att := projected.Type.ToObject()["att1"]
 				Ω(att).ShouldNot(BeNil())
 				Ω(att.Type).ShouldNot(BeNil())
-				Ω(att.Type.Kind()).Should(Equal(IntegerKind))
+				Ω(att.Type.Kind()).Should(Equal(design.IntegerKind))
 			})
 		})
 
@@ -183,19 +183,19 @@ var _ = Describe("Project", func() {
 			It("returns a media type with the default view attributes", func() {
 				Ω(prErr).ShouldNot(HaveOccurred())
 				Ω(projected).ShouldNot(BeNil())
-				Ω(projected.Type).Should(BeAssignableToTypeOf(Object{}))
+				Ω(projected.Type).Should(BeAssignableToTypeOf(design.Object{}))
 				Ω(projected.Type.ToObject()).Should(HaveKey("att2"))
 				att := projected.Type.ToObject()["att2"]
 				Ω(att).ShouldNot(BeNil())
 				Ω(att.Type).ShouldNot(BeNil())
-				Ω(att.Type.Kind()).Should(Equal(StringKind))
+				Ω(att.Type.Kind()).Should(Equal(design.StringKind))
 			})
 
 			Context("on a collection", func() {
 				BeforeEach(func() {
-					mt = CollectionOf(Dup(mt))
+					mt = apidsl.CollectionOf(design.Dup(mt))
 					dslengine.Execute(mt.DSL(), mt)
-					mt.GenerateExample(NewRandomGenerator(""), nil)
+					mt.GenerateExample(design.NewRandomGenerator(""), nil)
 				})
 
 				It("resets the example", func() {
@@ -210,24 +210,24 @@ var _ = Describe("Project", func() {
 
 	Context("with a media type with a links attribute", func() {
 		BeforeEach(func() {
-			mt = &MediaTypeDefinition{
-				UserTypeDefinition: &UserTypeDefinition{
-					AttributeDefinition: &AttributeDefinition{
-						Type: Object{
-							"att1":  &AttributeDefinition{Type: Integer},
-							"links": &AttributeDefinition{Type: String},
+			mt = &design.MediaTypeDefinition{
+				UserTypeDefinition: &design.UserTypeDefinition{
+					AttributeDefinition: &design.AttributeDefinition{
+						Type: design.Object{
+							"att1":  &design.AttributeDefinition{Type: design.Integer},
+							"links": &design.AttributeDefinition{Type: design.String},
 						},
 					},
 					TypeName: "Foo",
 				},
 				Identifier: "vnd.application/foo",
-				Views: map[string]*ViewDefinition{
+				Views: map[string]*design.ViewDefinition{
 					"default": {
 						Name: "default",
-						AttributeDefinition: &AttributeDefinition{
-							Type: Object{
-								"att1":  &AttributeDefinition{Type: String},
-								"links": &AttributeDefinition{Type: String},
+						AttributeDefinition: &design.AttributeDefinition{
+							Type: design.Object{
+								"att1":  &design.AttributeDefinition{Type: design.String},
+								"links": &design.AttributeDefinition{Type: design.String},
 							},
 						},
 					},
@@ -243,12 +243,12 @@ var _ = Describe("Project", func() {
 			It("uses the links attribute in the view", func() {
 				Ω(prErr).ShouldNot(HaveOccurred())
 				Ω(projected).ShouldNot(BeNil())
-				Ω(projected.Type).Should(BeAssignableToTypeOf(Object{}))
+				Ω(projected.Type).Should(BeAssignableToTypeOf(design.Object{}))
 				Ω(projected.Type.ToObject()).Should(HaveKey("links"))
 				att := projected.Type.ToObject()["links"]
 				Ω(att).ShouldNot(BeNil())
 				Ω(att.Type).ShouldNot(BeNil())
-				Ω(att.Type.Kind()).Should(Equal(StringKind))
+				Ω(att.Type.Kind()).Should(Equal(design.StringKind))
 			})
 		})
 	})
@@ -260,41 +260,41 @@ var _ = Describe("Project", func() {
 
 		BeforeEach(func() {
 			dslengine.Reset()
-			API("test", func() {})
-			mt = MediaType(id, func() {
-				TypeName(typeName)
-				Attributes(func() {
-					Attribute("att", "vnd.application/MT2", func() {
-						Metadata("foo", "bar")
+			apidsl.API("test", func() {})
+			mt = apidsl.MediaType(id, func() {
+				apidsl.TypeName(typeName)
+				apidsl.Attributes(func() {
+					apidsl.Attribute("att", "vnd.application/MT2", func() {
+						apidsl.Metadata("foo", "bar")
 					})
 				})
-				Links(func() {
-					Link("att", "default")
+				apidsl.Links(func() {
+					apidsl.Link("att", "default")
 				})
-				View("default", func() {
-					Attribute("att")
-					Attribute("links")
+				apidsl.View("default", func() {
+					apidsl.Attribute("att")
+					apidsl.Attribute("links")
 				})
-				View("tiny", func() {
-					Attribute("att", func() {
-						View("tiny")
+				apidsl.View("tiny", func() {
+					apidsl.Attribute("att", func() {
+						apidsl.View("tiny")
 					})
 				})
 			})
-			MediaType("vnd.application/MT2", func() {
-				TypeName("Mt2")
-				Attributes(func() {
-					Attribute("att2", mt)
+			apidsl.MediaType("vnd.application/MT2", func() {
+				apidsl.TypeName("Mt2")
+				apidsl.Attributes(func() {
+					apidsl.Attribute("att2", mt)
 				})
-				Links(func() {
-					Link("att2", "default")
+				apidsl.Links(func() {
+					apidsl.Link("att2", "default")
 				})
-				View("default", func() {
-					Attribute("att2")
-					Attribute("links")
+				apidsl.View("default", func() {
+					apidsl.Attribute("att2")
+					apidsl.Attribute("links")
 				})
-				View("tiny", func() {
-					Attribute("links")
+				apidsl.View("tiny", func() {
+					apidsl.Attribute("links")
 				})
 			})
 			err := dslengine.Run()
@@ -310,10 +310,10 @@ var _ = Describe("Project", func() {
 			It("returns the projected media type with links", func() {
 				Ω(prErr).ShouldNot(HaveOccurred())
 				Ω(projected).ShouldNot(BeNil())
-				Ω(projected.Type).Should(BeAssignableToTypeOf(Object{}))
+				Ω(projected.Type).Should(BeAssignableToTypeOf(design.Object{}))
 				Ω(projected.Type.ToObject()).Should(HaveKey("att"))
 				l := projected.Type.ToObject()["links"]
-				Ω(l.Type.(*UserTypeDefinition).AttributeDefinition).Should(Equal(links.AttributeDefinition))
+				Ω(l.Type.(*design.UserTypeDefinition).AttributeDefinition).Should(Equal(links.AttributeDefinition))
 				Ω(links.Type.ToObject()).Should(HaveKey("att"))
 				Ω(links.Type.ToObject()["att"].Metadata).Should(Equal(metadata))
 			})
@@ -327,7 +327,7 @@ var _ = Describe("Project", func() {
 			It("returns the projected media type with links", func() {
 				Ω(prErr).ShouldNot(HaveOccurred())
 				Ω(projected).ShouldNot(BeNil())
-				Ω(projected.Type).Should(BeAssignableToTypeOf(Object{}))
+				Ω(projected.Type).Should(BeAssignableToTypeOf(design.Object{}))
 				Ω(projected.Type.ToObject()).Should(HaveKey("att"))
 				att := projected.Type.ToObject()["att"]
 				Ω(att.Type.ToObject()).Should(HaveKey("links"))
@@ -339,17 +339,17 @@ var _ = Describe("Project", func() {
 
 var _ = Describe("UserTypes", func() {
 	var (
-		o         Object
-		userTypes map[string]*UserTypeDefinition
+		o         design.Object
+		userTypes map[string]*design.UserTypeDefinition
 	)
 
 	JustBeforeEach(func() {
-		userTypes = UserTypes(o)
+		userTypes = design.UserTypes(o)
 	})
 
 	Context("with an object not using user types", func() {
 		BeforeEach(func() {
-			o = Object{"foo": &AttributeDefinition{Type: String}}
+			o = design.Object{"foo": &design.AttributeDefinition{Type: design.String}}
 		})
 
 		It("returns nil", func() {
@@ -358,14 +358,14 @@ var _ = Describe("UserTypes", func() {
 	})
 
 	Context("with an object with an attribute using a user type", func() {
-		var ut *UserTypeDefinition
+		var ut *design.UserTypeDefinition
 		BeforeEach(func() {
-			ut = &UserTypeDefinition{
+			ut = &design.UserTypeDefinition{
 				TypeName:            "foo",
-				AttributeDefinition: &AttributeDefinition{Type: String},
+				AttributeDefinition: &design.AttributeDefinition{Type: design.String},
 			}
 
-			o = Object{"foo": &AttributeDefinition{Type: ut}}
+			o = design.Object{"foo": &design.AttributeDefinition{Type: ut}}
 		})
 
 		It("returns the user type", func() {
@@ -375,20 +375,20 @@ var _ = Describe("UserTypes", func() {
 	})
 
 	Context("with an object with an attribute using recursive user types", func() {
-		var ut, childut *UserTypeDefinition
+		var ut, childut *design.UserTypeDefinition
 
 		BeforeEach(func() {
-			childut = &UserTypeDefinition{
+			childut = &design.UserTypeDefinition{
 				TypeName:            "child",
-				AttributeDefinition: &AttributeDefinition{Type: String},
+				AttributeDefinition: &design.AttributeDefinition{Type: design.String},
 			}
-			child := Object{"child": &AttributeDefinition{Type: childut}}
-			ut = &UserTypeDefinition{
+			child := design.Object{"child": &design.AttributeDefinition{Type: childut}}
+			ut = &design.UserTypeDefinition{
 				TypeName:            "parent",
-				AttributeDefinition: &AttributeDefinition{Type: child},
+				AttributeDefinition: &design.AttributeDefinition{Type: child},
 			}
 
-			o = Object{"foo": &AttributeDefinition{Type: ut}}
+			o = design.Object{"foo": &design.AttributeDefinition{Type: ut}}
 		})
 
 		It("returns the user types", func() {
@@ -402,17 +402,17 @@ var _ = Describe("UserTypes", func() {
 var _ = Describe("MediaTypeDefinition", func() {
 	Describe("IterateViews", func() {
 		var (
-			m  *MediaTypeDefinition
-			it ViewIterator
+			m  *design.MediaTypeDefinition
+			it design.ViewIterator
 
 			iteratedViews []string
 		)
 		BeforeEach(func() {
-			m = &MediaTypeDefinition{}
+			m = &design.MediaTypeDefinition{}
 
 			// setup iterator that just accumulates view names into iteratedViews
 			iteratedViews = []string{}
-			it = func(v *ViewDefinition) error {
+			it = func(v *design.ViewDefinition) error {
 				iteratedViews = append(iteratedViews, v.Name)
 				return nil
 			}
@@ -424,7 +424,7 @@ var _ = Describe("MediaTypeDefinition", func() {
 		})
 		Context("with non-empty views map", func() {
 			BeforeEach(func() {
-				m.Views = map[string]*ViewDefinition{
+				m.Views = map[string]*design.ViewDefinition{
 					"d": {Name: "d"},
 					"c": {Name: "c"},
 					"a": {Name: "a"},
@@ -436,7 +436,7 @@ var _ = Describe("MediaTypeDefinition", func() {
 				Expect(iteratedViews).To(Equal([]string{"a", "b", "c", "d"}))
 			})
 			It("propagates error", func() {
-				errIterator := func(v *ViewDefinition) error {
+				errIterator := func(v *design.ViewDefinition) error {
 					if len(iteratedViews) > 2 {
 						return errors.New("foo")
 					}
@@ -451,25 +451,25 @@ var _ = Describe("MediaTypeDefinition", func() {
 })
 
 var _ = Describe("Walk", func() {
-	var target DataStructure
+	var target design.DataStructure
 	var matchedName string
 	var count int
 	var matched bool
 
-	counter := func(*AttributeDefinition) error {
+	counter := func(*design.AttributeDefinition) error {
 		count++
 		return nil
 	}
 
-	matcher := func(name string) func(*AttributeDefinition) error {
+	matcher := func(name string) func(*design.AttributeDefinition) error {
 		done := errors.New("done")
-		return func(att *AttributeDefinition) error {
-			if u, ok := att.Type.(*UserTypeDefinition); ok {
+		return func(att *design.AttributeDefinition) error {
+			if u, ok := att.Type.(*design.UserTypeDefinition); ok {
 				if u.TypeName == name {
 					matched = true
 					return done
 				}
-			} else if m, ok := att.Type.(*MediaTypeDefinition); ok {
+			} else if m, ok := att.Type.(*design.MediaTypeDefinition); ok {
 				if m.TypeName == name {
 					matched = true
 					return done
@@ -494,7 +494,7 @@ var _ = Describe("Walk", func() {
 
 	Context("with simple attribute", func() {
 		BeforeEach(func() {
-			target = &AttributeDefinition{Type: String}
+			target = &design.AttributeDefinition{Type: design.String}
 		})
 
 		It("walks it", func() {
@@ -504,8 +504,8 @@ var _ = Describe("Walk", func() {
 
 	Context("with an object attribute", func() {
 		BeforeEach(func() {
-			o := Object{"foo": &AttributeDefinition{Type: String}}
-			target = &AttributeDefinition{Type: o}
+			o := design.Object{"foo": &design.AttributeDefinition{Type: design.String}}
+			target = &design.AttributeDefinition{Type: o}
 		})
 
 		It("walks it", func() {
@@ -517,10 +517,10 @@ var _ = Describe("Walk", func() {
 		const typeName = "foo"
 		BeforeEach(func() {
 			matchedName = typeName
-			at := &AttributeDefinition{Type: String}
-			ut := &UserTypeDefinition{AttributeDefinition: at, TypeName: typeName}
-			o := Object{"foo": &AttributeDefinition{Type: ut}}
-			target = &AttributeDefinition{Type: o}
+			at := &design.AttributeDefinition{Type: design.String}
+			ut := &design.UserTypeDefinition{AttributeDefinition: at, TypeName: typeName}
+			o := design.Object{"foo": &design.AttributeDefinition{Type: ut}}
+			target = &design.AttributeDefinition{Type: o}
 		})
 
 		It("walks it", func() {
@@ -533,12 +533,12 @@ var _ = Describe("Walk", func() {
 		const typeName = "foo"
 		BeforeEach(func() {
 			matchedName = typeName
-			co := Object{}
-			at := &AttributeDefinition{Type: co}
-			ut := &UserTypeDefinition{AttributeDefinition: at, TypeName: typeName}
-			co["recurse"] = &AttributeDefinition{Type: ut}
-			o := Object{"foo": &AttributeDefinition{Type: ut}}
-			target = &AttributeDefinition{Type: o}
+			co := design.Object{}
+			at := &design.AttributeDefinition{Type: co}
+			ut := &design.UserTypeDefinition{AttributeDefinition: at, TypeName: typeName}
+			co["recurse"] = &design.AttributeDefinition{Type: ut}
+			o := design.Object{"foo": &design.AttributeDefinition{Type: ut}}
+			target = &design.AttributeDefinition{Type: o}
 		})
 
 		It("walks it", func() {
@@ -551,14 +551,14 @@ var _ = Describe("Walk", func() {
 var _ = Describe("Finalize", func() {
 	BeforeEach(func() {
 		dslengine.Reset()
-		MediaType("application/vnd.menu+json", func() {
-			Attributes(func() {
-				Attribute("name", String, "The name of an application")
-				Attribute("child", CollectionOf("application/vnd.menu"))
+		apidsl.MediaType("application/vnd.menu+json", func() {
+			apidsl.Attributes(func() {
+				apidsl.Attribute("name", design.String, "The name of an application")
+				apidsl.Attribute("child", apidsl.CollectionOf("application/vnd.menu"))
 			})
 
-			View("default", func() {
-				Attribute("name")
+			apidsl.View("default", func() {
+				apidsl.Attribute("name")
 			})
 		})
 	})
@@ -584,21 +584,21 @@ var _ = Describe("GenerateExample", func() {
 
 	Context("Given a UUID", func() {
 		It("generates a string example", func() {
-			rand := NewRandomGenerator("foo")
-			Ω(UUID.GenerateExample(rand, nil)).Should(BeAssignableToTypeOf("foo"))
+			rand := design.NewRandomGenerator("foo")
+			Ω(design.UUID.GenerateExample(rand, nil)).Should(BeAssignableToTypeOf("foo"))
 		})
 	})
 
 	Context("Given a Hash keyed by UUIDs", func() {
-		var h *Hash
+		var h *design.Hash
 		BeforeEach(func() {
-			h = &Hash{
-				KeyType:  &AttributeDefinition{Type: UUID},
-				ElemType: &AttributeDefinition{Type: String},
+			h = &design.Hash{
+				KeyType:  &design.AttributeDefinition{Type: design.UUID},
+				ElemType: &design.AttributeDefinition{Type: design.String},
 			}
 		})
 		It("generates a serializable example", func() {
-			rand := NewRandomGenerator("foo")
+			rand := design.NewRandomGenerator("foo")
 			Ω(h.GenerateExample(rand, nil)).Should(BeAssignableToTypeOf(map[string]string{"foo": "bar"}))
 		})
 	})

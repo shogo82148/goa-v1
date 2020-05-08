@@ -1,19 +1,19 @@
 package apidsl_test
 
 import (
-	. "github.com/shogo82148/goa-v1/design"
-	. "github.com/shogo82148/goa-v1/design/apidsl"
-	"github.com/shogo82148/goa-v1/dslengine"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/design/apidsl"
+	"github.com/shogo82148/goa-v1/dslengine"
 )
 
 var _ = Describe("Response", func() {
 	var name string
-	var dt DataType
+	var dt design.DataType
 	var dsl func()
 
-	var res *ResponseDefinition
+	var res *design.ResponseDefinition
 
 	BeforeEach(func() {
 		dslengine.Reset()
@@ -23,17 +23,17 @@ var _ = Describe("Response", func() {
 	})
 
 	JustBeforeEach(func() {
-		Resource("res", func() {
-			Action("action", func() {
+		apidsl.Resource("res", func() {
+			apidsl.Action("action", func() {
 				if dt != nil {
-					Response(name, dt, dsl)
+					apidsl.Response(name, dt, dsl)
 				} else {
-					Response(name, dsl)
+					apidsl.Response(name, dsl)
 				}
 			})
 		})
 		dslengine.Run()
-		if r, ok := Design.Resources["res"]; ok {
+		if r, ok := design.Design.Resources["res"]; ok {
 			if a, ok := r.Actions["action"]; ok {
 				res = a.Responses[name]
 			}
@@ -64,7 +64,7 @@ var _ = Describe("Response", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Status(status)
+				apidsl.Status(status)
 			}
 		})
 
@@ -82,9 +82,9 @@ var _ = Describe("Response", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Status(status)
+				apidsl.Status(status)
 			}
-			dt = HashOf(String, Any)
+			dt = apidsl.HashOf(design.String, design.Any)
 		})
 
 		It("produces a response definition with the given type", func() {
@@ -101,8 +101,8 @@ var _ = Describe("Response", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Status(status)
-				Description(description)
+				apidsl.Status(status)
+				apidsl.Description(description)
 			}
 		})
 
@@ -120,7 +120,7 @@ var _ = Describe("Response", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Status(status)
+				apidsl.Status(status)
 			}
 		})
 
@@ -138,8 +138,8 @@ var _ = Describe("Response", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Status(status)
-				Media(mediaType)
+				apidsl.Status(status)
+				apidsl.Media(mediaType)
 			}
 		})
 
@@ -158,9 +158,9 @@ var _ = Describe("Response", func() {
 		BeforeEach(func() {
 			name = "foo"
 			dsl = func() {
-				Status(status)
-				Headers(func() {
-					Header(headerName)
+				apidsl.Status(status)
+				apidsl.Headers(func() {
+					apidsl.Header(headerName)
 				})
 			}
 		})
@@ -170,8 +170,8 @@ var _ = Describe("Response", func() {
 			Ω(res.Validate()).ShouldNot(HaveOccurred())
 			Ω(res.Status).Should(Equal(status))
 			Ω(res.Headers).ShouldNot(BeNil())
-			Ω(res.Headers.Type).Should(BeAssignableToTypeOf(Object{}))
-			o := res.Headers.Type.(Object)
+			Ω(res.Headers.Type).Should(BeAssignableToTypeOf(design.Object{}))
+			o := res.Headers.Type.(design.Object)
 			Ω(o).Should(HaveLen(1))
 			Ω(o).Should(HaveKey(headerName))
 		})

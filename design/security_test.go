@@ -3,15 +3,15 @@ package design_test
 import (
 	"fmt"
 
-	. "github.com/shogo82148/goa-v1/design"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
 )
 
 var _ = Describe("SecuritySchemeDefinition", func() {
 	var scheme, host, tokenURL, authorizationURL string
 
-	var def *SecuritySchemeDefinition
+	var def *design.SecuritySchemeDefinition
 
 	BeforeEach(func() {
 		def = nil
@@ -22,9 +22,9 @@ var _ = Describe("SecuritySchemeDefinition", func() {
 	})
 
 	JustBeforeEach(func() {
-		Design.Schemes = []string{scheme}
-		Design.Host = host
-		def = &SecuritySchemeDefinition{
+		design.Design.Schemes = []string{scheme}
+		design.Design.Host = host
+		def = &design.SecuritySchemeDefinition{
 			TokenURL:         tokenURL,
 			AuthorizationURL: authorizationURL,
 		}
