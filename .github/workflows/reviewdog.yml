@@ -8,6 +8,8 @@ jobs:
     steps:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
+        with:
+          persist-credentials: false
       - name: golangci-lint
         uses: reviewdog/action-golangci-lint@v1
         with:
@@ -20,6 +22,8 @@ jobs:
     steps:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
+        with:
+          persist-credentials: false
       - name: misspell
         uses: reviewdog/action-misspell@v1
         with:
