@@ -1,19 +1,18 @@
 package goatest
 
 import (
-	"bytes"
 	"io"
 	"log"
+	"testing"
 
 	"github.com/shogo82148/goa-v1"
 	"github.com/shogo82148/goa-v1/middleware"
 )
 
-// TInterface is an interface for go's testing.T
-type TInterface interface {
-	Errorf(format string, args ...interface{})
-	Fatalf(format string, args ...interface{})
-}
+// TInterface is an interface for Go's testing.T and testing.B.
+//
+// It is an alias of testing.TB.
+type TInterface = testing.TB
 
 // ResponseSetterFunc func
 type ResponseSetterFunc func(resp interface{})
@@ -25,7 +24,7 @@ func (r ResponseSetterFunc) Encode(v interface{}) error {
 }
 
 // Service provide a general goa.Service used for testing purposes
-func Service(logBuf *bytes.Buffer, respSetter ResponseSetterFunc) *goa.Service {
+func Service(logBuf io.Writer, respSetter ResponseSetterFunc) *goa.Service {
 	s := goa.New("test")
 	logger := log.New(logBuf, "", log.Ltime)
 	s.WithLogger(goa.NewLogger(logger))
