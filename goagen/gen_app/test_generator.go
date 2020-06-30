@@ -370,7 +370,7 @@ func {{ $test.Name }}(t goatest.TInterface, ctx context.Context, service *goa.Se
 
 	// Setup service
 	var (
-		{{ $logBuf := $test.Escape "logBuf" }}{{ $logBuf }} bytes.Buffer
+		{{ $logBuf := $test.Escape "logBuf" }}{{ $logBuf }} strings.Builder
 		{{ $resp := $test.Escape "resp" }}{{ if $test.ReturnType }}{{ $resp }}   interface{}{{ end }}
 
 		{{ $respSetter := $test.Escape "respSetter" }}{{ $respSetter }} goatest.ResponseSetterFunc = func(r interface{}) { {{ if $test.ReturnType }}{{ $resp }} = r{{ end }} }
