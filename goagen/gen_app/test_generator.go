@@ -410,7 +410,7 @@ func {{ $test.Name }}(t goatest.TInterface, ctx context.Context, service *goa.Se
 		Path: fmt.Sprintf({{ printf "%q" $test.FullPath }}{{ range $param := $test.Params }}, {{ $param.Name }}{{ end }}),
 {{ if $test.QueryParams }}		RawQuery: {{ $query }}.Encode(),
 {{ end }}	}
-	{{ $req := $test.Escape "req" }}{{ $req }}, {{ $err := $test.Escape "err" }}{{ $err }}:= httptest.NewRequest(ctx, "{{ $test.RouteVerb }}", {{ $u }}.String(), nil)
+	{{ $req := $test.Escape "req" }}{{ $req }}, {{ $err := $test.Escape "err" }}{{ $err }}:= httptest.NewRequest("{{ $test.RouteVerb }}", {{ $u }}.String(), nil)
 	if {{ $err }} != nil {
 		panic("invalid test " + {{ $err }}.Error()) // bug
 	}
