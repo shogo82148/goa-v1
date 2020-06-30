@@ -7,7 +7,7 @@ import (
 
 // Type implements the type definition dsl. A type definition describes a data structure consisting
 // of attributes. Each attribute has a type which can also refer to a type definition (or use a
-// primitive type or nested attibutes). The dsl syntax for define a type definition is the
+// primitive type or nested attributes). The dsl syntax for define a type definition is the
 // Attribute dsl, see Attribute.
 //
 // On top of specifying any attribute type, type definitions can also be used to describe the data
