@@ -397,6 +397,9 @@ func {{ $test.Name }}(t goatest.TInterface, ctx context.Context, service *goa.Se
 	}
 {{ end }}{{ end }}
 	// Setup request context
+	if ctx == nil {
+		ctx = context.Background()
+	}
 	{{ $rw := $test.Escape "rw" }}{{ $rw }} := httptest.NewRecorder()
 {{ $query := $test.Escape "query" }}{{ if $test.QueryParams}}	{{ $query }} := url.Values{}
 {{ range $param := $test.QueryParams }}{{ if $param.Pointer }}	if {{ $param.Name }} != nil {{ end }}{
@@ -407,10 +410,8 @@ func {{ $test.Name }}(t goatest.TInterface, ctx context.Context, service *goa.Se
 		Path: fmt.Sprintf({{ printf "%q" $test.FullPath }}{{ range $param := $test.Params }}, {{ $param.Name }}{{ end }}),
 {{ if $test.QueryParams }}		RawQuery: {{ $query }}.Encode(),
 {{ end }}	}
-	{{ $req := $test.Escape "req" }}{{ $req }}, {{ $err := $test.Escape "err" }}{{ $err }}:= http.NewRequest("{{ $test.RouteVerb }}", {{ $u }}.String(), nil)
-	if {{ $err }} != nil {
-		panic("invalid test " + {{ $err }}.Error()) // bug
-	}
+	{{ $req := $test.Escape "req" }}{{ $req }} := httptest.NewRequest("{{ $test.RouteVerb }}", {{ $u }}.String(), nil)
+	{{ $req }} = {{ $req }}.WithContext(ctx)
 {{ range $header := $test.Headers }}{{ if $header.Pointer }}	if {{ $header.Name }} != nil {{ end }}{
 {{ template "convertParam" $header }}
 		{{ $req }}.Header[{{ printf "%q" $header.Label }}] = sliceVal
@@ -421,9 +422,7 @@ func {{ $test.Name }}(t goatest.TInterface, ctx context.Context, service *goa.Se
 {{ template "convertParam" $param }}
 		{{ $prms }}[{{ printf "%q" $param.Label }}] = sliceVal
 	}
-{{ end }}	if ctx == nil {
-		ctx = context.Background()
-	}
+{{ end }}
 	{{ $goaCtx := $test.Escape "goaCtx" }}{{ $goaCtx }} := goa.NewContext(goa.WithAction(ctx, "{{ $test.ResourceName }}Test"), {{ $rw }}, {{ $req }}, {{ $prms }})
 	{{ $test.ContextVarName }}, {{ $err := $test.Escape "err" }}{{ $err }} := {{ $test.ContextType }}({{ $goaCtx }}, {{ $req }}, service)
 	if {{ $err }} != nil {

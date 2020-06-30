@@ -1,9 +1,9 @@
 package goa_test
 
 import (
-	"github.com/shogo82148/goa-v1"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1"
 )
 
 var _ = Describe("ValidateFormat", func() {

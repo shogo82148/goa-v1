@@ -66,13 +66,26 @@ func NewNoOpSink() metrics.MetricSink {
 // NoOpSink default NOOP metrics recorder
 type NoOpSink struct{}
 
-func (*NoOpSink) SetGauge(key []string, val float32)                                      {}
-func (*NoOpSink) SetGaugeWithLabels(key []string, val float32, labels []metrics.Label)    {}
-func (*NoOpSink) EmitKey(key []string, val float32)                                       {}
-func (*NoOpSink) IncrCounter(key []string, val float32)                                   {}
+// SetGauge implements Collector.
+func (*NoOpSink) SetGauge(key []string, val float32) {}
+
+// SetGaugeWithLabels implements Collector.
+func (*NoOpSink) SetGaugeWithLabels(key []string, val float32, labels []metrics.Label) {}
+
+// EmitKey implements Collector.
+func (*NoOpSink) EmitKey(key []string, val float32) {}
+
+// IncrCounter implements Controller.
+func (*NoOpSink) IncrCounter(key []string, val float32) {}
+
+// IncrCounterWithLabels implements Controller.
 func (*NoOpSink) IncrCounterWithLabels(key []string, val float32, labels []metrics.Label) {}
-func (*NoOpSink) AddSample(key []string, val float32)                                     {}
-func (*NoOpSink) AddSampleWithLabels(key []string, val float32, labels []metrics.Label)   {}
+
+// AddSample implements Controller.
+func (*NoOpSink) AddSample(key []string, val float32) {}
+
+// AddSampleWithLabels implements Controller.
+func (*NoOpSink) AddSampleWithLabels(key []string, val float32, labels []metrics.Label) {}
 
 // NewMetrics initializes goa's metrics instance with the supplied
 // configuration and metrics sink

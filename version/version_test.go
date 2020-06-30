@@ -3,9 +3,9 @@ package version_test
 import (
 	"strconv"
 
-	"github.com/shogo82148/goa-v1/version"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/version"
 )
 
 var _ = Describe("version", func() {

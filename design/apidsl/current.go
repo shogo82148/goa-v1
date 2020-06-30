@@ -6,7 +6,7 @@ import (
 )
 
 // NOTE: the following functions are in this file so that IncompatibleDSL can compute the stack
-// depth correcly when looking up the name of the caller DSL function. IncompatibleDSL in used in
+// depth correctly when looking up the name of the caller DSL function. IncompatibleDSL in used in
 // two scenarios: in a type switch statement or via one of the functions below. In the case of a
 // switch statement the name of the DSL function is 2 levels up the call to IncompatibleDSL while in
 // the case of the functions below it's 3 levels up. Using a different file allows IncompatibleDSL
