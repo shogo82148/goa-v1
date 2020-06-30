@@ -17,7 +17,6 @@ var (
 )
 
 func init() {
-	var err error
 	fm := template.FuncMap{
 		"tabs":                Tabs,
 		"goify":               Goify,
@@ -27,21 +26,11 @@ func init() {
 		"publicizer":          Publicizer,
 		"recursivePublicizer": RecursivePublicizer,
 	}
-	if simplePublicizeT, err = template.New("simplePublicize").Funcs(fm).Parse(simplePublicizeTmpl); err != nil {
-		panic(err)
-	}
-	if recursivePublicizeT, err = template.New("recursivePublicize").Funcs(fm).Parse(recursivePublicizeTmpl); err != nil {
-		panic(err)
-	}
-	if objectPublicizeT, err = template.New("objectPublicize").Funcs(fm).Parse(objectPublicizeTmpl); err != nil {
-		panic(err)
-	}
-	if arrayPublicizeT, err = template.New("arrPublicize").Funcs(fm).Parse(arrayPublicizeTmpl); err != nil {
-		panic(err)
-	}
-	if hashPublicizeT, err = template.New("hashPublicize").Funcs(fm).Parse(hashPublicizeTmpl); err != nil {
-		panic(err)
-	}
+	simplePublicizeT = template.Must(template.New("simplePublicize").Funcs(fm).Parse(simplePublicizeTmpl))
+	recursivePublicizeT = template.Must(template.New("recursivePublicize").Funcs(fm).Parse(recursivePublicizeTmpl))
+	objectPublicizeT = template.Must(template.New("objectPublicize").Funcs(fm).Parse(objectPublicizeTmpl))
+	arrayPublicizeT = template.Must(template.New("arrPublicize").Funcs(fm).Parse(arrayPublicizeTmpl))
+	hashPublicizeT = template.Must(template.New("hashPublicize").Funcs(fm).Parse(hashPublicizeTmpl))
 }
 
 // RecursivePublicizer produces code that copies fields from the private struct to the

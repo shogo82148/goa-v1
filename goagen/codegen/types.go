@@ -29,7 +29,6 @@ var (
 
 // Initialize all templates
 func init() {
-	var err error
 	fn := template.FuncMap{
 		"tabs":               Tabs,
 		"add":                func(a, b int) int { return a + b },
@@ -42,18 +41,10 @@ func init() {
 		"transformObject":    transformObject,
 		"typeName":           typeName,
 	}
-	if transformT, err = template.New("transform").Funcs(fn).Parse(transformTmpl); err != nil {
-		panic(err) // bug
-	}
-	if transformArrayT, err = template.New("transformArray").Funcs(fn).Parse(transformArrayTmpl); err != nil {
-		panic(err) // bug
-	}
-	if transformHashT, err = template.New("transformHash").Funcs(fn).Parse(transformHashTmpl); err != nil {
-		panic(err) // bug
-	}
-	if transformObjectT, err = template.New("transformObject").Funcs(fn).Parse(transformObjectTmpl); err != nil {
-		panic(err) // bug
-	}
+	transformT = template.Must(template.New("transform").Funcs(fn).Parse(transformTmpl))
+	transformArrayT = template.Must(template.New("transformArray").Funcs(fn).Parse(transformArrayTmpl))
+	transformHashT = template.Must(template.New("transformHash").Funcs(fn).Parse(transformHashTmpl))
+	transformObjectT = template.Must(template.New("transformObject").Funcs(fn).Parse(transformObjectTmpl))
 }
 
 // GoTypeDef returns the Go code that defines a Go type which matches the data structure
