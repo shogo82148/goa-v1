@@ -493,9 +493,7 @@ const (
 {{end}}{{tabs .depth}}}`
 
 	requiredValTmpl = `{{ $att := index $.attribute.Type.ToObject .required }}{{/*
-*/}}{{ if and (not $.private) (eq $att.Type.Kind 4) }}{{ tabs $.depth }}if {{ $.target }}.{{ goifyAtt $att .required true }} == "" {
-{{ tabs $.depth }}	err = goa.MergeErrors(err, goa.MissingAttributeError(` + "`" + `{{ $.context }}` + "`" + `, "{{  .required  }}"))
-{{ tabs $.depth }}}{{ else if or $.private (not $att.Type.IsPrimitive) }}{{ tabs $.depth }}if {{ $.target }}.{{ goifyAtt $att .required true }} == nil {
+*/}}{{ if or $.private (not $att.Type.IsPrimitive) }}{{ tabs $.depth }}if {{ $.target }}.{{ goifyAtt $att .required true }} == nil {
 {{ tabs $.depth }}	err = goa.MergeErrors(err, goa.MissingAttributeError(` + "`" + `{{ $.context }}` + "`" + `, "{{ .required }}"))
 {{ tabs $.depth }}}{{ end }}`
 )
