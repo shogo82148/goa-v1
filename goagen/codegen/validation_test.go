@@ -4,11 +4,11 @@ import (
 	"math"
 	"strings"
 
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 	"github.com/shogo82148/goa-v1/design"
 	"github.com/shogo82148/goa-v1/dslengine"
 	"github.com/shogo82148/goa-v1/goagen/codegen"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("validation code generation", func() {
@@ -444,11 +444,5 @@ const (
 		err = goa.MergeErrors(err, goa.MissingAttributeError(` + "`context`" + `, "foo"))
 	}`
 
-	utRequiredCode = `	for _, e := range val.Foo {
-		if e != nil {
-			if err2 := e.Validate(); err2 != nil {
-				err = goa.MergeErrors(err, err2)
-			}
-		}
-	}`
+	utRequiredCode = ``
 )
