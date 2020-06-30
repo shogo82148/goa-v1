@@ -414,6 +414,7 @@ func {{ $test.Name }}(t goatest.TInterface, ctx context.Context, service *goa.Se
 	if {{ $err }} != nil {
 		panic("invalid test " + {{ $err }}.Error()) // bug
 	}
+	{{ $req }} = {{ $req }}.WithContext(ctx)
 {{ range $header := $test.Headers }}{{ if $header.Pointer }}	if {{ $header.Name }} != nil {{ end }}{
 {{ template "convertParam" $header }}
 		{{ $req }}.Header[{{ printf "%q" $header.Label }}] = sliceVal
