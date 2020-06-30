@@ -4,16 +4,16 @@ import (
 	"bytes"
 	"io"
 	"log"
+	"testing"
 
 	"github.com/shogo82148/goa-v1"
 	"github.com/shogo82148/goa-v1/middleware"
 )
 
-// TInterface is an interface for go's testing.T
-type TInterface interface {
-	Errorf(format string, args ...interface{})
-	Fatalf(format string, args ...interface{})
-}
+// TInterface is an interface for Go's testing.T and testing.B.
+//
+// It is an alias of testing.TB.
+type TInterface = testing.TB
 
 // ResponseSetterFunc func
 type ResponseSetterFunc func(resp interface{})
