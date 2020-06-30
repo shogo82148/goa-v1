@@ -1,7 +1,6 @@
 package goatest
 
 import (
-	"bytes"
 	"io"
 	"log"
 	"testing"
@@ -25,7 +24,7 @@ func (r ResponseSetterFunc) Encode(v interface{}) error {
 }
 
 // Service provide a general goa.Service used for testing purposes
-func Service(logBuf *bytes.Buffer, respSetter ResponseSetterFunc) *goa.Service {
+func Service(logBuf io.Writer, respSetter ResponseSetterFunc) *goa.Service {
 	s := goa.New("test")
 	logger := log.New(logBuf, "", log.Ltime)
 	s.WithLogger(goa.NewLogger(logger))
