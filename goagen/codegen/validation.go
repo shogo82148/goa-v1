@@ -38,10 +38,7 @@ type Validator struct {
 
 // NewValidator instantiates a validate code generator.
 func NewValidator() *Validator {
-	var (
-		v   = &Validator{seen: make(map[string]*bytes.Buffer)}
-		err error
-	)
+	v := &Validator{seen: map[string]*bytes.Buffer{}}
 	fm := template.FuncMap{
 		"tabs":             Tabs,
 		"slice":            toSlice,
@@ -51,18 +48,9 @@ func NewValidator() *Validator {
 		"add":              Add,
 		"recurseAttribute": v.recurseAttribute,
 	}
-	v.arrayValT, err = template.New("array").Funcs(fm).Parse(arrayValTmpl)
-	if err != nil {
-		panic(err)
-	}
-	v.hashValT, err = template.New("hash").Funcs(fm).Parse(hashValTmpl)
-	if err != nil {
-		panic(err)
-	}
-	v.userValT, err = template.New("user").Funcs(fm).Parse(userValTmpl)
-	if err != nil {
-		panic(err)
-	}
+	v.arrayValT = template.Must(template.New("array").Funcs(fm).Parse(arrayValTmpl))
+	v.hashValT = template.Must(template.New("hash").Funcs(fm).Parse(hashValTmpl))
+	v.userValT = template.Must(template.New("user").Funcs(fm).Parse(userValTmpl))
 	return v
 }
 
