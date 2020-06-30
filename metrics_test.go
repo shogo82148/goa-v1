@@ -3,12 +3,11 @@ package goa_test
 import (
 	"time"
 
-	"github.com/shogo82148/goa-v1"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
 	metrics "github.com/armon/go-metrics"
+	"github.com/shogo82148/goa-v1"
 )
 
 var _ = Describe("Metrics", func() {

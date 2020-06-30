@@ -1,10 +1,9 @@
 package goa
 
 import (
+	"context"
 	"fmt"
 	"net/http"
-
-	"context"
 )
 
 type (

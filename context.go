@@ -1,12 +1,11 @@
 package goa
 
 import (
+	"context"
 	"net/http"
 	"net/url"
 	"strconv"
 	"time"
-
-	"context"
 )
 
 // Keys used to store data in context.

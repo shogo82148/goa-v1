@@ -2,13 +2,11 @@ package goa_test
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-
-	"context"
-
 	"sync"
 
 	. "github.com/onsi/ginkgo"

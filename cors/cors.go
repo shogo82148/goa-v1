@@ -5,11 +5,10 @@ see https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS.
 package cors
 
 import (
+	"context"
 	"net/http"
 	"regexp"
 	"strings"
-
-	"context"
 
 	"github.com/shogo82148/goa-v1"
 )
