@@ -397,6 +397,9 @@ func {{ $test.Name }}(t goatest.TInterface, ctx context.Context, service *goa.Se
 	}
 {{ end }}{{ end }}
 	// Setup request context
+	if ctx == nil {
+		ctx = context.Background()
+	}
 	{{ $rw := $test.Escape "rw" }}{{ $rw }} := httptest.NewRecorder()
 {{ $query := $test.Escape "query" }}{{ if $test.QueryParams}}	{{ $query }} := url.Values{}
 {{ range $param := $test.QueryParams }}{{ if $param.Pointer }}	if {{ $param.Name }} != nil {{ end }}{
@@ -421,9 +424,7 @@ func {{ $test.Name }}(t goatest.TInterface, ctx context.Context, service *goa.Se
 {{ template "convertParam" $param }}
 		{{ $prms }}[{{ printf "%q" $param.Label }}] = sliceVal
 	}
-{{ end }}	if ctx == nil {
-		ctx = context.Background()
-	}
+{{ end }}
 	{{ $goaCtx := $test.Escape "goaCtx" }}{{ $goaCtx }} := goa.NewContext(goa.WithAction(ctx, "{{ $test.ResourceName }}Test"), {{ $rw }}, {{ $req }}, {{ $prms }})
 	{{ $test.ContextVarName }}, {{ $err := $test.Escape "err" }}{{ $err }} := {{ $test.ContextType }}({{ $goaCtx }}, {{ $req }}, service)
 	if {{ $err }} != nil {
