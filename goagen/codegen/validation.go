@@ -12,18 +12,7 @@ import (
 )
 
 var (
-	enumValT     *template.Template
-	formatValT   *template.Template
-	patternValT  *template.Template
-	minMaxValT   *template.Template
-	lengthValT   *template.Template
-	requiredValT *template.Template
-)
-
-//  init instantiates the templates.
-func init() {
-	var err error
-	fm := template.FuncMap{
+	validationFuncs = template.FuncMap{
 		"tabs":     Tabs,
 		"slice":    toSlice,
 		"oneof":    oneof,
@@ -31,25 +20,13 @@ func init() {
 		"goifyAtt": GoifyAtt,
 		"add":      Add,
 	}
-	if enumValT, err = template.New("enum").Funcs(fm).Parse(enumValTmpl); err != nil {
-		panic(err)
-	}
-	if formatValT, err = template.New("format").Funcs(fm).Parse(formatValTmpl); err != nil {
-		panic(err)
-	}
-	if patternValT, err = template.New("pattern").Funcs(fm).Parse(patternValTmpl); err != nil {
-		panic(err)
-	}
-	if minMaxValT, err = template.New("minMax").Funcs(fm).Parse(minMaxValTmpl); err != nil {
-		panic(err)
-	}
-	if lengthValT, err = template.New("length").Funcs(fm).Parse(lengthValTmpl); err != nil {
-		panic(err)
-	}
-	if requiredValT, err = template.New("required").Funcs(fm).Parse(requiredValTmpl); err != nil {
-		panic(err)
-	}
-}
+	enumValT     = template.Must(template.New("enum").Funcs(validationFuncs).Parse(enumValTmpl))
+	formatValT   = template.Must(template.New("format").Funcs(validationFuncs).Parse(formatValTmpl))
+	patternValT  = template.Must(template.New("pattern").Funcs(validationFuncs).Parse(patternValTmpl))
+	minMaxValT   = template.Must(template.New("minMax").Funcs(validationFuncs).Parse(minMaxValTmpl))
+	lengthValT   = template.Must(template.New("length").Funcs(validationFuncs).Parse(lengthValTmpl))
+	requiredValT = template.Must(template.New("required").Funcs(validationFuncs).Parse(requiredValTmpl))
+)
 
 // Validator is the code generator for the 'Validate' type methods.
 type Validator struct {
