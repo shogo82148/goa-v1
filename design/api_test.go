@@ -1,10 +1,10 @@
 package design_test
 
 import (
-	"github.com/shogo82148/goa-v1/design"
-	"github.com/shogo82148/goa-v1/dslengine"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/dslengine"
 )
 
 var _ = Describe("CanonicalIdentifier", func() {
@@ -30,7 +30,7 @@ var _ = Describe("CanonicalIdentifier", func() {
 			id = "application/json+xml; foo=bar"
 		})
 
-		It("canonicalizes it", func() {
+		It("cannibalizes it", func() {
 			Ω(canonical).Should(Equal("application/json; foo=bar"))
 		})
 	})
