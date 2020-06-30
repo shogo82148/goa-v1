@@ -12,18 +12,7 @@ import (
 )
 
 var (
-	enumValT     *template.Template
-	formatValT   *template.Template
-	patternValT  *template.Template
-	minMaxValT   *template.Template
-	lengthValT   *template.Template
-	requiredValT *template.Template
-)
-
-//  init instantiates the templates.
-func init() {
-	var err error
-	fm := template.FuncMap{
+	validationFuncs = template.FuncMap{
 		"tabs":     Tabs,
 		"slice":    toSlice,
 		"oneof":    oneof,
@@ -31,25 +20,13 @@ func init() {
 		"goifyAtt": GoifyAtt,
 		"add":      Add,
 	}
-	if enumValT, err = template.New("enum").Funcs(fm).Parse(enumValTmpl); err != nil {
-		panic(err)
-	}
-	if formatValT, err = template.New("format").Funcs(fm).Parse(formatValTmpl); err != nil {
-		panic(err)
-	}
-	if patternValT, err = template.New("pattern").Funcs(fm).Parse(patternValTmpl); err != nil {
-		panic(err)
-	}
-	if minMaxValT, err = template.New("minMax").Funcs(fm).Parse(minMaxValTmpl); err != nil {
-		panic(err)
-	}
-	if lengthValT, err = template.New("length").Funcs(fm).Parse(lengthValTmpl); err != nil {
-		panic(err)
-	}
-	if requiredValT, err = template.New("required").Funcs(fm).Parse(requiredValTmpl); err != nil {
-		panic(err)
-	}
-}
+	enumValT     = template.Must(template.New("enum").Funcs(validationFuncs).Parse(enumValTmpl))
+	formatValT   = template.Must(template.New("format").Funcs(validationFuncs).Parse(formatValTmpl))
+	patternValT  = template.Must(template.New("pattern").Funcs(validationFuncs).Parse(patternValTmpl))
+	minMaxValT   = template.Must(template.New("minMax").Funcs(validationFuncs).Parse(minMaxValTmpl))
+	lengthValT   = template.Must(template.New("length").Funcs(validationFuncs).Parse(lengthValTmpl))
+	requiredValT = template.Must(template.New("required").Funcs(validationFuncs).Parse(requiredValTmpl))
+)
 
 // Validator is the code generator for the 'Validate' type methods.
 type Validator struct {
@@ -61,10 +38,7 @@ type Validator struct {
 
 // NewValidator instantiates a validate code generator.
 func NewValidator() *Validator {
-	var (
-		v   = &Validator{seen: make(map[string]*bytes.Buffer)}
-		err error
-	)
+	v := &Validator{seen: map[string]*bytes.Buffer{}}
 	fm := template.FuncMap{
 		"tabs":             Tabs,
 		"slice":            toSlice,
@@ -74,18 +48,9 @@ func NewValidator() *Validator {
 		"add":              Add,
 		"recurseAttribute": v.recurseAttribute,
 	}
-	v.arrayValT, err = template.New("array").Funcs(fm).Parse(arrayValTmpl)
-	if err != nil {
-		panic(err)
-	}
-	v.hashValT, err = template.New("hash").Funcs(fm).Parse(hashValTmpl)
-	if err != nil {
-		panic(err)
-	}
-	v.userValT, err = template.New("user").Funcs(fm).Parse(userValTmpl)
-	if err != nil {
-		panic(err)
-	}
+	v.arrayValT = template.Must(template.New("array").Funcs(fm).Parse(arrayValTmpl))
+	v.hashValT = template.Must(template.New("hash").Funcs(fm).Parse(hashValTmpl))
+	v.userValT = template.Must(template.New("user").Funcs(fm).Parse(userValTmpl))
 	return v
 }
 
@@ -528,9 +493,7 @@ const (
 {{end}}{{tabs .depth}}}`
 
 	requiredValTmpl = `{{ $att := index $.attribute.Type.ToObject .required }}{{/*
-*/}}{{ if and (not $.private) (eq $att.Type.Kind 4) }}{{ tabs $.depth }}if {{ $.target }}.{{ goifyAtt $att .required true }} == "" {
-{{ tabs $.depth }}	err = goa.MergeErrors(err, goa.MissingAttributeError(` + "`" + `{{ $.context }}` + "`" + `, "{{  .required  }}"))
-{{ tabs $.depth }}}{{ else if or $.private (not $att.Type.IsPrimitive) }}{{ tabs $.depth }}if {{ $.target }}.{{ goifyAtt $att .required true }} == nil {
+*/}}{{ if or $.private (not $att.Type.IsPrimitive) }}{{ tabs $.depth }}if {{ $.target }}.{{ goifyAtt $att .required true }} == nil {
 {{ tabs $.depth }}	err = goa.MergeErrors(err, goa.MissingAttributeError(` + "`" + `{{ $.context }}` + "`" + `, "{{ .required }}"))
 {{ tabs $.depth }}}{{ end }}`
 )
