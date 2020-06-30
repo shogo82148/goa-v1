@@ -318,7 +318,7 @@ func (f *SourceFile) FormatCode() error {
 	return format.Node(w, fset, file)
 }
 
-// Abs returne the source file absolute filename
+// Abs returns the source file absolute filename
 func (f *SourceFile) Abs() string {
 	return filepath.Join(f.Package.Abs(), f.Name)
 }
