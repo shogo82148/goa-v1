@@ -366,6 +366,8 @@ func {{ $test.Name }}(t goatest.TInterface, ctx context.Context, service *goa.Se
 */}}{{ range $header := $test.Headers }}, {{ $header.Name }} {{ $header.Pointer }}{{ $header.Type }}{{ end }}{{/*
 */}}{{ if $test.Payload }}, {{ $test.Payload.Name }} {{ $test.Payload.Pointer }}{{ $test.Payload.Type }}{{ end }}){{/*
 */}} (http.ResponseWriter{{ if $test.ReturnType }}, {{ $test.ReturnType.Pointer }}{{ $test.ReturnType.Type }}{{ end }}) {
+	t.Helper()
+
 	// Setup service
 	var (
 		{{ $logBuf := $test.Escape "logBuf" }}{{ $logBuf }} bytes.Buffer
