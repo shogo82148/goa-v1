@@ -73,6 +73,10 @@ var (
 	// handler but not the HTTP method.
 	ErrMethodNotAllowed = NewErrorClass("method_not_allowed", 405)
 
+	// ErrPreconditionFailed is the error response code indicates that access to the
+	// target resource has been denied.
+	ErrPreconditionFailed = NewErrorClass("precondition_failed", 412)
+
 	// ErrInternal is the class of error used for uncaught errors.
 	ErrInternal = NewErrorClass("internal", 500)
 )
