@@ -6,13 +6,14 @@ jobs:
     strategy:
       matrix:
         os:
-          - 'ubuntu-latest'
-          - 'windows-latest'
-          - 'macos-latest'
+          - "ubuntu-latest"
+          - "windows-latest"
+          - "macos-latest"
         go:
-          - '1.13'
-          - '1.14'
-          - '1'
+          - "1"
+          - "1.15"
+          - "1.14"
+          - "1.13"
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
