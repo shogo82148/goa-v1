@@ -1,5 +1,9 @@
 name: test
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   test:
@@ -26,9 +30,10 @@ jobs:
           go-version: ${{ matrix.go }}
       - run: |
           go version
-          echo "::set-env name=GO111MODULE::on"
-          echo "::set-env name=GOPATH::${{ github.workspace }}"
-          echo "::add-path::${{ github.workspace }}/bin"
+          echo "GO111MODULE=on" >> "$GITHUB_ENV"
+          echo "GOPATH=${{ github.workspace }}" >> "$GITHUB_ENV"
+          echo "${{ github.workspace }}/bin" >> "$GITHUB_PATH"
+        shell: bash
       - run: make depend
         working-directory: src/github.com/shogo82148/goa-v1
       - run: make test
