@@ -18,18 +18,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-        with:
-          path: src/github.com/shogo82148/goa-v1
-          persist-credentials: false
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go }}
       - run: |
           go version
-          echo "::set-env name=GO111MODULE::on"
-          echo "::set-env name=GOPATH::${{ github.workspace }}"
-          echo "::add-path::${{ github.workspace }}/bin"
       - run: make depend
-        working-directory: src/github.com/shogo82148/goa-v1
       - run: make test
-        working-directory: src/github.com/shogo82148/goa-v1
