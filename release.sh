@@ -9,7 +9,7 @@ MINOR=$(echo "$VERSION" | cut -d. -f2)
 PATCH=$(echo "$VERSION" | cut -d. -f3)
 
 cd "$CURRENT"
-git switch master
+git switch main
 
 cat <<EOF > version/version.go
 package version
@@ -27,5 +27,5 @@ perl -i -pe "s(Current Release: \`v[.0-9]+\`)(Current Release: \`v$VERSION\`)" R
 git add version/version.go README.md
 git commit -m "bump up v$VERSION"
 git tag "v$VERSION"
-git push origin master
+git push origin main
 git push --tags
