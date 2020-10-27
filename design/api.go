@@ -138,7 +138,7 @@ var (
 				Description: "Error response media type",
 				Example: map[string]interface{}{
 					"id":     "3F1FKVRR",
-					"status": "400",
+					"status": 400,
 					"code":   "invalid_value",
 					"detail": "Value of ID must be an integer",
 					"meta":   map[string]interface{}{"timestamp": 1458609066},
@@ -157,9 +157,9 @@ var (
 			Example:     "3F1FKVRR",
 		},
 		"status": &AttributeDefinition{
-			Type:        String,
-			Description: "the HTTP status code applicable to this problem, expressed as a string value.",
-			Example:     "400",
+			Type:        Integer,
+			Description: "the HTTP status code applicable to this problem, expressed as a int value.",
+			Example:     400,
 		},
 		"code": &AttributeDefinition{
 			Type:        String,
