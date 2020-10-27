@@ -29,6 +29,7 @@ jobs:
           echo "GO111MODULE=on" >> "$GITHUB_ENV"
           echo "GOPATH=${{ github.workspace }}" >> "$GITHUB_ENV"
           echo "${{ github.workspace }}/bin" >> "$GITHUB_PATH"
+        shell: bash
       - run: make depend
         working-directory: src/github.com/shogo82148/goa-v1
       - run: make test
