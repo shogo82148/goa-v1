@@ -9,7 +9,7 @@ require (
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598
 	github.com/dimfeld/httptreemux v5.0.1+incompatible
 	github.com/go-kit/kit v0.10.0
-	github.com/go-openapi/loads v0.19.6
+	github.com/go-openapi/loads v0.19.7
 	github.com/gofrs/uuid v3.3.0+incompatible
 	github.com/gogo/protobuf v1.3.1
 	github.com/google/gxui v0.0.0-20151028112939-f85e0a97b3a4 // indirect
