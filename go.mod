@@ -29,5 +29,5 @@ require (
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea
 	golang.org/x/net v0.0.0-20201031054903-ff519b6c9102
 	golang.org/x/tools v0.0.0-20201105220310-78b158585360
-	gopkg.in/yaml.v2 v2.3.0
+	gopkg.in/yaml.v2 v2.4.0
 )
