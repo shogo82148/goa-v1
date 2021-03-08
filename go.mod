@@ -20,7 +20,7 @@ require (
 	github.com/manveru/gobdd v0.0.0-20131210092515-f1a17fdd710b // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/onsi/ginkgo v1.15.0
-	github.com/onsi/gomega v1.10.5
+	github.com/onsi/gomega v1.11.0
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.8.0
 	github.com/spf13/cobra v1.1.3
