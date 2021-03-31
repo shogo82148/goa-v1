@@ -25,7 +25,7 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/pflag v1.0.5
-	github.com/ugorji/go/codec v1.2.4
+	github.com/ugorji/go/codec v1.2.5
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea
 	golang.org/x/net v0.0.0-20210119194325-5f4716e94777
 	golang.org/x/tools v0.0.0-20210106214847-113979e3529a
