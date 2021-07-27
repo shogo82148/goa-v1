@@ -11,6 +11,14 @@ import (
 	"github.com/shogo82148/goa-v1"
 )
 
+// contextKey is a value for use with context.WithValue. It's used as
+// a pointer so it fits in an interface{} without allocation.
+type contextKey struct {
+	name string
+}
+
+func (k *contextKey) String() string { return "goa-v1 context value " + k.name }
+
 var _ = Describe("ResponseData", func() {
 	var data *goa.ResponseData
 	var rw http.ResponseWriter
@@ -144,17 +152,19 @@ var _ = Describe("ResponseData", func() {
 			})
 		})
 		Context("Value", func() {
+			key := &contextKey{"key"}
+			otherKey := &contextKey{"other-key"}
 			It("should return the value associated with the child if it exists", func() {
-				parent := context.WithValue(context.Background(), "key", "parent value")
-				child := context.WithValue(context.Background(), "key", "child value")
+				parent := context.WithValue(context.Background(), key, "parent value")
+				child := context.WithValue(context.Background(), key, "child value")
 				ctx := mergeContext(parent, child)
 				Ω(ctx.Value("key")).Should(Equal("child value"))
 			})
 			It("should return the value associated with the parent if the child associates nothing", func() {
-				parent := context.WithValue(context.Background(), "key", "parent value")
-				child := context.WithValue(context.Background(), "other-key", "child value")
+				parent := context.WithValue(context.Background(), key, "parent value")
+				child := context.WithValue(context.Background(), otherKey, "child value")
 				ctx := mergeContext(parent, child)
-				Ω(ctx.Value("key")).Should(Equal("parent value"))
+				Ω(ctx.Value(key)).Should(Equal("parent value"))
 			})
 		})
 	})

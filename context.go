@@ -9,16 +9,14 @@ import (
 )
 
 // Keys used to store data in context.
-const (
-	reqKey key = iota + 1
-	respKey
-	ctrlKey
-	actionKey
-	paramsKey
-	logKey
-	logContextKey
-	errKey
-	securityScopesKey
+var (
+	reqKey            = &contextKey{"request"}
+	respKey           = &contextKey{"response"}
+	ctrlKey           = &contextKey{"controller"}
+	actionKey         = &contextKey{"action"}
+	logKey            = &contextKey{"logger"}
+	errKey            = &contextKey{"error"}
+	securityScopesKey = &contextKey{"security-scope"}
 )
 
 type (
@@ -46,11 +44,15 @@ type (
 		// Length is the response body length.
 		Length int
 	}
-
-	// key is the type used to store internal values in the context.
-	// Context provides typed accessor methods to these values.
-	key int
 )
+
+// contextKey is a value for use with context.WithValue. It's used as
+// a pointer so it fits in an interface{} without allocation.
+type contextKey struct {
+	name string
+}
+
+func (k *contextKey) String() string { return "goa-v1 context value " + k.name }
 
 // NewContext builds a new goa request context.
 // If ctx is nil then req.Context() is used.
