@@ -167,7 +167,7 @@ func parseClaimScopes(token *jwt.Token) (map[string]bool, []string, error) {
 	var scopesInClaimList []string
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return nil, nil, fmt.Errorf("unsupport claims shape")
+		return nil, nil, fmt.Errorf("unsupported claims shape")
 	}
 	for _, k := range validScopeClaimKeys {
 		if rawscopes, ok := claims[k]; ok && rawscopes != nil {
