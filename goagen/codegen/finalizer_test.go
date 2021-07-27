@@ -1,10 +1,10 @@
 package codegen_test
 
 import (
-	"github.com/shogo82148/goa-v1/design"
-	"github.com/shogo82148/goa-v1/goagen/codegen"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/goagen/codegen"
 )
 
 var _ = Describe("Struct finalize code generation", func() {
@@ -182,9 +182,6 @@ if ut.Foo == nil {
 	ut.Foo = []string{"bar", "baz"}
 }`
 
-	hashAssignmentCode = `if ut.Foo == nil {
-	ut.Foo = map[string]string{"bar": "baz"}
-}`
 	datetimeAssignmentCode = `var defaultFoo, _ = time.Parse(time.RFC3339, "1978-06-30T10:00:00+09:00")
 if ut.Foo == nil {
 	ut.Foo = &defaultFoo
