@@ -313,7 +313,7 @@ func TestPeriodicallyRedialingConn(t *testing.T) {
 			t.Fatalf("Unexpected second connection: got %#v, expected %#v", c, secondConn)
 		}
 	})
-	t.Run("connection not replaced if dial errored", func(t *testing.T) {
+	t.Run("connection not replaced if dial fails", func(t *testing.T) {
 		var (
 			firstConn = &net.UDPConn{}
 			callCount = 0
