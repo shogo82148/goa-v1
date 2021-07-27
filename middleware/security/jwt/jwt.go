@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"context"
 	"crypto/ecdsa"
 	"crypto/rsa"
 	"fmt"
@@ -8,9 +9,7 @@ import (
 	"sort"
 	"strings"
 
-	"context"
-
-	jwt "github.com/dgrijalva/jwt-go"
+	jwt "github.com/golang-jwt/jwt"
 	"github.com/shogo82148/goa-v1"
 )
 
