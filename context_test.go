@@ -158,7 +158,7 @@ var _ = Describe("ResponseData", func() {
 				parent := context.WithValue(context.Background(), key, "parent value")
 				child := context.WithValue(context.Background(), key, "child value")
 				ctx := mergeContext(parent, child)
-				Ω(ctx.Value("key")).Should(Equal("child value"))
+				Ω(ctx.Value(key)).Should(Equal("child value"))
 			})
 			It("should return the value associated with the parent if the child associates nothing", func() {
 				parent := context.WithValue(context.Background(), key, "parent value")
