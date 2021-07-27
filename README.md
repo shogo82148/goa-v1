@@ -10,7 +10,7 @@ unique design-first approach.
 
 [![Build Status](https://github.com/shogo82148/goa-v1/workflows/test/badge.svg?branch=master)](https://github.com/shogo82148/goa-v1/actions?query=workflow%3Atest)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/shogo82148/goa-v1/blob/master/LICENSE)
-[![GoDoc](https://godoc.org/github.com/shogo82148/goa-v1?status.svg)](https://godoc.org/github.com/shogo82148/goa-v1)
+[![Go Reference](https://pkg.go.dev/badge/github.com/shogo82148/goa-v1.svg)](https://pkg.go.dev/github.com/shogo82148/goa-v1)
 
 ## Why Goa?
 
