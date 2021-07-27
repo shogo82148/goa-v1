@@ -568,17 +568,15 @@ func (m *MediaTypeDefinition) Validate() *dslengine.ValidationErrors {
 	} else {
 		obj = m.Type.ToObject()
 	}
-	if obj != nil {
-		for n, att := range obj {
-			verr.Merge(att.Validate("attribute "+n, m))
-			if att.View != "" {
-				cmt, ok := att.Type.(*MediaTypeDefinition)
-				if !ok {
-					verr.Add(m, "attribute %s of media type defines a view for rendering but its type is not MediaTypeDefinition", n)
-				}
-				if _, ok := cmt.Views[att.View]; !ok {
-					verr.Add(m, "attribute %s of media type uses unknown view %#v", n, att.View)
-				}
+	for n, att := range obj {
+		verr.Merge(att.Validate("attribute "+n, m))
+		if att.View != "" {
+			cmt, ok := att.Type.(*MediaTypeDefinition)
+			if !ok {
+				verr.Add(m, "attribute %s of media type defines a view for rendering but its type is not MediaTypeDefinition", n)
+			}
+			if _, ok := cmt.Views[att.View]; !ok {
+				verr.Add(m, "attribute %s of media type uses unknown view %#v", n, att.View)
 			}
 		}
 	}
