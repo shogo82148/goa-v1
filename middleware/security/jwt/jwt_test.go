@@ -1,18 +1,17 @@
 package jwt_test
 
 import (
+	"context"
 	"crypto/ecdsa"
 	"crypto/rsa"
 	"net/http"
 	"net/http/httptest"
 
-	"context"
-
-	jwtpkg "github.com/dgrijalva/jwt-go"
-	"github.com/shogo82148/goa-v1"
-	"github.com/shogo82148/goa-v1/middleware/security/jwt"
+	jwtpkg "github.com/golang-jwt/jwt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1"
+	"github.com/shogo82148/goa-v1/middleware/security/jwt"
 )
 
 var _ = Describe("Middleware", func() {

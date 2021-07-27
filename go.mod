@@ -5,13 +5,13 @@ go 1.13
 require (
 	github.com/ajg/form v1.5.1
 	github.com/armon/go-metrics v0.3.9
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598
 	github.com/dimfeld/httptreemux v5.0.1+incompatible
 	github.com/go-kit/kit v0.11.0
 	github.com/go-openapi/loads v0.20.2
 	github.com/gofrs/uuid v3.4.0+incompatible
 	github.com/gogo/protobuf v1.3.2
+	github.com/golang-jwt/jwt v3.2.1+incompatible
 	github.com/google/gxui v0.0.0-20151028112939-f85e0a97b3a4 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
