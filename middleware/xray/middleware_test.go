@@ -51,14 +51,6 @@ func TestMiddleware(t *testing.T) {
 	t.Skip("xray middleware is deprecated")
 
 	type (
-		Tra struct {
-			TraceID, SpanID, ParentID string
-		}
-		Req struct {
-			Method, Host, IP, RemoteAddr string
-			RemoteHost, UserAgent        string
-			URL                          *url.URL
-		}
 		Res struct {
 			Status int
 		}
