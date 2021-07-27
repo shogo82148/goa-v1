@@ -11,9 +11,9 @@ jobs:
         with:
           persist-credentials: false
       - name: golangci-lint
-        uses: reviewdog/action-golangci-lint@v1
+        uses: reviewdog/action-golangci-lint@v2
         with:
-          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
           level: warning
 
   misspell:
@@ -27,6 +27,6 @@ jobs:
       - name: misspell
         uses: reviewdog/action-misspell@v1
         with:
-          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
           level: warning
           locale: "US"
