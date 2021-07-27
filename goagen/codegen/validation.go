@@ -102,6 +102,7 @@ func (v *Validator) arrayValCode(att *design.AttributeDefinition, nonzero, requi
 		}
 		buf.WriteString(validation)
 	}
+	_ = first // suppress: ineffectual assignment to first (ineffassign)
 	return buf.Bytes()
 }
 
@@ -159,6 +160,7 @@ func (v *Validator) hashValCode(att *design.AttributeDefinition, nonzero, requir
 		}
 		buf.WriteString(validation)
 	}
+	_ = first // suppress: ineffectual assignment to first (ineffassign)
 	return buf.Bytes()
 }
 
