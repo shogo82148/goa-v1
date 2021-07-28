@@ -108,11 +108,7 @@ func normalizeEncodingDefinitions(defs []*design.EncodingDefinition) []*design.E
 		if first == "" {
 			first = key
 		}
-		if _, ok := byfn[key]; ok {
-			byfn[key] = append(byfn[key], enc)
-		} else {
-			byfn[key] = []*design.EncodingDefinition{enc}
-		}
+		byfn[key] = append(byfn[key], enc)
 	}
 
 	// Reserialize into array keeping the first element identical since it's the default

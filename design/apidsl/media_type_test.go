@@ -111,7 +111,6 @@ var _ = Describe("MediaType", func() {
 	})
 
 	Context("with links", func() {
-		const linkName = "link"
 		var link1Name, link2Name string
 		var link2View string
 		var mt1, mt2 *design.MediaTypeDefinition

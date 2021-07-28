@@ -18,8 +18,6 @@ import (
 )
 
 var _ = Describe("Generate", func() {
-	const testgenPackagePath = "github.com/shogo82148/goa-v1/goagen/gen_client/test_"
-
 	var workspace *codegen.Workspace
 	var outDir string
 	var files []string

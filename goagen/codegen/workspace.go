@@ -86,9 +86,15 @@ func NewWorkspace(prefix string) (*Workspace, error) {
 		return nil, err
 	}
 	// create workspace layout
-	os.MkdirAll(filepath.Join(dir, "src"), 0755)
-	os.MkdirAll(filepath.Join(dir, "pkg"), 0755)
-	os.MkdirAll(filepath.Join(dir, "bin"), 0755)
+	if err := os.MkdirAll(filepath.Join(dir, "src"), 0755); err != nil {
+		return nil, err
+	}
+	if err := os.MkdirAll(filepath.Join(dir, "pkg"), 0755); err != nil {
+		return nil, err
+	}
+	if err := os.MkdirAll(filepath.Join(dir, "bin"), 0755); err != nil {
+		return nil, err
+	}
 
 	// setup GOPATH
 	gopath := envOr("GOPATH", build.Default.GOPATH)
