@@ -6,15 +6,23 @@ import (
 
 	"context"
 
-	"github.com/shogo82148/goa-v1"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1"
 )
 
 var _ = Describe("Info", func() {
 	Context("with a nil Log", func() {
 		It("doesn't log and doesn't crash", func() {
 			Ω(func() { goa.LogInfo(context.Background(), "foo", "bar") }).ShouldNot(Panic())
+		})
+	})
+})
+
+var _ = Describe("Warn", func() {
+	Context("with a nil Log", func() {
+		It("doesn't log and doesn't crash", func() {
+			Ω(func() { goa.LogWarn(context.Background(), "foo", "bar") }).ShouldNot(Panic())
 		})
 	})
 })

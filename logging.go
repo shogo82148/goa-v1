@@ -113,6 +113,17 @@ func LogInfo(ctx context.Context, msg string, keyvals ...interface{}) {
 	}
 }
 
+// LogWarn extracts the logger from the given context and calls Warn on it.
+// This is intended for code that needs portable logging such as the internal code of goa and
+// middleware. User code should use the log adapters instead.
+func LogWarn(ctx context.Context, msg string, keyvals ...interface{}) {
+	if l := ctx.Value(logKey); l != nil {
+		if logger, ok := l.(LogAdapter); ok {
+			logger.Warn(msg, keyvals...)
+		}
+	}
+}
+
 // LogError extracts the logger from the given context and calls Error on it.
 // This is intended for code that needs portable logging such as the internal code of goa and
 // middleware. User code should use the log adapters instead.
