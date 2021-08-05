@@ -45,6 +45,11 @@ var _ = Describe("LogAdapter", func() {
 			Ω(out.String()).Should(ContainSubstring(msg + " data=foo"))
 		})
 
+		It("Warn logs", func() {
+			logger.Warn(msg, data...)
+			Ω(out.String()).Should(ContainSubstring(msg + " data=foo"))
+		})
+
 		It("Error logs", func() {
 			logger.Error(msg, data...)
 			Ω(out.String()).Should(ContainSubstring(msg + " data=foo"))

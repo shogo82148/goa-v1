@@ -19,6 +19,8 @@ type (
 	LogAdapter interface {
 		// Info logs an informational message.
 		Info(msg string, keyvals ...interface{})
+		// Warn logs a warning message.
+		Warn(mgs string, keyvals ...interface{})
 		// Error logs an error.
 		Error(msg string, keyvals ...interface{})
 		// New appends to the logger context and returns the updated logger logger.
@@ -47,11 +49,15 @@ func Logger(ctx context.Context) *log.Logger {
 }
 
 func (a *adapter) Info(msg string, keyvals ...interface{}) {
-	a.logit(msg, keyvals, false)
+	a.logit(msg, keyvals, "INFO")
+}
+
+func (a *adapter) Warn(msg string, keyvals ...interface{}) {
+	a.logit(msg, keyvals, "WARN")
 }
 
 func (a *adapter) Error(msg string, keyvals ...interface{}) {
-	a.logit(msg, keyvals, true)
+	a.logit(msg, keyvals, "EROR")
 }
 
 func (a *adapter) New(keyvals ...interface{}) LogAdapter {
@@ -70,7 +76,7 @@ func (a *adapter) New(keyvals ...interface{}) LogAdapter {
 	}
 }
 
-func (a *adapter) logit(msg string, keyvals []interface{}, iserror bool) {
+func (a *adapter) logit(msg string, keyvals []interface{}, level string) {
 	n := (len(keyvals) + 1) / 2
 	if len(keyvals)%2 != 0 {
 		keyvals = append(keyvals, ErrMissingLogValue)
@@ -78,11 +84,7 @@ func (a *adapter) logit(msg string, keyvals []interface{}, iserror bool) {
 	m := (len(a.keyvals) + 1) / 2
 	n += m
 	var fm bytes.Buffer
-	lvl := "INFO"
-	if iserror {
-		lvl = "EROR"
-	}
-	fm.WriteString(fmt.Sprintf("[%s] %s", lvl, msg))
+	fm.WriteString(fmt.Sprintf("[%s] %s", level, msg))
 	vals := make([]interface{}, n)
 	offset := len(a.keyvals)
 	for i := 0; i < offset; i += 2 {
