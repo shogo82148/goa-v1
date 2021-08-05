@@ -47,6 +47,13 @@ func (a *adapter) Info(msg string, data ...interface{}) {
 	a.Logger.Log(ctx...)
 }
 
+// Info logs warning messages using go-kit.
+func (a *adapter) Warn(msg string, data ...interface{}) {
+	ctx := []interface{}{"lvl", "warn", "msg", msg}
+	ctx = append(ctx, data...)
+	a.Logger.Log(ctx...)
+}
+
 // Error logs error messages using go-kit.
 func (a *adapter) Error(msg string, data ...interface{}) {
 	ctx := []interface{}{"lvl", "error", "msg", msg}

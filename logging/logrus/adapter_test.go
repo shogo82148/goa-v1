@@ -5,10 +5,10 @@ import (
 
 	"context"
 
-	"github.com/shogo82148/goa-v1"
-	goalogrus "github.com/shogo82148/goa-v1/logging/logrus"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1"
+	goalogrus "github.com/shogo82148/goa-v1/logging/logrus"
 	"github.com/sirupsen/logrus"
 )
 
@@ -26,6 +26,18 @@ var _ = Describe("goalogrus", func() {
 	It("adapts info messages", func() {
 		msg := "msg"
 		adapter.Info(msg)
+		Ω(buf.String()).Should(ContainSubstring(msg))
+	})
+
+	It("adapts warn messages", func() {
+		msg := "msg"
+		adapter.Warn(msg)
+		Ω(buf.String()).Should(ContainSubstring(msg))
+	})
+
+	It("adapts error messages", func() {
+		msg := "msg"
+		adapter.Error(msg)
 		Ω(buf.String()).Should(ContainSubstring(msg))
 	})
 })
