@@ -51,6 +51,11 @@ func (a *adapter) Info(msg string, data ...interface{}) {
 	a.Entry.WithFields(data2rus(data)).Info(msg)
 }
 
+// Warn logs message using logrus.
+func (a *adapter) Warn(msg string, data ...interface{}) {
+	a.Entry.WithFields(data2rus(data)).Warn(msg)
+}
+
 // Error logs errors using logrus.
 func (a *adapter) Error(msg string, data ...interface{}) {
 	a.Entry.WithFields(data2rus(data)).Error(msg)

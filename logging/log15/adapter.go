@@ -16,8 +16,8 @@ package goalog15
 import (
 	"context"
 
-	"github.com/shogo82148/goa-v1"
 	"github.com/inconshreveable/log15"
+	"github.com/shogo82148/goa-v1"
 )
 
 // adapter is the log15 goa adapter logger.
@@ -42,6 +42,11 @@ func Logger(ctx context.Context) log15.Logger {
 // Info logs informational messages using log15.
 func (a *adapter) Info(msg string, data ...interface{}) {
 	a.Logger.Info(msg, data...)
+}
+
+// Warn logs informational messages using log15.
+func (a *adapter) Warn(msg string, data ...interface{}) {
+	a.Logger.Warn(msg, data...)
 }
 
 // Error logs error messages using log15.

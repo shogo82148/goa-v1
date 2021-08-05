@@ -3,11 +3,11 @@ package goalog15_test
 import (
 	"context"
 
-	"github.com/shogo82148/goa-v1"
-	goalog15 "github.com/shogo82148/goa-v1/logging/log15"
 	"github.com/inconshreveable/log15"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1"
+	goalog15 "github.com/shogo82148/goa-v1/logging/log15"
 )
 
 type TestHandler struct {
@@ -34,6 +34,21 @@ var _ = Describe("New", func() {
 	It("creates an adapter that logs", func() {
 		msg := "msg"
 		adapter.Info(msg)
+		Ω(handler.records).Should(HaveLen(1))
+		Ω(handler.records[0].Msg).Should(ContainSubstring(msg))
+	})
+
+	It("creates an adapter that logs", func() {
+		adapter := adapter.(goa.WarningLogAdapter)
+		msg := "msg"
+		adapter.Warn(msg)
+		Ω(handler.records).Should(HaveLen(1))
+		Ω(handler.records[0].Msg).Should(ContainSubstring(msg))
+	})
+
+	It("creates an adapter that logs", func() {
+		msg := "msg"
+		adapter.Error(msg)
 		Ω(handler.records).Should(HaveLen(1))
 		Ω(handler.records[0].Msg).Should(ContainSubstring(msg))
 	})
