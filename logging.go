@@ -19,12 +19,20 @@ type (
 	LogAdapter interface {
 		// Info logs an informational message.
 		Info(msg string, keyvals ...interface{})
-		// Warn logs a warning message.
-		Warn(mgs string, keyvals ...interface{})
 		// Error logs an error.
 		Error(msg string, keyvals ...interface{})
 		// New appends to the logger context and returns the updated logger logger.
 		New(keyvals ...interface{}) LogAdapter
+	}
+
+	// WarningLogAdapter is the logger interface used by goa to log informational, warning and error messages.
+	// Adapters to different logging backends are provided in the logging sub-packages.
+	// goa takes care of initializing the logging context with the service, controller and
+	// action names.
+	WarningLogAdapter interface {
+		LogAdapter
+		// Warn logs a warning message.
+		Warn(mgs string, keyvals ...interface{})
 	}
 
 	// adapter is the stdlib logger adapter.
@@ -118,8 +126,11 @@ func LogInfo(ctx context.Context, msg string, keyvals ...interface{}) {
 // middleware. User code should use the log adapters instead.
 func LogWarn(ctx context.Context, msg string, keyvals ...interface{}) {
 	if l := ctx.Value(logKey); l != nil {
-		if logger, ok := l.(LogAdapter); ok {
+		switch logger := l.(type) {
+		case WarningLogAdapter:
 			logger.Warn(msg, keyvals...)
+		case LogAdapter:
+			logger.Info(msg, keyvals...)
 		}
 	}
 }

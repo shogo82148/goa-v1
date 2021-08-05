@@ -39,6 +39,7 @@ var _ = Describe("New", func() {
 	})
 
 	It("creates an adapter that logs", func() {
+		adapter := adapter.(goa.WarningLogAdapter)
 		msg := "msg"
 		adapter.Warn(msg)
 		Ω(handler.records).Should(HaveLen(1))

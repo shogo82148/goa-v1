@@ -54,6 +54,7 @@ var _ = Describe("LogAdapter", func() {
 		})
 
 		It("Warn logs", func() {
+			logger := logger.(goa.WarningLogAdapter)
 			logger.Warn(msg, data...)
 			Ω(out.String()).Should(ContainSubstring(msg + " data=foo"))
 		})

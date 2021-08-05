@@ -30,6 +30,7 @@ var _ = Describe("goalogrus", func() {
 	})
 
 	It("adapts warn messages", func() {
+		adapter := adapter.(goa.WarningLogAdapter)
 		msg := "msg"
 		adapter.Warn(msg)
 		Ω(buf.String()).Should(ContainSubstring(msg))

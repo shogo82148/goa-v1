@@ -28,6 +28,7 @@ var _ = Describe("New", func() {
 	})
 
 	It("creates an adapter that logs", func() {
+		adapter := adapter.(goa.WarningLogAdapter)
 		msg := "msg"
 		adapter.Warn(msg)
 		Ω(buf.String()).Should(Equal("lvl=warn msg=" + msg + "\n"))
