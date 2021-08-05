@@ -32,12 +32,18 @@ type logEntry struct {
 type testLogger struct {
 	Context      []interface{}
 	InfoEntries  []logEntry
+	WarnEntries  []logEntry
 	ErrorEntries []logEntry
 }
 
 func (t *testLogger) Info(msg string, data ...interface{}) {
 	e := logEntry{msg, append(t.Context, data...)}
 	t.InfoEntries = append(t.InfoEntries, e)
+}
+
+func (t *testLogger) Warn(msg string, data ...interface{}) {
+	e := logEntry{msg, append(t.Context, data...)}
+	t.WarnEntries = append(t.InfoEntries, e)
 }
 
 func (t *testLogger) Error(msg string, data ...interface{}) {
