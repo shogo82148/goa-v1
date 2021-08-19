@@ -9,7 +9,7 @@ import (
 	"sort"
 	"strings"
 
-	jwt "github.com/golang-jwt/jwt"
+	jwt "github.com/golang-jwt/jwt/v4"
 	"github.com/shogo82148/goa-v1"
 )
 
