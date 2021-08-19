@@ -3,10 +3,10 @@ package design_test
 import (
 	"path"
 
-	"github.com/shogo82148/goa-v1/design"
-	"github.com/shogo82148/goa-v1/dslengine"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/dslengine"
 )
 
 var _ = Describe("Inherit", func() {

@@ -1,10 +1,9 @@
 package middleware
 
 import (
+	"context"
 	"fmt"
 	"net/http"
-
-	"context"
 
 	"github.com/shogo82148/goa-v1"
 )

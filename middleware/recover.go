@@ -1,14 +1,13 @@
 package middleware
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"runtime"
 	"strings"
 
 	"github.com/shogo82148/goa-v1"
-
-	"context"
 )
 
 // Recover is a middleware that recovers panics and maps them to errors.

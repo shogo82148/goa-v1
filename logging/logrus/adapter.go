@@ -14,9 +14,8 @@ Usage:
 package goalogrus
 
 import (
-	"fmt"
-
 	"context"
+	"fmt"
 
 	"github.com/shogo82148/goa-v1"
 	"github.com/sirupsen/logrus"

@@ -1,11 +1,10 @@
 package middleware
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/shogo82148/goa-v1"
-
-	"context"
 )
 
 // loggingResponseWriter wraps an http.ResponseWriter and writes only raw

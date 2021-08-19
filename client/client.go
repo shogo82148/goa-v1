@@ -2,6 +2,7 @@ package client
 
 import (
 	"bytes"
+	"context"
 	"crypto/rand"
 	"encoding/base64"
 	"io"
@@ -9,8 +10,6 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"time"
-
-	"context"
 
 	"github.com/shogo82148/goa-v1"
 )

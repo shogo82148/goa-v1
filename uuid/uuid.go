@@ -1,3 +1,4 @@
+//go:build !js
 // +build !js
 
 //This is just a declaration of the uuid.UUID which doesn't work with gopherjs

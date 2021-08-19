@@ -1,16 +1,15 @@
 package middleware_test
 
 import (
+	"context"
 	"net/http"
 	"net/url"
 	"strings"
 
-	"context"
-
-	"github.com/shogo82148/goa-v1"
-	"github.com/shogo82148/goa-v1/middleware"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1"
+	"github.com/shogo82148/goa-v1/middleware"
 )
 
 var _ = Describe("LogRequest", func() {

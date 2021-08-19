@@ -2,9 +2,8 @@ package goa_test
 
 import (
 	"bytes"
-	"log"
-
 	"context"
+	"log"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

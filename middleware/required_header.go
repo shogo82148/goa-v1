@@ -1,12 +1,11 @@
 package middleware
 
 import (
+	"context"
 	"net/http"
 	"regexp"
 
 	"github.com/shogo82148/goa-v1"
-
-	"context"
 )
 
 // RequireHeader requires a request header to match a value pattern. If the
