@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	jwtpkg "github.com/golang-jwt/jwt"
+	jwtpkg "github.com/golang-jwt/jwt/v4"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/shogo82148/goa-v1"
