@@ -1,3 +1,4 @@
+//go:build js
 // +build js
 
 //This part is copied from github.com/gofrs/uuid but some feature uses non gopherjs complaints calls

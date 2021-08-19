@@ -1,10 +1,10 @@
 package genapp_test
 
 import (
-	"github.com/shogo82148/goa-v1/design"
-	genapp "github.com/shogo82148/goa-v1/goagen/gen_app"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/design"
+	genapp "github.com/shogo82148/goa-v1/goagen/gen_app"
 )
 
 var _ = Describe("BuildEncoders", func() {

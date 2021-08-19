@@ -2,7 +2,6 @@ package goalogrus_test
 
 import (
 	"bytes"
-
 	"context"
 
 	. "github.com/onsi/ginkgo"

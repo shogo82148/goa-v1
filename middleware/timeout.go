@@ -1,12 +1,11 @@
 package middleware
 
 import (
+	"context"
 	"net/http"
 	"time"
 
 	"github.com/shogo82148/goa-v1"
-
-	"context"
 )
 
 // Timeout sets a global timeout for all controller actions.

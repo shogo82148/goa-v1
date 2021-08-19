@@ -1,15 +1,14 @@
 package middleware_test
 
 import (
+	"context"
 	"net/http"
 	"strings"
 	"time"
 
-	"context"
-
-	"github.com/shogo82148/goa-v1/middleware"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/shogo82148/goa-v1/middleware"
 )
 
 var _ = Describe("Timeout", func() {

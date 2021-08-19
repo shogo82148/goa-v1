@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"context"
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
@@ -9,8 +10,6 @@ import (
 	"sync/atomic"
 
 	"github.com/shogo82148/goa-v1"
-
-	"context"
 )
 
 const (

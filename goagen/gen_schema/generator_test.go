@@ -7,14 +7,14 @@ import (
 	"path/filepath"
 	"strings"
 
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 	"github.com/shogo82148/goa-v1/design"
 	"github.com/shogo82148/goa-v1/design/apidsl"
 	"github.com/shogo82148/goa-v1/dslengine"
 	"github.com/shogo82148/goa-v1/goagen/codegen"
 	genschema "github.com/shogo82148/goa-v1/goagen/gen_schema"
 	"github.com/shogo82148/goa-v1/version"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Generate", func() {

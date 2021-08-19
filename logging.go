@@ -2,10 +2,9 @@ package goa
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"log"
-
-	"context"
 )
 
 // ErrMissingLogValue is the value used to log keys with missing values

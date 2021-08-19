@@ -5,8 +5,8 @@ import (
 	"errors"
 	"io"
 
-	"github.com/shogo82148/goa-v1"
 	"github.com/gogo/protobuf/proto"
+	"github.com/shogo82148/goa-v1"
 )
 
 // Enforce that codec.Decoder satisfies goa.ResettableDecoder at compile time
