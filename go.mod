@@ -27,8 +27,8 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/ugorji/go/codec v1.2.6
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea
-	golang.org/x/net v0.0.0-20210428140749-89ef3d95e781
-	golang.org/x/tools v0.1.5
+	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d
+	golang.org/x/tools v0.1.6
 	gopkg.in/yaml.v2 v2.4.0
 )
 
@@ -53,7 +53,7 @@ require (
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
 	github.com/nxadm/tail v1.4.8 // indirect
 	go.mongodb.org/mongo-driver v1.7.1 // indirect
-	golang.org/x/sys v0.0.0-20210603081109-ebe580a85c40 // indirect
+	golang.org/x/sys v0.0.0-20210809222454-d867a43fc93e // indirect
 	golang.org/x/text v0.3.6 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 )
