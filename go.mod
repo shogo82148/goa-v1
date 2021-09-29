@@ -28,7 +28,7 @@ require (
 	github.com/ugorji/go/codec v1.2.6
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea
 	golang.org/x/net v0.0.0-20210917221730-978cfadd31cf
-	golang.org/x/tools v0.1.6
+	golang.org/x/tools v0.1.7
 	gopkg.in/yaml.v2 v2.4.0
 )
 
