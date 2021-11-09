@@ -17,7 +17,6 @@ jobs:
           - "1"
           - "1.17"
           - "1.16"
-          - "1.15"
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
