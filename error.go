@@ -359,6 +359,8 @@ func asErrorResponse(err error) *ErrorResponse {
 // are not catastrophic.
 func newErrorID() string {
 	b := make([]byte, 6)
-	io.ReadFull(rand.Reader, b)
+	if _, err := io.ReadFull(rand.Reader, b); err != nil {
+		panic(err)
+	}
 	return base64.StdEncoding.EncodeToString(b)
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"fmt"
+	"io"
 	"net"
 	"net/http"
 	"sync"
@@ -107,7 +108,7 @@ func New(service, daemon string) (goa.Middleware, error) {
 // compatible with AWS X-Ray.
 func NewID() string {
 	b := make([]byte, 8)
-	if _, err := rand.Read(b); err != nil {
+	if _, err := io.ReadFull(rand.Reader, b); err != nil {
 		panic(err)
 	}
 	return fmt.Sprintf("%x", b)
@@ -117,7 +118,7 @@ func NewID() string {
 // compatible with AWS X-Ray.
 func NewTraceID() string {
 	b := make([]byte, 12)
-	if _, err := rand.Read(b); err != nil {
+	if _, err := io.ReadFull(rand.Reader, b); err != nil {
 		panic(err)
 	}
 	return fmt.Sprintf("%d-%x-%s", 1, time.Now().Unix(), fmt.Sprintf("%x", b))
