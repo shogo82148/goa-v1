@@ -3,7 +3,7 @@ package goakit_test
 import (
 	"bytes"
 
-	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/shogo82148/goa-v1"
