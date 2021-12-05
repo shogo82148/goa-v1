@@ -333,7 +333,6 @@ func (g *Generator) generateResourceClient(pkgDir string, res *design.ResourceDe
 		codegen.SimpleImport("encoding/json"),
 		codegen.SimpleImport("fmt"),
 		codegen.SimpleImport("io"),
-		codegen.SimpleImport("io/ioutil"),
 		codegen.SimpleImport("mime/multipart"),
 		codegen.SimpleImport("net/http"),
 		codegen.SimpleImport("net/url"),
@@ -1045,7 +1044,7 @@ func (c * Client) {{ .Name }}(ctx context.Context, {{ if .DirName }}filename, {{
 	}
 	if resp.StatusCode != 200 {
 		var body string
-		if b, err := ioutil.ReadAll(resp.Body); err != nil {
+		if b, err := io.ReadAll(resp.Body); err != nil {
 			if len(b) > 0 {
 				body = ": "+ string(b)
 			}

@@ -2,7 +2,7 @@ package goa_test
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 
@@ -51,7 +51,7 @@ var _ = Describe("Mux", func() {
 			req, err = http.NewRequest(reqMeth, reqPath, &body)
 			Ω(err).ShouldNot(HaveOccurred())
 			mux.Handle(reqMeth, reqPath, func(rw http.ResponseWriter, req *http.Request, vals url.Values) {
-				b, err := ioutil.ReadAll(req.Body)
+				b, err := io.ReadAll(req.Body)
 				Ω(err).ShouldNot(HaveOccurred())
 				readPath = req.URL.Path
 				readMeth = req.Method

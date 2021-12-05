@@ -3,7 +3,6 @@ package genschema
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -73,7 +72,7 @@ func (g *Generator) Generate() (_ []string, err error) {
 	os.MkdirAll(g.OutDir, 0755)
 	g.genfiles = append(g.genfiles, g.OutDir)
 	schemaFile := filepath.Join(g.OutDir, "schema.json")
-	if err = ioutil.WriteFile(schemaFile, js, 0644); err != nil {
+	if err = os.WriteFile(schemaFile, js, 0644); err != nil {
 		return
 	}
 	g.genfiles = append(g.genfiles, schemaFile)

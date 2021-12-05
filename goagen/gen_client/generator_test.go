@@ -3,7 +3,6 @@ package genclient_test
 import (
 	"bytes"
 	"html/template"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -35,7 +34,7 @@ var _ = Describe("Generate", func() {
 		var err error
 		workspace, err = codegen.NewWorkspace("test")
 		Ω(err).ShouldNot(HaveOccurred())
-		outDir, err = ioutil.TempDir(filepath.Join(workspace.Path, "src"), "")
+		outDir, err = os.MkdirTemp(filepath.Join(workspace.Path, "src"), "")
 		Ω(err).ShouldNot(HaveOccurred())
 		os.Args = []string{"goagen", "--out=" + outDir, "--design=foo", "--version=" + version.String()}
 	})
@@ -120,19 +119,19 @@ var _ = Describe("Generate", func() {
 
 		It("generates code generated header", func() {
 			Ω(genErr).Should(BeNil())
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "client", "foo.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "client", "foo.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(string(content)).Should(HavePrefix(resourceHeader))
 
-			content, err = ioutil.ReadFile(filepath.Join(outDir, "client", "client.go"))
+			content, err = os.ReadFile(filepath.Join(outDir, "client", "client.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(string(content)).Should(HavePrefix(clientHeader))
 
-			content, err = ioutil.ReadFile(filepath.Join(outDir, "client", "media_types.go"))
+			content, err = os.ReadFile(filepath.Join(outDir, "client", "media_types.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(string(content)).Should(HavePrefix(mediaTypesHeader))
 
-			content, err = ioutil.ReadFile(filepath.Join(outDir, "client", "user_types.go"))
+			content, err = os.ReadFile(filepath.Join(outDir, "client", "user_types.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(string(content)).Should(HavePrefix(userTypesHeader))
 		})
@@ -173,7 +172,7 @@ var _ = Describe("Generate", func() {
 		It("generates header initialization code that compiles", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(9))
-			c, err := ioutil.ReadFile(filepath.Join(outDir, "client", "foo.go"))
+			c, err := os.ReadFile(filepath.Join(outDir, "client", "foo.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			content := string(c)
 			Ω(content).Should(ContainSubstring("header.Set(\"header_name\", tmp3)\n"))
@@ -219,7 +218,7 @@ var _ = Describe("Generate", func() {
 		It("generates path initialization code that uses all defined URL params in proper format", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(9))
-			c, err := ioutil.ReadFile(filepath.Join(outDir, "client", "foo.go"))
+			c, err := os.ReadFile(filepath.Join(outDir, "client", "foo.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			content := string(c)
 			Ω(content).Should(ContainSubstring("func ShowFooPath("))
@@ -275,7 +274,7 @@ var _ = Describe("Generate", func() {
 		It("generates param initialization code that uses the param name given in the design", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(9))
-			c, err := ioutil.ReadFile(filepath.Join(outDir, "client", "foo.go"))
+			c, err := os.ReadFile(filepath.Join(outDir, "client", "foo.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			content := string(c)
 			Ω(content).Should(ContainSubstring("func ShowFooPath("))
@@ -346,7 +345,7 @@ var _ = Describe("Generate", func() {
 		It("generates param initialization code that uses the param name given in the design", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(9))
-			c, err := ioutil.ReadFile(filepath.Join(outDir, "client", "foo.go"))
+			c, err := os.ReadFile(filepath.Join(outDir, "client", "foo.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			content := string(c)
 			Ω(content).Should(ContainSubstring("func ShowFooPath("))
@@ -417,7 +416,7 @@ var _ = Describe("Generate", func() {
 		It("generates Path function with unique names", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(9))
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "client", "foo.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "client", "foo.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(content).Should(ContainSubstring("func ShowFooPath("))
 			Ω(strings.Count(string(content), "func ShowFooPath(")).Should(Equal(1))
@@ -440,7 +439,7 @@ var _ = Describe("Generate", func() {
 			It("generates a Download function", func() {
 				Ω(genErr).Should(BeNil())
 				Ω(files).Should(HaveLen(9))
-				content, err := ioutil.ReadFile(filepath.Join(outDir, "client", "foo.go"))
+				content, err := os.ReadFile(filepath.Join(outDir, "client", "foo.go"))
 				Ω(err).ShouldNot(HaveOccurred())
 				Ω(content).Should(ContainSubstring("func (c *Client) DownloadSwaggerJSON("))
 			})
@@ -499,7 +498,7 @@ var _ = Describe("Generate", func() {
 		It("generates the correct client Fields", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(9))
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "client", "client.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "client", "client.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(content).Should(ContainSubstring("JWT1Signer goaclient.Signer"))
 			Ω(content).Should(ContainSubstring("func (c *Client) SetJWT1Signer(signer goaclient.Signer) {\n	c.JWT1Signer = signer\n}"))
@@ -508,7 +507,7 @@ var _ = Describe("Generate", func() {
 		It("generates the Signer.Sign call from Action", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(9))
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "client", "foo.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "client", "foo.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(content).Should(ContainSubstring(`		if err := c.JWT1Signer.Sign(req); err != nil {
 			return nil, err
@@ -564,7 +563,7 @@ var _ = Describe("Generate", func() {
 		It("generates the user type imports", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(9))
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "client", "user_types.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "client", "user_types.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(content).Should(ContainSubstring("uuid \"github.com/shogo82148/goa-v1/uuid\""))
 		})
@@ -627,7 +626,7 @@ var _ = Describe("Generate", func() {
 		It("treat non-required param as pointer type", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(9))
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "client", "foo.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "client", "foo.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(string(content)).Should(ContainSubstring("if payload.Param != nil"))
 			Ω(string(content)).Should(ContainSubstring("if payload.Image != nil"))
@@ -681,7 +680,7 @@ var _ = Describe("Generate", func() {
 		It("generates param initialization code that uses the param name given in the design", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(9))
-			c, err := ioutil.ReadFile(filepath.Join(outDir, "client", "foo.go"))
+			c, err := os.ReadFile(filepath.Join(outDir, "client", "foo.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			content := string(c)
 			Ω(string(content)).Should(ContainSubstring("ShowFoo(ctx context.Context, path string, metaFoo *string)"))

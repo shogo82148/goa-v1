@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"compress/gzip"
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -265,7 +265,7 @@ func Middleware(level int, o ...Option) goa.Middleware {
 	}
 	gzipPool := sync.Pool{
 		New: func() interface{} {
-			gz, err := gzip.NewWriterLevel(ioutil.Discard, level)
+			gz, err := gzip.NewWriterLevel(io.Discard, level)
 			if err != nil {
 				panic(err)
 			}

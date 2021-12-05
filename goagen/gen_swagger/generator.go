@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -93,7 +92,7 @@ func (g *Generator) Generate() (_ []string, err error) {
 		return nil, err
 	}
 	swaggerFile := filepath.Join(swaggerDir, "swagger.json")
-	if err := ioutil.WriteFile(swaggerFile, rawJSON, 0644); err != nil {
+	if err := os.WriteFile(swaggerFile, rawJSON, 0644); err != nil {
 		return nil, err
 	}
 	g.genfiles = append(g.genfiles, swaggerFile)
@@ -104,7 +103,7 @@ func (g *Generator) Generate() (_ []string, err error) {
 		return nil, err
 	}
 	swaggerFile = filepath.Join(swaggerDir, "swagger.yaml")
-	if err := ioutil.WriteFile(swaggerFile, rawYAML, 0644); err != nil {
+	if err := os.WriteFile(swaggerFile, rawYAML, 0644); err != nil {
 		return nil, err
 	}
 	g.genfiles = append(g.genfiles, swaggerFile)

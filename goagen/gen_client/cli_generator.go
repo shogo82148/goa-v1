@@ -29,7 +29,6 @@ func (g *Generator) generateMain(mainFile string, clientPkg, cliPkg string, func
 	imports := []*codegen.ImportSpec{
 		codegen.SimpleImport("encoding/json"),
 		codegen.SimpleImport("fmt"),
-		codegen.SimpleImport("io/ioutil"),
 		codegen.SimpleImport("net/http"),
 		codegen.SimpleImport("os"),
 		codegen.SimpleImport("time"),

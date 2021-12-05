@@ -3,7 +3,6 @@ package codegen_test
 import (
 	"fmt"
 	"go/build"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -68,7 +67,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -107,7 +106,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -144,7 +143,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -180,7 +179,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -214,7 +213,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -248,7 +247,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -310,7 +309,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -349,7 +348,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -386,7 +385,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -422,7 +421,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -457,7 +456,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -492,7 +491,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -540,7 +539,7 @@ var _ = Describe("Workspace", func() {
 
 		Context("outside GOPATH", func() {
 			BeforeEach(func() {
-				gopath, err = ioutil.TempDir(".", "go")
+				gopath, err = os.MkdirTemp(".", "go")
 				Ω(err).ShouldNot(HaveOccurred())
 				os.Setenv("GOPATH", gopath)
 			})
@@ -603,7 +602,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -642,7 +641,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -679,7 +678,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -715,7 +714,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -750,7 +749,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})
@@ -785,7 +784,7 @@ var _ = Describe("Workspace", func() {
 
 				Context("outside GOPATH", func() {
 					BeforeEach(func() {
-						gopath, err = ioutil.TempDir(".", "go")
+						gopath, err = os.MkdirTemp(".", "go")
 						Ω(err).ShouldNot(HaveOccurred())
 						os.Setenv("GOPATH", gopath)
 					})

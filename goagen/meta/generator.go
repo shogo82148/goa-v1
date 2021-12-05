@@ -2,7 +2,6 @@ package meta
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -99,7 +98,7 @@ func (m *Generator) Generate() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	tmpDir, err := ioutil.TempDir(wd, "goagen")
+	tmpDir, err := os.MkdirTemp(wd, "goagen")
 	if err != nil {
 		if _, ok := err.(*os.PathError); ok {
 			err = fmt.Errorf(`invalid output directory path "%s"`, m.OutDir)

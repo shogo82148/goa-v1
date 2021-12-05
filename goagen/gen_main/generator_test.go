@@ -2,7 +2,6 @@ package genmain_test
 
 import (
 	"bytes"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -86,7 +85,7 @@ var _ = Describe("Generate", func() {
 		It("generates controllers ready for regeneration", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(2))
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "first.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "first.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(content).Should(MatchRegexp("FirstController_Alpha: start_implement"))
 			Ω(content).Should(MatchRegexp(`// FirstController_Alpha: start_implement\s*// Put your logic here\s*return nil\s*// FirstController_Alpha: end_implement`))
@@ -98,7 +97,7 @@ var _ = Describe("Generate", func() {
 				files, genErr = genmain.Generate()
 
 				// Put some impl in the existing controller
-				existing, err := ioutil.ReadFile(filepath.Join(outDir, "first.go"))
+				existing, err := os.ReadFile(filepath.Join(outDir, "first.go"))
 				Ω(err).ShouldNot(HaveOccurred())
 
 				// First add an import for fmt, to make sure it remains
@@ -107,7 +106,7 @@ var _ = Describe("Generate", func() {
 				// Next add some body that uses fmt
 				existing = bytes.Replace(existing, []byte("// Put your logic here"), []byte("fmt.Println(\"I did it first\")"), 1)
 
-				err = ioutil.WriteFile(filepath.Join(outDir, "first.go"), existing, os.ModePerm)
+				err = os.WriteFile(filepath.Join(outDir, "first.go"), existing, os.ModePerm)
 				Ω(err).ShouldNot(HaveOccurred())
 
 				// Add an action to the existing resource
@@ -144,14 +143,14 @@ var _ = Describe("Generate", func() {
 				Ω(files).Should(HaveLen(2))
 				Ω(files).Should(ConsistOf(filepath.Join(outDir, "first.go"), filepath.Join(outDir, "second.go")))
 
-				content, err := ioutil.ReadFile(filepath.Join(outDir, "second.go"))
+				content, err := os.ReadFile(filepath.Join(outDir, "second.go"))
 				Ω(err).ShouldNot(HaveOccurred())
 				Ω(content).Should(ContainSubstring("SecondController_Gamma: start_implement"))
 
 			})
 
 			It("regenerates controllers without modifying existing impls", func() {
-				content, err := ioutil.ReadFile(filepath.Join(outDir, "first.go"))
+				content, err := os.ReadFile(filepath.Join(outDir, "first.go"))
 				Ω(err).ShouldNot(HaveOccurred())
 
 				// First make sure the new controller is in place
