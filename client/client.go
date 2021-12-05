@@ -194,7 +194,9 @@ func drainBody(b io.ReadCloser) (r1, r2 io.ReadCloser, err error) {
 // Do not use as a reliable way to get unique IDs, instead use for things like logging.
 func shortID() string {
 	b := make([]byte, 6)
-	io.ReadFull(rand.Reader, b)
+	if _, err := io.ReadFull(rand.Reader, b); err != nil {
+		panic(err)
+	}
 	return base64.StdEncoding.EncodeToString(b)
 }
 

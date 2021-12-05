@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 	"sync/atomic"
@@ -31,10 +32,13 @@ func init() {
 	// algorithm taken from https://github.com/zenazn/goji/blob/master/web/middleware/request_id.go#L44-L50
 	var buf [12]byte
 	var b64 string
+	replacer := strings.NewReplacer("+", "", "/", "")
 	for len(b64) < 10 {
-		rand.Read(buf[:])
+		if _, err := io.ReadFull(rand.Reader, buf[:]); err != nil {
+			panic(err)
+		}
 		b64 = base64.StdEncoding.EncodeToString(buf[:])
-		b64 = strings.NewReplacer("+", "", "/", "").Replace(b64)
+		b64 = replacer.Replace(b64)
 	}
 	reqPrefix = string(b64[0:10])
 }
