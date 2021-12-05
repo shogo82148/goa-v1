@@ -3,7 +3,6 @@ package genjs
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
@@ -237,7 +236,7 @@ func (g *Generator) generateIndexHTML(htmlFile string, exampleAction *design.Act
 
 func (g *Generator) generateAxiosJS() error {
 	filePath := filepath.Join(g.OutDir, "axios.min.js")
-	if err := ioutil.WriteFile(filePath, []byte(axios), 0644); err != nil {
+	if err := os.WriteFile(filePath, []byte(axios), 0644); err != nil {
 		return err
 	}
 	g.genfiles = append(g.genfiles, filePath)

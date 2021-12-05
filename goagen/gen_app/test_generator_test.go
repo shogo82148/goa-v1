@@ -1,7 +1,6 @@
 package genapp_test
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -186,7 +185,7 @@ var _ = Describe("Generate", func() {
 		It("does not call Validate on the resulting media type when it does not exist", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(8))
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 
 			Ω(content).ShouldNot(ContainSubstring("err = mt.Validate()"))
@@ -195,7 +194,7 @@ var _ = Describe("Generate", func() {
 		It("generates the ActionRouteResponse test methods ", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(8))
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 
 			Ω(content).Should(ContainSubstring("ShowFooOK("))
@@ -206,7 +205,7 @@ var _ = Describe("Generate", func() {
 		})
 
 		It("generates the route path parameters", func() {
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 
 			Ω(content).Should(ContainSubstring(`["param"] = []string{`))
@@ -216,7 +215,7 @@ var _ = Describe("Generate", func() {
 		})
 
 		It("properly handles query parameters", func() {
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 
 			Ω(content).Should(ContainSubstring(`if optional != nil`))
@@ -225,7 +224,7 @@ var _ = Describe("Generate", func() {
 		})
 
 		It("properly handles headers", func() {
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 
 			Ω(content).Should(ContainSubstring(`if optionalHeader != nil`))
@@ -237,28 +236,28 @@ var _ = Describe("Generate", func() {
 		})
 
 		It("generates calls to new Context ", func() {
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 
 			Ω(content).Should(ContainSubstring("app.NewShowFooContext("))
 		})
 
 		It("generates calls controller action method", func() {
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 
 			Ω(content).Should(ContainSubstring("ctrl.Show("))
 		})
 
 		It("generates non pointer references to primitive/array/hash payloads", func() {
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 
 			Ω(content).Should(ContainSubstring(", payload app.CustomName)"))
 		})
 
 		It("generates header compliant with https://github.com/golang/go/issues/13560", func() {
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
+			content, err := os.ReadFile(filepath.Join(outDir, "app", "test", "foo_testing.go"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(strings.Split(string(content), "\n")).Should(ContainElement(MatchRegexp(`^// Code generated .* DO NOT EDIT\.$`)))
 		})

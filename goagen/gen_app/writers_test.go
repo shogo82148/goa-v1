@@ -1,7 +1,6 @@
 package genapp_test
 
 import (
-	"io/ioutil"
 	"os"
 
 	. "github.com/onsi/ginkgo"
@@ -46,7 +45,7 @@ var _ = Describe("ContextsWriter", func() {
 		var f *os.File
 		BeforeEach(func() {
 			dslengine.Reset()
-			f, _ = ioutil.TempFile("", "")
+			f, _ = os.CreateTemp("", "")
 			filename = f.Name()
 		})
 
@@ -90,7 +89,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("writes the simple contexts code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -133,7 +132,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("the generated code sets the Content-Type header", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -174,7 +173,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("the generated code sets the response to an empty collection if value is nil", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -207,7 +206,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("writes the integer contexts code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -223,7 +222,7 @@ var _ = Describe("ContextsWriter", func() {
 					It("writes the integer contexts code", func() {
 						err := writer.Execute(data)
 						Ω(err).ShouldNot(HaveOccurred())
-						b, err := ioutil.ReadFile(filename)
+						b, err := os.ReadFile(filename)
 						Ω(err).ShouldNot(HaveOccurred())
 						written := string(b)
 						Ω(written).ShouldNot(BeEmpty())
@@ -240,7 +239,7 @@ var _ = Describe("ContextsWriter", func() {
 					It("writes the integer contexts code", func() {
 						err := writer.Execute(data)
 						Ω(err).ShouldNot(HaveOccurred())
-						b, err := ioutil.ReadFile(filename)
+						b, err := os.ReadFile(filename)
 						Ω(err).ShouldNot(HaveOccurred())
 						written := string(b)
 						Ω(written).ShouldNot(BeEmpty())
@@ -256,7 +255,7 @@ var _ = Describe("ContextsWriter", func() {
 						It("writes the integer contexts code", func() {
 							err := writer.Execute(data)
 							Ω(err).ShouldNot(HaveOccurred())
-							b, err := ioutil.ReadFile(filename)
+							b, err := os.ReadFile(filename)
 							Ω(err).ShouldNot(HaveOccurred())
 							written := string(b)
 							Ω(written).ShouldNot(BeEmpty())
@@ -289,7 +288,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("writes the string contexts code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -305,7 +304,7 @@ var _ = Describe("ContextsWriter", func() {
 					It("writes the string contexts code", func() {
 						err := writer.Execute(data)
 						Ω(err).ShouldNot(HaveOccurred())
-						b, err := ioutil.ReadFile(filename)
+						b, err := os.ReadFile(filename)
 						Ω(err).ShouldNot(HaveOccurred())
 						written := string(b)
 						Ω(written).ShouldNot(BeEmpty())
@@ -322,7 +321,7 @@ var _ = Describe("ContextsWriter", func() {
 					It("writes the String contexts code", func() {
 						err := writer.Execute(data)
 						Ω(err).ShouldNot(HaveOccurred())
-						b, err := ioutil.ReadFile(filename)
+						b, err := os.ReadFile(filename)
 						Ω(err).ShouldNot(HaveOccurred())
 						written := string(b)
 						Ω(written).ShouldNot(BeEmpty())
@@ -338,7 +337,7 @@ var _ = Describe("ContextsWriter", func() {
 						It("writes the integer contexts code", func() {
 							err := writer.Execute(data)
 							Ω(err).ShouldNot(HaveOccurred())
-							b, err := ioutil.ReadFile(filename)
+							b, err := os.ReadFile(filename)
 							Ω(err).ShouldNot(HaveOccurred())
 							written := string(b)
 							Ω(written).ShouldNot(BeEmpty())
@@ -371,7 +370,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("writes the number contexts code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -387,7 +386,7 @@ var _ = Describe("ContextsWriter", func() {
 					It("writes the number contexts code", func() {
 						err := writer.Execute(data)
 						Ω(err).ShouldNot(HaveOccurred())
-						b, err := ioutil.ReadFile(filename)
+						b, err := os.ReadFile(filename)
 						Ω(err).ShouldNot(HaveOccurred())
 						written := string(b)
 						Ω(written).ShouldNot(BeEmpty())
@@ -404,7 +403,7 @@ var _ = Describe("ContextsWriter", func() {
 					It("writes the number contexts code", func() {
 						err := writer.Execute(data)
 						Ω(err).ShouldNot(HaveOccurred())
-						b, err := ioutil.ReadFile(filename)
+						b, err := os.ReadFile(filename)
 						Ω(err).ShouldNot(HaveOccurred())
 						written := string(b)
 						Ω(written).ShouldNot(BeEmpty())
@@ -420,7 +419,7 @@ var _ = Describe("ContextsWriter", func() {
 						It("writes the number contexts code", func() {
 							err := writer.Execute(data)
 							Ω(err).ShouldNot(HaveOccurred())
-							b, err := ioutil.ReadFile(filename)
+							b, err := os.ReadFile(filename)
 							Ω(err).ShouldNot(HaveOccurred())
 							written := string(b)
 							Ω(written).ShouldNot(BeEmpty())
@@ -453,7 +452,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("writes the boolean contexts code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -469,7 +468,7 @@ var _ = Describe("ContextsWriter", func() {
 					It("writes the boolean contexts code", func() {
 						err := writer.Execute(data)
 						Ω(err).ShouldNot(HaveOccurred())
-						b, err := ioutil.ReadFile(filename)
+						b, err := os.ReadFile(filename)
 						Ω(err).ShouldNot(HaveOccurred())
 						written := string(b)
 						Ω(written).ShouldNot(BeEmpty())
@@ -486,7 +485,7 @@ var _ = Describe("ContextsWriter", func() {
 					It("writes the boolean contexts code", func() {
 						err := writer.Execute(data)
 						Ω(err).ShouldNot(HaveOccurred())
-						b, err := ioutil.ReadFile(filename)
+						b, err := os.ReadFile(filename)
 						Ω(err).ShouldNot(HaveOccurred())
 						written := string(b)
 						Ω(written).ShouldNot(BeEmpty())
@@ -502,7 +501,7 @@ var _ = Describe("ContextsWriter", func() {
 						It("writes the boolean contexts code", func() {
 							err := writer.Execute(data)
 							Ω(err).ShouldNot(HaveOccurred())
-							b, err := ioutil.ReadFile(filename)
+							b, err := os.ReadFile(filename)
 							Ω(err).ShouldNot(HaveOccurred())
 							written := string(b)
 							Ω(written).ShouldNot(BeEmpty())
@@ -535,7 +534,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("writes the array contexts code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -552,7 +551,7 @@ var _ = Describe("ContextsWriter", func() {
 					It("writes the array contexts code", func() {
 						err := writer.Execute(data)
 						Ω(err).ShouldNot(HaveOccurred())
-						b, err := ioutil.ReadFile(filename)
+						b, err := os.ReadFile(filename)
 						Ω(err).ShouldNot(HaveOccurred())
 						written := string(b)
 						Ω(written).ShouldNot(BeEmpty())
@@ -568,7 +567,7 @@ var _ = Describe("ContextsWriter", func() {
 					It("writes the array contexts code", func() {
 						err := writer.Execute(data)
 						Ω(err).ShouldNot(HaveOccurred())
-						b, err := ioutil.ReadFile(filename)
+						b, err := os.ReadFile(filename)
 						Ω(err).ShouldNot(HaveOccurred())
 						written := string(b)
 						Ω(written).ShouldNot(BeEmpty())
@@ -585,7 +584,7 @@ var _ = Describe("ContextsWriter", func() {
 					It("writes the array contexts code", func() {
 						err := writer.Execute(data)
 						Ω(err).ShouldNot(HaveOccurred())
-						b, err := ioutil.ReadFile(filename)
+						b, err := os.ReadFile(filename)
 						Ω(err).ShouldNot(HaveOccurred())
 						written := string(b)
 						Ω(written).ShouldNot(BeEmpty())
@@ -601,7 +600,7 @@ var _ = Describe("ContextsWriter", func() {
 						It("writes the array contexts code", func() {
 							err := writer.Execute(data)
 							Ω(err).ShouldNot(HaveOccurred())
-							b, err := ioutil.ReadFile(filename)
+							b, err := os.ReadFile(filename)
 							Ω(err).ShouldNot(HaveOccurred())
 							written := string(b)
 							Ω(written).ShouldNot(BeEmpty())
@@ -634,7 +633,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("writes the array contexts code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -650,7 +649,7 @@ var _ = Describe("ContextsWriter", func() {
 					It("writes the array contexts code", func() {
 						err := writer.Execute(data)
 						Ω(err).ShouldNot(HaveOccurred())
-						b, err := ioutil.ReadFile(filename)
+						b, err := os.ReadFile(filename)
 						Ω(err).ShouldNot(HaveOccurred())
 						written := string(b)
 						Ω(written).ShouldNot(BeEmpty())
@@ -667,7 +666,7 @@ var _ = Describe("ContextsWriter", func() {
 					It("writes the array contexts code", func() {
 						err := writer.Execute(data)
 						Ω(err).ShouldNot(HaveOccurred())
-						b, err := ioutil.ReadFile(filename)
+						b, err := os.ReadFile(filename)
 						Ω(err).ShouldNot(HaveOccurred())
 						written := string(b)
 						Ω(written).ShouldNot(BeEmpty())
@@ -683,7 +682,7 @@ var _ = Describe("ContextsWriter", func() {
 						It("writes the array contexts code", func() {
 							err := writer.Execute(data)
 							Ω(err).ShouldNot(HaveOccurred())
-							b, err := ioutil.ReadFile(filename)
+							b, err := os.ReadFile(filename)
 							Ω(err).ShouldNot(HaveOccurred())
 							written := string(b)
 							Ω(written).ShouldNot(BeEmpty())
@@ -708,7 +707,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("writes the contexts code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -735,7 +734,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("writes the contexts code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -763,7 +762,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("writes the contexts code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -786,7 +785,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("writes the contexts code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -812,7 +811,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("writes the contexts code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -833,7 +832,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("writes the contexts code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -866,7 +865,7 @@ var _ = Describe("ContextsWriter", func() {
 				It("writes the contexts code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -971,7 +970,7 @@ var _ = Describe("ControllersWriter", func() {
 			It("writes the file server code", func() {
 				err := writer.Execute(data)
 				Ω(err).ShouldNot(HaveOccurred())
-				b, err := ioutil.ReadFile(filename)
+				b, err := os.ReadFile(filename)
 				Ω(err).ShouldNot(HaveOccurred())
 				written := string(b)
 				Ω(written).ShouldNot(BeEmpty())
@@ -996,7 +995,7 @@ var _ = Describe("ControllersWriter", func() {
 				It("writes the OPTIONS handler code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -1073,7 +1072,7 @@ var _ = Describe("ControllersWriter", func() {
 				It("returns an empty string", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).Should(BeEmpty())
@@ -1091,7 +1090,7 @@ var _ = Describe("ControllersWriter", func() {
 				It("writes the controller code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -1124,7 +1123,7 @@ var _ = Describe("ControllersWriter", func() {
 				It("writes the payload unmarshal function", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).Should(ContainSubstring(payloadNoValidationsObjUnmarshal))
@@ -1158,7 +1157,7 @@ var _ = Describe("ControllersWriter", func() {
 				It("writes the payload unmarshal function", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).Should(ContainSubstring(payloadObjUnmarshal))
@@ -1253,7 +1252,7 @@ var _ = Describe("ControllersWriter", func() {
 				It("writes the payload unmarshal function", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).Should(ContainSubstring(payloadMultipartObjUnmarshalID))
@@ -1279,7 +1278,7 @@ var _ = Describe("ControllersWriter", func() {
 				It("writes the controllers code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -1313,7 +1312,7 @@ var _ = Describe("ControllersWriter", func() {
 				It("writes the controllers code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -1347,7 +1346,7 @@ var _ = Describe("ControllersWriter", func() {
 				It("writes the controller code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -1383,7 +1382,7 @@ var _ = Describe("ControllersWriter", func() {
 				It("writes the controller code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -1506,7 +1505,7 @@ var _ = Describe("HrefWriter", func() {
 					It("writes the href method", func() {
 						err := writer.Execute(data)
 						Ω(err).ShouldNot(HaveOccurred())
-						b, err := ioutil.ReadFile(filename)
+						b, err := os.ReadFile(filename)
 						Ω(err).ShouldNot(HaveOccurred())
 						written := string(b)
 						Ω(written).ShouldNot(BeEmpty())
@@ -1522,7 +1521,7 @@ var _ = Describe("HrefWriter", func() {
 					It("writes the href method", func() {
 						err := writer.Execute(data)
 						Ω(err).ShouldNot(HaveOccurred())
-						b, err := ioutil.ReadFile(filename)
+						b, err := os.ReadFile(filename)
 						Ω(err).ShouldNot(HaveOccurred())
 						written := string(b)
 						Ω(written).ShouldNot(BeEmpty())
@@ -1599,7 +1598,7 @@ var _ = Describe("UserTypesWriter", func() {
 				It("writes the simple user type code", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())
@@ -1641,7 +1640,7 @@ var _ = Describe("UserTypesWriter", func() {
 				It("writes the user type including hash", func() {
 					err := writer.Execute(data)
 					Ω(err).ShouldNot(HaveOccurred())
-					b, err := ioutil.ReadFile(filename)
+					b, err := os.ReadFile(filename)
 					Ω(err).ShouldNot(HaveOccurred())
 					written := string(b)
 					Ω(written).ShouldNot(BeEmpty())

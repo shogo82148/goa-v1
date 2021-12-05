@@ -3,7 +3,6 @@ package tests
 import (
 	"fmt"
 	"go/build"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
@@ -30,7 +29,7 @@ func TestDefaultMedia(t *testing.T) {
 	if err := gobuild("./media"); err != nil {
 		t.Error(err.Error())
 	}
-	b, err := ioutil.ReadFile("./media/app/contexts.go")
+	b, err := os.ReadFile("./media/app/contexts.go")
 	if err != nil {
 		t.Fatal("failed to load contexts.go")
 	}
@@ -68,7 +67,7 @@ func TestCustomFieldName(t *testing.T) {
 	if err := gobuild("./field"); err != nil {
 		t.Error(err.Error())
 	}
-	b, err := ioutil.ReadFile("./field/app/user_types.go")
+	b, err := os.ReadFile("./field/app/user_types.go")
 	if err != nil {
 		t.Fatal("failed to load user_types.go")
 	}
@@ -87,7 +86,7 @@ type UploadPayload struct {
 		t.Errorf("UploadPayload attribute definitions reference failed. Generated user_types:\n%s", string(b))
 	}
 
-	b, err = ioutil.ReadFile("./field/app/media_types.go")
+	b, err = os.ReadFile("./field/app/media_types.go")
 	if err != nil {
 		t.Fatal("failed to load media_types.go")
 	}

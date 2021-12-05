@@ -2,7 +2,6 @@ package genapp_test
 
 import (
 	"bytes"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -30,7 +29,7 @@ var _ = Describe("Generate", func() {
 		var err error
 		workspace, err = codegen.NewWorkspace("test")
 		Ω(err).ShouldNot(HaveOccurred())
-		outDir, err = ioutil.TempDir(filepath.Join(workspace.Path, "src"), "")
+		outDir, err = os.MkdirTemp(filepath.Join(workspace.Path, "src"), "")
 		Ω(err).ShouldNot(HaveOccurred())
 		os.Args = []string{"goagen", "--out=" + outDir, "--design=foo", "--version=" + version.String()}
 		codegen.TempCount = 0
@@ -61,7 +60,7 @@ var _ = Describe("Generate", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(6))
 			isEmptySource := func(filename string) {
-				contextsContent, err := ioutil.ReadFile(filepath.Join(outDir, "app", filename))
+				contextsContent, err := os.ReadFile(filepath.Join(outDir, "app", filename))
 				Ω(err).ShouldNot(HaveOccurred())
 				lines := strings.Split(string(contextsContent), "\n")
 				Ω(lines).ShouldNot(BeEmpty())
@@ -79,7 +78,7 @@ var _ = Describe("Generate", func() {
 		var payload *design.UserTypeDefinition
 
 		isSource := func(filename, content string) {
-			contextsContent, err := ioutil.ReadFile(filepath.Join(outDir, "app", filename))
+			contextsContent, err := os.ReadFile(filepath.Join(outDir, "app", filename))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(string(contextsContent)).Should(Equal(content))
 		}
@@ -220,7 +219,7 @@ var _ = Describe("Generate", func() {
 			It("generates the correct payload assignment code", func() {
 				Ω(genErr).Should(BeNil())
 
-				contextsContent, err := ioutil.ReadFile(filepath.Join(outDir, "app", "controllers.go"))
+				contextsContent, err := os.ReadFile(filepath.Join(outDir, "app", "controllers.go"))
 				Ω(err).ShouldNot(HaveOccurred())
 				Ω(string(contextsContent)).Should(ContainSubstring(controllersSlicePayloadCode))
 			})
@@ -243,7 +242,7 @@ var _ = Describe("Generate", func() {
 			It("generates the no payloads assignment code", func() {
 				Ω(genErr).Should(BeNil())
 
-				contextsContent, err := ioutil.ReadFile(filepath.Join(outDir, "app", "controllers.go"))
+				contextsContent, err := os.ReadFile(filepath.Join(outDir, "app", "controllers.go"))
 				Ω(err).ShouldNot(HaveOccurred())
 				Ω(string(contextsContent)).Should(ContainSubstring(controllersOptionalPayloadCode))
 			})
@@ -270,7 +269,7 @@ var _ = Describe("Generate", func() {
 			It("generates the corresponding code", func() {
 				Ω(genErr).Should(BeNil())
 
-				contextsContent, err := ioutil.ReadFile(filepath.Join(outDir, "app", "controllers.go"))
+				contextsContent, err := os.ReadFile(filepath.Join(outDir, "app", "controllers.go"))
 				Ω(err).ShouldNot(HaveOccurred())
 				Ω(string(contextsContent)).Should(ContainSubstring(controllersMultipartPayloadCode))
 			})

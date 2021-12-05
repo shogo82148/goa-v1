@@ -9,7 +9,6 @@ import (
 	"go/parser"
 	"go/scanner"
 	"go/token"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -81,7 +80,7 @@ var (
 // NewWorkspace returns a newly created temporary Go workspace.
 // Use Delete to delete the corresponding temporary directory when done.
 func NewWorkspace(prefix string) (*Workspace, error) {
-	dir, err := ioutil.TempDir("", prefix)
+	dir, err := os.MkdirTemp("", prefix)
 	if err != nil {
 		return nil, err
 	}
@@ -294,7 +293,7 @@ func (f *SourceFile) FormatCode() error {
 	fset := token.NewFileSet()
 	file, err := parser.ParseFile(fset, f.Abs(), nil, parser.ParseComments)
 	if err != nil {
-		content, _ := ioutil.ReadFile(f.Abs())
+		content, _ := os.ReadFile(f.Abs())
 		var buf bytes.Buffer
 		scanner.PrintError(&buf, err)
 		return fmt.Errorf("%s\n========\nContent:\n%s", buf.String(), content)
@@ -361,7 +360,7 @@ func PackagePath(path string) (string, error) {
 	if os.Getenv("GO111MODULE") != "off" { // Module mode
 		root, file := findModuleRoot(absPath, "", false)
 		if root != "" {
-			content, err := ioutil.ReadFile(filepath.Join(root, file))
+			content, err := os.ReadFile(filepath.Join(root, file))
 			if err == nil {
 				p := modulePath(content)
 				base := filepath.FromSlash(root)

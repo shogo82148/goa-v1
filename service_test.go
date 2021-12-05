@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"sync"
@@ -118,7 +118,7 @@ var _ = Describe("Service", func() {
 			ctrl := s.NewController("test")
 			ctrl.MaxRequestBodyLength = 4
 			unmarshaler := func(ctx context.Context, service *goa.Service, req *http.Request) error {
-				_, err := ioutil.ReadAll(req.Body)
+				_, err := io.ReadAll(req.Body)
 				return err
 			}
 			handler := func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
@@ -254,7 +254,7 @@ var _ = Describe("Service", func() {
 
 			Context("with an invalid payload", func() {
 				BeforeEach(func() {
-					r.Body = ioutil.NopCloser(bytes.NewBuffer([]byte("not json")))
+					r.Body = io.NopCloser(bytes.NewBuffer([]byte("not json")))
 					r.ContentLength = 8
 				})
 
@@ -329,7 +329,7 @@ var _ = Describe("Service", func() {
 
 				BeforeEach(func() {
 					r.Header.Set("Content-Type", "application/json")
-					r.Body = ioutil.NopCloser(bytes.NewReader(content))
+					r.Body = io.NopCloser(bytes.NewReader(content))
 					r.ContentLength = int64(len(content))
 				})
 

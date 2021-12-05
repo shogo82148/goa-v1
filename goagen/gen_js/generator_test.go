@@ -2,7 +2,6 @@ package genjs_test
 
 import (
 	"go/build"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -51,7 +50,7 @@ var _ = Describe("Generate", func() {
 		It("generates a dummy js", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(3))
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "js", "client.js"))
+			content, err := os.ReadFile(filepath.Join(outDir, "js", "client.js"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(len(strings.Split(string(content), "\n"))).Should(BeNumerically(">=", 13))
 		})
@@ -95,7 +94,7 @@ var _ = Describe("Generate", func() {
 		It("generates an example HTML", func() {
 			Ω(genErr).Should(BeNil())
 			Ω(files).Should(HaveLen(5))
-			content, err := ioutil.ReadFile(filepath.Join(outDir, "js", "index.html"))
+			content, err := os.ReadFile(filepath.Join(outDir, "js", "index.html"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(len(strings.Split(string(content), "\n"))).Should(BeNumerically(">=", 13))
 		})

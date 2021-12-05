@@ -1,7 +1,6 @@
 package gencontroller_test
 
 import (
-	"io/ioutil"
 	"os"
 
 	. "github.com/onsi/ginkgo"
@@ -28,7 +27,7 @@ var _ = Describe("Generate", func() {
 		var err error
 		workspace, err = codegen.NewWorkspace("test")
 		Ω(err).ShouldNot(HaveOccurred())
-		outDir, err = ioutil.TempDir(workspace.Path, "")
+		outDir, err = os.MkdirTemp(workspace.Path, "")
 		Ω(err).ShouldNot(HaveOccurred())
 		os.Args = []string{"goagen", "--out=" + outDir, "--design=foo", "--version=" + version.String()}
 	})
