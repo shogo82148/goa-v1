@@ -3,7 +3,7 @@ Package goakit contains an adapter that makes it possible to configure goa so it
 log package as logger backend.
 Usage:
 
-    // Initialize logger using github.com/go-kit/kit/log package
+    // Initialize logger using github.com/go-kit/log package
     logger := log.NewLogfmtLogger(w)
     // Initialize goa service logger using adapter
     service.WithLogger(goakit.New(logger))
@@ -17,7 +17,7 @@ package goakit
 import (
 	"context"
 
-	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log"
 	"github.com/shogo82148/goa-v1"
 )
 
