@@ -366,7 +366,7 @@ func Enum(val ...interface{}) {
 			// such as responses that refer to responses defined at the API level or links that
 			// refer to the media type attributes. So if the form that takes a DSL always ended
 			// up defining an object we'd have a weird situation where one arg is string and
-			// two args is object. Breaks the least surprise principle. Soooo long story
+			// two args is object. Breaks the least surprise principle. So long story
 			// short the lesser evil seems to be to allow the ambiguity. Also tests like the
 			// one below are really a convenience to the user and not a fundamental feature
 			// - not checking in the case the type is not known yet is OK.

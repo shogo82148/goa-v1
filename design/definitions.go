@@ -158,7 +158,7 @@ type (
 		Methods []string
 		// List of headers exposed to clients
 		Exposed []string
-		// How long to cache a prefligh request response
+		// How long to cache a preflight request response
 		MaxAge uint
 		// Sets Access-Control-Allow-Credentials header
 		Credentials bool
@@ -176,7 +176,7 @@ type (
 		// the goa.EncoderFactory or goa.DecoderFactory interface respectively.
 		PackagePath string
 		// Function is the name of the Go function used to instantiate the encoder/decoder.
-		// Defaults to NewEncoder and NewDecoder respecitively.
+		// Defaults to NewEncoder and NewDecoder respectively.
 		Function string
 		// Encoder is true if the definition is for a encoder, false if it's for a decoder.
 		Encoder bool
