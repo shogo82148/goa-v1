@@ -97,7 +97,8 @@ func Version(ver string) {
 
 // Description sets the definition description.
 // Description can be called inside API, Resource, Action, MediaType, Attribute, Response or ResponseTemplate
-func Description(d string) {
+func Description(lines ...string) {
+	d := strings.Join(lines, "\n")
 	switch def := dslengine.CurrentDefinition().(type) {
 	case *design.APIDefinition:
 		def.Description = d
