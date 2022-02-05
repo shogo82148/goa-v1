@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
-	"io"
 	"net/http"
 	"strings"
 	"sync/atomic"
@@ -34,7 +33,7 @@ func init() {
 	var b64 string
 	replacer := strings.NewReplacer("+", "", "/", "")
 	for len(b64) < 10 {
-		if _, err := io.ReadFull(rand.Reader, buf[:]); err != nil {
+		if _, err := rand.Read(buf[:]); err != nil {
 			panic(err)
 		}
 		b64 = base64.StdEncoding.EncodeToString(buf[:])
