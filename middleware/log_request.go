@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
-	"io"
 	"net"
 	"net/http"
 	"sort"
@@ -112,7 +111,7 @@ func LogRequest(verbose bool, sensitiveHeaders ...string) goa.Middleware {
 // Do not use as a reliable way to get unique IDs, instead use for things like logging.
 func shortID() string {
 	b := make([]byte, 6)
-	if _, err := io.ReadFull(rand.Reader, b); err != nil {
+	if _, err := rand.Read(b); err != nil {
 		panic(err)
 	}
 	return base64.StdEncoding.EncodeToString(b)

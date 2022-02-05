@@ -33,7 +33,6 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
-	"io"
 	"strings"
 )
 
@@ -359,7 +358,7 @@ func asErrorResponse(err error) *ErrorResponse {
 // are not catastrophic.
 func newErrorID() string {
 	b := make([]byte, 6)
-	if _, err := io.ReadFull(rand.Reader, b); err != nil {
+	if _, err := rand.Read(b); err != nil {
 		panic(err)
 	}
 	return base64.StdEncoding.EncodeToString(b)
