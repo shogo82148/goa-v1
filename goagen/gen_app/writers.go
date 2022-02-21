@@ -935,7 +935,7 @@ func (ut {{ gotyperef . .AllRequired 0 true }}) Publicize() {{ gotyperef . .AllR
 
 // {{ gotypedesc . true }}
 type {{ $typeName }} {{ gotypedef . 0 true false }}
-{{ $validation := validationCode .AttributeDefinition false false false "ut" "type" 1 false -}}
+{{ $validation := validationCode .AttributeDefinition false false false "ut" "type" 1 false }}
 // Validate validates the {{$typeName}} type instance.
 func (ut {{ gotyperef . .AllRequired 0 false }}) Validate() (err error) {
 {{ $validation }}
