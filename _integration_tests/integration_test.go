@@ -120,6 +120,16 @@ type Multimedialist struct {
 	}
 }
 
+func TestIssue161(t *testing.T) {
+	defer cleanup("./issue161/*")
+	if err := goagen("./issue161", "bootstrap", "-d", "github.com/shogo82148/goa-v1/_integration_tests/issue161/design"); err != nil {
+		t.Error(err.Error())
+	}
+	if err := gobuild("./issue161"); err != nil {
+		t.Error(err.Error())
+	}
+}
+
 func goagen(dir, command string, args ...string) error {
 	pkg, err := build.Import("github.com/shogo82148/goa-v1/goagen", "", 0)
 	if err != nil {
