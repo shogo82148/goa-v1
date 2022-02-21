@@ -2,7 +2,6 @@ package codegen
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"math"
 	"strings"
@@ -220,44 +219,11 @@ func (v *Validator) recurse(att *design.AttributeDefinition, nonzero, required, 
 
 func (v *Validator) recurseAttribute(att, catt *design.AttributeDefinition, n, target, context string, depth int, private bool) string {
 	var validation string
-	if ds, ok := catt.Type.(design.DataStructure); ok {
-		// We need to check empirically whether there are validations to be
-		// generated, we can't just generate and check whether something was
-		// generated to avoid infinite recursions.
-		hasValidations := false
-		done := errors.New("done")
-		ds.Walk(func(a *design.AttributeDefinition) error {
-			if a.Validation != nil {
-				if private {
-					hasValidations = true
-					return done
-				}
-				// For public data structures there is a case where
-				// there is validation but no actual validation
-				// code: if the validation is a required validation
-				// that applies to attributes that cannot be nil or
-				// empty string i.e. primitive types other than
-				// string.
-				if !a.Validation.HasRequiredOnly() {
-					hasValidations = true
-					return done
-				}
-				for _, name := range a.Validation.Required {
-					att := a.Type.ToObject()[name]
-					if att != nil && (!att.Type.IsPrimitive() || att.Type.Kind() == design.StringKind) {
-						hasValidations = true
-						return done
-					}
-				}
-			}
-			return nil
+	if _, ok := catt.Type.(design.DataStructure); ok {
+		validation = RunTemplate(v.userValT, map[string]interface{}{
+			"depth":  depth,
+			"target": fmt.Sprintf("%s.%s", target, GoifyAtt(catt, n, true)),
 		})
-		if hasValidations {
-			validation = RunTemplate(v.userValT, map[string]interface{}{
-				"depth":  depth,
-				"target": fmt.Sprintf("%s.%s", target, GoifyAtt(catt, n, true)),
-			})
-		}
 	} else {
 		dp := depth
 		if catt.Type.IsObject() {

@@ -891,23 +891,24 @@ func {{ .Name }}Href({{ if .CanonicalParams }}{{ join .CanonicalParams ", " }} i
 // Identifier: {{ .Identifier }}{{ $typeName := gotypename . .AllRequired 0 false }}
 type {{ $typeName }} {{ gotypedef . 0 true false }}
 
-{{ $validation := validationCode .AttributeDefinition false false false "mt" "response" 1 false }}{{ if $validation }}// Validate validates the {{$typeName}} media type instance.
+{{ $validation := validationCode .AttributeDefinition false false false "mt" "response" 1 false -}}
+// Validate validates the {{$typeName}} media type instance.
 func (mt {{ gotyperef . .AllRequired 0 false }}) Validate() (err error) {
 {{ $validation }}
 	return
 }
-{{ end }}
 `
 
 	// mediaTypeLinkT generates the code for a media type link.
 	// template input: MediaTypeLinkTemplateData
 	mediaTypeLinkT = `// {{ gotypedesc . true }}{{ $typeName := gotypename . .AllRequired 0 false }}
 type {{ $typeName }} {{ gotypedef . 0 true false }}
-{{ $validation := validationCode .AttributeDefinition false false false "ut" "response" 1 false }}{{ if $validation }}// Validate validates the {{$typeName}} type instance.
+{{ $validation := validationCode .AttributeDefinition false false false "ut" "response" 1 false -}}
+// Validate validates the {{$typeName}} type instance.
 func (ut {{ gotyperef . .AllRequired 0 false }}) Validate() (err error) {
 {{ $validation }}
 	return
-}{{ end }}
+}
 `
 
 	// userTypeT generates the code for a user type.
@@ -918,11 +919,12 @@ type {{ $privateTypeName }} {{ gotypedef . 0 true true }}
 func (ut {{ gotyperef . .AllRequired 0 true }}) Finalize() {
 {{ $assignment }}
 }{{ end }}
-{{ $validation := validationCode .AttributeDefinition false false false "ut" "request" 1 true }}{{ if $validation }}// Validate validates the {{$privateTypeName}} type instance.
+{{ $validation := validationCode .AttributeDefinition false false false "ut" "request" 1 true -}}
+// Validate validates the {{$privateTypeName}} type instance.
 func (ut {{ gotyperef . .AllRequired 0 true }}) Validate() (err error) {
 {{ $validation }}
 	return
-}{{ end }}
+}
 {{ $typeName := gotypename . .AllRequired 0 false }}
 // Publicize creates {{ $typeName }} from {{ $privateTypeName }}
 func (ut {{ gotyperef . .AllRequired 0 true }}) Publicize() {{ gotyperef . .AllRequired 0 false }} {
@@ -933,11 +935,12 @@ func (ut {{ gotyperef . .AllRequired 0 true }}) Publicize() {{ gotyperef . .AllR
 
 // {{ gotypedesc . true }}
 type {{ $typeName }} {{ gotypedef . 0 true false }}
-{{ $validation := validationCode .AttributeDefinition false false false "ut" "type" 1 false }}{{ if $validation }}// Validate validates the {{$typeName}} type instance.
+{{ $validation := validationCode .AttributeDefinition false false false "ut" "type" 1 false -}}
+// Validate validates the {{$typeName}} type instance.
 func (ut {{ gotyperef . .AllRequired 0 false }}) Validate() (err error) {
 {{ $validation }}
 	return
-}{{ end }}
+}
 `
 
 	// securitySchemesT generates the code for the security module.
