@@ -442,7 +442,16 @@ const (
 
 	utCode = `	if val.Foo == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(` + "`context`" + `, "foo"))
+	}
+	if val.Foo2 != nil {
+	if err2 := val.Foo2.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
+	}
 	}`
 
-	utRequiredCode = ``
+	utRequiredCode = `	if val.Foo2 != nil {
+	if err2 := val.Foo2.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
+	}
+	}`
 )

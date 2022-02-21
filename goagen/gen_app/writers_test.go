@@ -2710,7 +2710,11 @@ type simplePayload struct {
 	Name *string ` + "`" + `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"` + "`" + `
 }
 
+// Validate validates the simplePayload type instance.
+func (ut *simplePayload) Validate() (err error) {
 
+	return
+}
 
 // Publicize creates SimplePayload from simplePayload
 func (ut *simplePayload) Publicize() *SimplePayload {
@@ -2725,6 +2729,12 @@ func (ut *simplePayload) Publicize() *SimplePayload {
 type SimplePayload struct {
 	Name *string ` + "`" + `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"` + "`" + `
 }
+
+// Validate validates the SimplePayload type instance.
+func (ut *SimplePayload) Validate() (err error) {
+
+	return
+}
 `
 
 	userTypeIncludingHash = `// complexPayload user type.
@@ -2733,7 +2743,11 @@ type complexPayload struct {
 	Name *string ` + "`" + `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"` + "`" + `
 }
 
+// Validate validates the complexPayload type instance.
+func (ut *complexPayload) Validate() (err error) {
 
+	return
+}
 
 // Publicize creates ComplexPayload from complexPayload
 func (ut *complexPayload) Publicize() *ComplexPayload {
@@ -2759,6 +2773,12 @@ func (ut *complexPayload) Publicize() *ComplexPayload {
 type ComplexPayload struct {
 	Misc map[int]*MiscPayload ` + "`" + `form:"misc,omitempty" json:"misc,omitempty" yaml:"misc,omitempty" xml:"misc,omitempty"` + "`" + `
 	Name *string ` + "`" + `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"` + "`" + `
+}
+
+// Validate validates the ComplexPayload type instance.
+func (ut *ComplexPayload) Validate() (err error) {
+
+	return
 }
 `
 )
