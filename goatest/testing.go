@@ -11,7 +11,7 @@ import (
 
 // TInterface is an interface for Go's testing.T and testing.B.
 //
-// It is an alias of testing.TB.
+// Deprecated: use testing.TB instead.
 type TInterface = testing.TB
 
 // ResponseSetterFunc func

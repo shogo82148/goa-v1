@@ -91,6 +91,7 @@ func (g *Generator) generateResourceTest() error {
 		codegen.SimpleImport("net/url"),
 		codegen.SimpleImport("strconv"),
 		codegen.SimpleImport("strings"),
+		codegen.SimpleImport("testing"),
 		codegen.SimpleImport("time"),
 		codegen.SimpleImport(appPkg),
 		codegen.NewImport("goa", "github.com/shogo82148/goa-v1"),
@@ -360,7 +361,7 @@ var testTmpl = `{{ define "convertParam" }}` + convertParamTmpl + `{{ end }}` + 
 // {{ $test.Name }} {{ $test.Comment }}
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func {{ $test.Name }}(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl {{ $test.ControllerName}}{{/*
+func {{ $test.Name }}(t testing.TB, ctx context.Context, service *goa.Service, ctrl {{ $test.ControllerName}}{{/*
 */}}{{ range $param := $test.Params }}, {{ $param.Name }} {{ $param.Pointer }}{{ $param.Type }}{{ end }}{{/*
 */}}{{ range $param := $test.QueryParams }}, {{ $param.Name }} {{ $param.Pointer }}{{ $param.Type }}{{ end }}{{/*
 */}}{{ range $header := $test.Headers }}, {{ $header.Name }} {{ $header.Pointer }}{{ $header.Type }}{{ end }}{{/*
