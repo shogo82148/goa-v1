@@ -24,7 +24,7 @@ jobs:
         with:
           path: src/github.com/shogo82148/goa-v1
           persist-credentials: false
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go }}
       - run: |
