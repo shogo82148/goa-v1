@@ -1,5 +1,5 @@
-//go:build !js && !appengine
-// +build !js,!appengine
+//go:build !js
+// +build !js
 
 package goa
 
