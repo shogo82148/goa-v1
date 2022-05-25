@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/ajg/form v1.5.1
-	github.com/armon/go-metrics v0.3.11
+	github.com/armon/go-metrics v0.4.0
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598
 	github.com/dimfeld/httptreemux v5.0.1+incompatible
 	github.com/go-kit/log v0.2.1
