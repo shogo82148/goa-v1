@@ -27,8 +27,8 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/ugorji/go/codec v1.2.7
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea
-	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4
-	golang.org/x/tools v0.1.11
+	golang.org/x/net v0.0.0-20220722155237-a158d28d115b
+	golang.org/x/tools v0.1.12
 	gopkg.in/yaml.v2 v2.4.0
 )
 
@@ -56,7 +56,7 @@ require (
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/smartystreets/goconvey v1.7.2 // indirect
 	go.mongodb.org/mongo-driver v1.7.3 // indirect
-	golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect
+	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
