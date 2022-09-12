@@ -9,7 +9,7 @@ require (
 	github.com/dimfeld/httptreemux v5.0.1+incompatible
 	github.com/go-kit/log v0.2.1
 	github.com/go-openapi/loads v0.21.2
-	github.com/gofrs/uuid v4.2.0+incompatible
+	github.com/gofrs/uuid v4.3.0+incompatible
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/google/gxui v0.0.0-20151028112939-f85e0a97b3a4 // indirect
