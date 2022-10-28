@@ -1,6 +1,6 @@
 module github.com/shogo82148/goa-v1
 
-go 1.17
+go 1.18
 
 require (
 	github.com/ajg/form v1.5.1
