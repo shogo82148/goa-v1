@@ -15,7 +15,7 @@ require (
 	github.com/google/gxui v0.0.0-20151028112939-f85e0a97b3a4 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
-	github.com/inconshreveable/log15 v0.0.0-20200109203555-b30bc20e4fd1
+	github.com/inconshreveable/log15 v3.0.0-testing.5+incompatible
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d
 	github.com/manveru/gobdd v0.0.0-20131210092515-f1a17fdd710b // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
@@ -55,6 +55,7 @@ require (
 	github.com/smartystreets/goconvey v1.7.2 // indirect
 	go.mongodb.org/mongo-driver v1.10.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
+	golang.org/x/term v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
