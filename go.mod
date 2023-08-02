@@ -27,7 +27,7 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/ugorji/go/codec v1.2.11
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea
-	golang.org/x/net v0.12.0
+	golang.org/x/net v0.13.0
 	golang.org/x/tools v0.11.1
 	gopkg.in/yaml.v2 v2.4.0
 )
