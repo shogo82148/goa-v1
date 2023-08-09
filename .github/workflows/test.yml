@@ -15,9 +15,17 @@ jobs:
           - "macos-latest"
         go:
           - "1"
+          - "1.21"
           - "1.20"
           - "1.19"
           - "1.18"
+        goexperiment: [""]
+        include:
+          # test with GOEXPERIMENT=loopvar
+          # https://github.com/golang/go/wiki/LoopvarExperiment
+          - os: ubuntu-latest
+            go: "1.21"
+            goexperiment: "loopvar"
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -38,3 +46,5 @@ jobs:
         working-directory: src/github.com/shogo82148/goa-v1
       - run: make test
         working-directory: src/github.com/shogo82148/goa-v1
+        env:
+          GOEXPERIMENT: ${{ matrix.goexperiment }}
