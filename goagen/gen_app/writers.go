@@ -471,6 +471,8 @@ func valueTypeOf(prefix string, att *design.AttributeDefinition) string {
 		return prefix + "float"
 	case design.StringKind:
 		return prefix + "string"
+	case design.DateTimeKind:
+		return prefix + "time.Time"
 	case design.ArrayKind:
 		return valueTypeOf(prefix+"[]", arrayAttribute(att))
 	case design.HashKind:
@@ -644,7 +646,7 @@ func New{{ .Name }}(ctx context.Context, r *http.Request, service *goa.Service) 
 */}}err = goa.MergeErrors(err, goa.MissingParamError("{{ $name }}")){{end}}
 	} else {
 {{ else }}{{ if $.Params.HasDefaultValue $name }}	if len(param{{ goifyatt $att $name true }}) == 0 {
-		{{printf "rctx.%s" (goifyatt $att $name true) }} = {{ printVal $att.Type $att.DefaultValue }}
+{{ if eq (valueTypeOf "" $att ) "time.Time" }}		{{printf "rctx.%s, err" (goifyatt $att $name true)}} = {{ printVal $att.Type $att.DefaultValue }}{{ else }}		{{printf "rctx.%s" (goifyatt $att $name true) }} = {{ printVal $att.Type $att.DefaultValue }}{{ end }}
 	} else {
 {{ else }}	if len(param{{ goifyatt $att $name true }}) > 0 {
 {{ end }}{{ end }}{{/* if $mustValidate */}}{{ if $att.Type.IsArray }}{{ if eq (arrayAttribute $att).Type.Kind 4 }}		params := param{{ goifyatt $att $name true }}
