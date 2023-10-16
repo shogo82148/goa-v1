@@ -47,7 +47,7 @@ type CreateGreetingPayload struct {
 }
 
 func TestDefaultTime(t *testing.T) {
-	//defer cleanup("./default-value/*")
+	defer cleanup("./default-value/*")
 	if err := goagen("./default-value", "bootstrap", "-d", "github.com/shogo82148/goa-v1/_integration_tests/default-value/design"); err != nil {
 		t.Error(err.Error())
 	}
