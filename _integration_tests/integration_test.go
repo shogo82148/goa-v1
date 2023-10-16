@@ -46,6 +46,43 @@ type CreateGreetingPayload struct {
 	}
 }
 
+func TestDefaultTime(t *testing.T) {
+	defer cleanup("./default-value/*")
+	if err := goagen("./default-value", "bootstrap", "-d", "github.com/shogo82148/goa-v1/_integration_tests/default-value/design"); err != nil {
+		t.Error(err.Error())
+	}
+	if err := gobuild("./default-value"); err != nil {
+		t.Error(err.Error())
+	}
+	b, err := os.ReadFile("./default-value/app/contexts.go")
+	if err != nil {
+		t.Fatal("failed to load contexts.go")
+	}
+	expected := `func NewCheckTimetestContext(ctx context.Context, r *http.Request, service *goa.Service) (*CheckTimetestContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := CheckTimetestContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramTimes := req.Params["times"]
+	if len(paramTimes) == 0 {
+		rctx.Times, err = time.Parse(time.RFC3339, "0001-01-01T00:00:00Z")
+	} else {
+		rawTimes := paramTimes[0]
+		if times, err2 := time.Parse(time.RFC3339, rawTimes); err2 == nil {
+			rctx.Times = times
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("times", rawTimes, "datetime"))
+		}
+	}
+	return &rctx, err
+}`
+	if !strings.Contains(string(b), expected) {
+		t.Errorf("Default time attribute definitions reference failed. Generated context:\n%s", string(b))
+	}
+}
+
 func TestCellar(t *testing.T) {
 	defer cleanup("./goa-cellar/*")
 	if err := goagen("./goa-cellar", "bootstrap", "-d", "github.com/shogo82148/goa-v1/_integration_tests/goa-cellar/design"); err != nil {
