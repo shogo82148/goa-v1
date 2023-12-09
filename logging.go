@@ -126,6 +126,7 @@ func (a *adapter) logit(msg string, keyvals []interface{}, level string) {
 // This is intended for code that needs portable logging such as the internal code of goa and
 // middleware. User code should use the log adapters instead.
 func LogInfo(ctx context.Context, msg string, keyvals ...interface{}) {
+	// This block should be synced with Service.LogInfo
 	if l := ctx.Value(logKey); l != nil {
 		switch logger := l.(type) {
 		case ContextLogAdapter:
@@ -156,6 +157,7 @@ func LogWarn(ctx context.Context, msg string, keyvals ...interface{}) {
 // This is intended for code that needs portable logging such as the internal code of goa and
 // middleware. User code should use the log adapters instead.
 func LogError(ctx context.Context, msg string, keyvals ...interface{}) {
+	// this block should be synced with Service.LogError
 	if l := ctx.Value(logKey); l != nil {
 		switch logger := l.(type) {
 		case ContextLogAdapter:
