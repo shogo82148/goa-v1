@@ -189,12 +189,36 @@ func (service *Service) WithLogger(logger LogAdapter) {
 
 // LogInfo logs the message and values at odd indexes using the keys at even indexes of the keyvals slice.
 func (service *Service) LogInfo(msg string, keyvals ...interface{}) {
-	LogInfo(service.Context, msg, keyvals...)
+	ctx := service.Context
+
+	// this block should be synced with LogInfo.
+	// we want not to call LogInfo because it changes the call stack
+	// and makes the log adapter more complex to implement.
+	if l := ctx.Value(logKey); l != nil {
+		switch logger := l.(type) {
+		case ContextLogAdapter:
+			logger.InfoContext(ctx, msg, keyvals...)
+		case LogAdapter:
+			logger.Info(msg, keyvals...)
+		}
+	}
 }
 
 // LogError logs the error and values at odd indexes using the keys at even indexes of the keyvals slice.
 func (service *Service) LogError(msg string, keyvals ...interface{}) {
-	LogError(service.Context, msg, keyvals...)
+	ctx := service.Context
+
+	// this block should be synced with LogError.
+	// we want not to call LogError because it changes the call stack
+	// and makes the log adapter more complex to implement.
+	if l := ctx.Value(logKey); l != nil {
+		switch logger := l.(type) {
+		case ContextLogAdapter:
+			logger.ErrorContext(ctx, msg, keyvals...)
+		case WarningLogAdapter:
+			logger.Error(msg, keyvals...)
+		}
+	}
 }
 
 // ListenAndServe starts a HTTP server and sets up a listener on the given host/port.
@@ -354,7 +378,7 @@ func (ctrl *Controller) MuxHandler(name string, hdlr Handler, unm Unmarshaler) M
 // of the URL (e.g. *filepath). If it does the matching path is appended to filename to form the
 // full file path, so:
 //
-// 	c.FileHandler("/index.html", "/www/data/index.html")
+//	c.FileHandler("/index.html", "/www/data/index.html")
 //
 // Returns the content of the file "/www/data/index.html" when requests are sent to "/index.html"
 // and:

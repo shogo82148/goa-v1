@@ -34,6 +34,19 @@ type (
 		Warn(mgs string, keyvals ...interface{})
 	}
 
+	// ContextLogAdapter is the logger interface used by goa to log informational, warning and error messages.
+	// It allows to pass a context.Context to the logger.
+	ContextLogAdapter interface {
+		WarningLogAdapter
+
+		// InfoContext is same as Info but with context.
+		InfoContext(ctx context.Context, msg string, keyvals ...interface{})
+		// ErrorContext is same as Error but with context.
+		ErrorContext(ctx context.Context, msg string, keyvals ...interface{})
+		// WarnContext is same as Warn but with context.
+		WarnContext(ctx context.Context, mgs string, keyvals ...interface{})
+	}
+
 	// adapter is the stdlib logger adapter.
 	adapter struct {
 		*log.Logger
@@ -113,8 +126,12 @@ func (a *adapter) logit(msg string, keyvals []interface{}, level string) {
 // This is intended for code that needs portable logging such as the internal code of goa and
 // middleware. User code should use the log adapters instead.
 func LogInfo(ctx context.Context, msg string, keyvals ...interface{}) {
+	// This block should be synced with Service.LogInfo
 	if l := ctx.Value(logKey); l != nil {
-		if logger, ok := l.(LogAdapter); ok {
+		switch logger := l.(type) {
+		case ContextLogAdapter:
+			logger.InfoContext(ctx, msg, keyvals...)
+		case LogAdapter:
 			logger.Info(msg, keyvals...)
 		}
 	}
@@ -126,6 +143,8 @@ func LogInfo(ctx context.Context, msg string, keyvals ...interface{}) {
 func LogWarn(ctx context.Context, msg string, keyvals ...interface{}) {
 	if l := ctx.Value(logKey); l != nil {
 		switch logger := l.(type) {
+		case ContextLogAdapter:
+			logger.WarnContext(ctx, msg, keyvals...)
 		case WarningLogAdapter:
 			logger.Warn(msg, keyvals...)
 		case LogAdapter:
@@ -138,8 +157,12 @@ func LogWarn(ctx context.Context, msg string, keyvals ...interface{}) {
 // This is intended for code that needs portable logging such as the internal code of goa and
 // middleware. User code should use the log adapters instead.
 func LogError(ctx context.Context, msg string, keyvals ...interface{}) {
+	// this block should be synced with Service.LogError
 	if l := ctx.Value(logKey); l != nil {
-		if logger, ok := l.(LogAdapter); ok {
+		switch logger := l.(type) {
+		case ContextLogAdapter:
+			logger.ErrorContext(ctx, msg, keyvals...)
+		case WarningLogAdapter:
 			logger.Error(msg, keyvals...)
 		}
 	}
