@@ -1,3 +1,6 @@
+//go:build go1.21
+// +build go1.21
+
 /*
 Package goaslog contains an adapter that makes it possible to configure goa so it uses [log/slog]
 as logger backend.
