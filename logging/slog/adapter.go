@@ -25,6 +25,9 @@ import (
 	"github.com/shogo82148/goa-v1"
 )
 
+var _ goa.LogAdapter = (*adapter)(nil)
+var _ goa.ContextLogAdapter = (*adapter)(nil)
+
 // adapter is the slog goa logger adapter.
 type adapter struct {
 	handler slog.Handler
@@ -40,14 +43,29 @@ func (a *adapter) Info(msg string, data ...any) {
 	a.log(context.Background(), slog.LevelInfo, msg, data...)
 }
 
+// InfoContext logs messages using [log/slog].
+func (a *adapter) InfoContext(ctx context.Context, msg string, data ...any) {
+	a.log(ctx, slog.LevelInfo, msg, data...)
+}
+
 // Warn logs message using [log/slog].
 func (a *adapter) Warn(msg string, data ...any) {
 	a.log(context.Background(), slog.LevelWarn, msg, data...)
 }
 
+// WarnContext logs message using [log/slog].
+func (a *adapter) WarnContext(ctx context.Context, msg string, data ...any) {
+	a.log(ctx, slog.LevelWarn, msg, data...)
+}
+
 // Error logs errors using [log/slog].
 func (a *adapter) Error(msg string, data ...any) {
 	a.log(context.Background(), slog.LevelError, msg, data...)
+}
+
+// ErrorContext logs errors using [log/slog].
+func (a *adapter) ErrorContext(ctx context.Context, msg string, data ...any) {
+	a.log(ctx, slog.LevelError, msg, data...)
 }
 
 // New creates a new logger given a context.
