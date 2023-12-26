@@ -8,7 +8,7 @@ require (
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598
 	github.com/dimfeld/httptreemux v5.0.1+incompatible
 	github.com/go-kit/log v0.2.1
-	github.com/go-openapi/loads v0.21.4
+	github.com/go-openapi/loads v0.21.5
 	github.com/gofrs/uuid v4.4.0+incompatible
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang-jwt/jwt/v4 v4.5.0
