@@ -6,9 +6,9 @@ Package goaslog contains an adapter that makes it possible to configure goa so i
 as logger backend.
 Usage:
 
-	logger := logrus.New()
-	// Initialize logger handler using logrus package
-	service.WithLogger(goaslog.New(logger))
+	handler := slog.NewJSONHandler(os.Stderr, nil)
+	// Initialize logger handler using [log/slog] package
+	service.WithLogger(goaslog.New(handler))
 	// ... Proceed with configuring and starting the goa service
 
 	// In handlers:
