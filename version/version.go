@@ -4,7 +4,7 @@ const (
 	// Major version number
 	Major = 1
 	// Minor version number
-	Minor = 5
+	Minor = 6
 	// Build version number
-	Build = 16
+	Build = 0
 )
