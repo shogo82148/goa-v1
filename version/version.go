@@ -6,5 +6,5 @@ const (
 	// Minor version number
 	Minor = 6
 	// Build version number
-	Build = 0
+	Build = 1
 )
