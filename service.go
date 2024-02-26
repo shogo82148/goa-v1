@@ -215,7 +215,7 @@ func (service *Service) LogError(msg string, keyvals ...interface{}) {
 		switch logger := l.(type) {
 		case ContextLogAdapter:
 			logger.ErrorContext(ctx, msg, keyvals...)
-		case WarningLogAdapter:
+		case LogAdapter:
 			logger.Error(msg, keyvals...)
 		}
 	}
