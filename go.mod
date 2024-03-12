@@ -8,7 +8,7 @@ require (
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598
 	github.com/dimfeld/httptreemux v5.0.1+incompatible
 	github.com/go-kit/log v0.2.1
-	github.com/go-openapi/loads v0.21.6
+	github.com/go-openapi/loads v0.22.0
 	github.com/gofrs/uuid v4.4.0+incompatible
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang-jwt/jwt/v4 v4.5.0
@@ -36,13 +36,13 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
-	github.com/go-openapi/analysis v0.22.3 // indirect
-	github.com/go-openapi/errors v0.21.1 // indirect
-	github.com/go-openapi/jsonpointer v0.20.3 // indirect
-	github.com/go-openapi/jsonreference v0.20.5 // indirect
-	github.com/go-openapi/spec v0.20.15 // indirect
-	github.com/go-openapi/strfmt v0.22.2 // indirect
-	github.com/go-openapi/swag v0.22.10 // indirect
+	github.com/go-openapi/analysis v0.23.0 // indirect
+	github.com/go-openapi/errors v0.22.0 // indirect
+	github.com/go-openapi/jsonpointer v0.21.0 // indirect
+	github.com/go-openapi/jsonreference v0.21.0 // indirect
+	github.com/go-openapi/spec v0.21.0 // indirect
+	github.com/go-openapi/strfmt v0.23.0 // indirect
+	github.com/go-openapi/swag v0.23.0 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
