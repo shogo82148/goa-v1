@@ -4,6 +4,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/shogo82148/goa-v1/design"
+	"github.com/shogo82148/goa-v1/dslengine"
 	"github.com/shogo82148/goa-v1/goagen/codegen"
 )
 
@@ -160,20 +161,44 @@ var _ = Describe("Struct finalize code generation", func() {
 			Ω(code).Should(Equal(recursiveAssignmentCodeB))
 		})
 	})
+
+	Context("given an object with a user definition type", func() {
+		BeforeEach(func() {
+			att = &design.AttributeDefinition{
+				Type: &design.Object{
+					"foo": &design.AttributeDefinition{
+						Type: design.String,
+						Metadata: dslengine.MetadataDefinition{
+							"struct:field:type": []string{"UserDefinitionType", "github.com/shogo82148/goa-v1/goagen/codegen_test"},
+						},
+						DefaultValue: UserDefinitionType("bar"),
+					},
+				},
+			}
+			target = "ut"
+		})
+		It("finalizes the fields", func() {
+			code := finalizer.Code(att, target, 0)
+			Ω(code).Should(Equal(userTypeAssignmentCode))
+		})
+	})
 })
 
+// UserDefinitionType is a user defined type used in the unit tests.
+type UserDefinitionType string
+
 const (
-	primitiveAssignmentCode = `var defaultFoo = "bar"
+	primitiveAssignmentCode = `var defaultFoo string = "bar"
 if ut.Foo == nil {
 	ut.Foo = &defaultFoo
 }`
 
-	numberAssignmentCodeIntDefault = `var defaultFoo = 50.000000
+	numberAssignmentCodeIntDefault = `var defaultFoo float64 = 50.000000
 if ut.Foo == nil {
 	ut.Foo = &defaultFoo
 }`
 
-	numberAssignmentCode = `var defaultFoo = 0.000000
+	numberAssignmentCode = `var defaultFoo float64 = 0.000000
 if ut.Foo == nil {
 	ut.Foo = &defaultFoo
 }`
@@ -192,13 +217,18 @@ if ut.Foo == nil {
 }`
 
 	recursiveAssignmentCodeB = `	for _, e := range ut.Elems {
-		var defaultOther = "foo"
+		var defaultOther string = "foo"
 		if e.Other == nil {
 			e.Other = &defaultOther
 }
 	}
-var defaultOther = "foo"
+var defaultOther string = "foo"
 if ut.Other == nil {
 	ut.Other = &defaultOther
+}`
+
+	userTypeAssignmentCode = `var defaultFoo UserDefinitionType = "bar"
+if ut.Foo == nil {
+	ut.Foo = &defaultFoo
 }`
 )

@@ -25,6 +25,7 @@ func NewFinalizer() *Finalizer {
 		"tabs":         Tabs,
 		"goify":        Goify,
 		"gotyperef":    GoTypeRef,
+		"gotypedef":    GoTypeDef,
 		"add":          Add,
 		"finalizeCode": f.Code,
 	}
@@ -163,7 +164,7 @@ func PrintVal(t design.DataType, val interface{}) string {
 
 const (
 	assignmentTmpl = `{{ if .catt.Type.IsPrimitive }}{{ $defaultName := (print "default" (goify .field true)) }}{{/*
-*/}}{{ tabs .depth }}var {{ $defaultName }}{{if .isDatetime}}, _{{end}} = {{ .defaultVal }}
+*/}}{{ tabs .depth }}{{if .isDatetime}}var {{ $defaultName }}, _ = {{ .defaultVal }}{{ else }}var {{ $defaultName }} {{ gotypedef .catt 0 false false }} = {{ .defaultVal }}{{end}}
 {{ tabs .depth }}if {{ .target }}.{{ goify .field true }} == nil {
 {{ tabs .depth }}	{{ .target }}.{{ goify .field true }} = &{{ $defaultName }}
 }{{ else }}{{ tabs .depth }}if {{ .target }}.{{ goify .field true }} == nil {
