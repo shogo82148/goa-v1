@@ -105,10 +105,10 @@ var _ = Describe("DSL errors", func() {
 		const lineNumber = 111
 
 		BeforeEach(func() {
-			API("foo", func() {
+			apidsl.API("foo", func() {
 				// NOTE: moving the line below requires updating the
 				// constant above to match its number.
-				Attributes(func() {})
+				apidsl.Attributes(func() {})
 			})
 			dslengine.Run()
 		})
@@ -127,10 +127,10 @@ var _ = Describe("DSL errors", func() {
 		const lineNumber = 133
 
 		BeforeEach(func() {
-			Type("bar", func() {
+			apidsl.Type("bar", func() {
 				// NOTE: moving the line below requires updating the
 				// constant above to match its number.
-				Attribute("baz", 42)
+				apidsl.Attribute("baz", 42)
 			})
 			dslengine.Run()
 		})
