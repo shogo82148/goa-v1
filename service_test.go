@@ -404,7 +404,8 @@ var _ = Describe("Service", func() {
 		})
 
 		AfterEach(func() {
-			os.RemoveAll(outDir)
+			err := os.RemoveAll(outDir)
+			Ω(err).ShouldNot(HaveOccurred())
 		})
 
 		It("creates a handler", func() {
