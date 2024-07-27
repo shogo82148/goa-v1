@@ -4,9 +4,12 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"go/build"
 	"io"
 	"net/http"
 	"net/url"
+	"os"
+	"path/filepath"
 	"sync"
 
 	. "github.com/onsi/ginkgo"
@@ -373,65 +376,64 @@ var _ = Describe("Service", func() {
 		})
 	})
 
-	// FIXME: @shogo82148 https://github.com/shogo82148/goa-v1/pull/1/checks?check_run_id=382581692#step:6:27
-	// Describe("FileHandler", func() {
-	// 	const publicPath = "github.com/shogo82148/goa-v1/public"
+	Describe("FileHandler", func() {
+		const publicPath = "github.com/shogo82148/goa-v1/public"
 
-	// 	var outDir string
+		var outDir string
 
-	// 	var handler goa.Handler
-	// 	const respStatus = 200
-	// 	var respContent = []byte(`{"foo":"bar"}`)
+		var handler goa.Handler
+		const respStatus = 200
+		var respContent = []byte(`{"foo":"bar"}`)
 
-	// 	var muxHandler goa.MuxHandler
+		var muxHandler goa.MuxHandler
 
-	// 	JustBeforeEach(func() {
-	// 		gopath := filepath.SplitList(build.Default.GOPATH)[0]
-	// 		outDir = filepath.Join(gopath, "src", publicPath)
-	// 		err := os.MkdirAll(filepath.Join(outDir, "swagger"), 0777)
-	// 		Ω(err).ShouldNot(HaveOccurred())
-	// 		file, err := os.Create(filepath.Join(outDir, "swagger", "swagger.json"))
-	// 		Ω(err).ShouldNot(HaveOccurred())
-	// 		_, err = file.Write(respContent)
-	// 		Ω(err).ShouldNot(HaveOccurred())
-	// 		file.Close()
+		JustBeforeEach(func() {
+			gopath := filepath.SplitList(build.Default.GOPATH)[0]
+			outDir = filepath.Join(gopath, "src", publicPath)
+			err := os.MkdirAll(filepath.Join(outDir, "swagger"), 0777)
+			Ω(err).ShouldNot(HaveOccurred())
+			file, err := os.Create(filepath.Join(outDir, "swagger", "swagger.json"))
+			Ω(err).ShouldNot(HaveOccurred())
+			_, err = file.Write(respContent)
+			Ω(err).ShouldNot(HaveOccurred())
+			file.Close()
 
-	// 		ctrl := s.NewController("test")
-	// 		handler = ctrl.FileHandler("/swagger.json", "public/swagger/swagger.json")
-	// 		muxHandler = ctrl.MuxHandler("testAct", handler, nil)
-	// 	})
+			ctrl := s.NewController("test")
+			handler = ctrl.FileHandler("/swagger.json", "public/swagger/swagger.json")
+			muxHandler = ctrl.MuxHandler("testAct", handler, nil)
+		})
 
-	// 	AfterEach(func() {
-	// 		os.RemoveAll(outDir)
-	// 	})
+		AfterEach(func() {
+			os.RemoveAll(outDir)
+		})
 
-	// 	It("creates a handler", func() {
-	// 		Ω(muxHandler).ShouldNot(BeNil())
-	// 	})
+		It("creates a handler", func() {
+			Ω(muxHandler).ShouldNot(BeNil())
+		})
 
-	// 	Context("with a request", func() {
-	// 		var rw http.ResponseWriter
-	// 		var r *http.Request
-	// 		var p url.Values
+		Context("with a request", func() {
+			var rw http.ResponseWriter
+			var r *http.Request
+			var p url.Values
 
-	// 		BeforeEach(func() {
-	// 			var err error
-	// 			r, err = http.NewRequest("GET", "/swagger.json", nil)
-	// 			Ω(err).ShouldNot(HaveOccurred())
-	// 			rw = &TestResponseWriter{ParentHeader: make(http.Header)}
-	// 		})
+			BeforeEach(func() {
+				var err error
+				r, err = http.NewRequest("GET", "/swagger.json", nil)
+				Ω(err).ShouldNot(HaveOccurred())
+				rw = &TestResponseWriter{ParentHeader: make(http.Header)}
+			})
 
-	// 		JustBeforeEach(func() {
-	// 			muxHandler(rw, r, p)
-	// 		})
+			JustBeforeEach(func() {
+				muxHandler(rw, r, p)
+			})
 
-	// 		It("creates a handle that handles the request", func() {
-	// 			tw := rw.(*TestResponseWriter)
-	// 			Ω(tw.Status).Should(Equal(respStatus))
-	// 			Ω(tw.Body).Should(Equal(respContent))
-	// 		})
-	// 	})
-	// })
+			It("creates a handle that handles the request", func() {
+				tw := rw.(*TestResponseWriter)
+				Ω(tw.Status).Should(Equal(respStatus))
+				Ω(tw.Body).Should(Equal(respContent))
+			})
+		})
+	})
 })
 
 func TErrorHandler(witness *bool) goa.Middleware {
