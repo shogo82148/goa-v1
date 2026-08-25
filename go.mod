@@ -3,7 +3,7 @@ module github.com/shogo82148/goa-v1
 go 1.23.0
 
 require (
-	github.com/ajg/form v1.5.1
+	github.com/ajg/form v1.9.0
 	github.com/armon/go-metrics v0.4.1
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598
 	github.com/dimfeld/httptreemux v5.0.1+incompatible
