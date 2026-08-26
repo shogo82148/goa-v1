@@ -260,13 +260,13 @@ func GoTypeDesc(t design.DataType, upper bool) string {
 	switch actual := t.(type) {
 	case *design.UserTypeDefinition:
 		if actual.Description != "" {
-			return strings.Replace(actual.Description, "\n", "\n// ", -1)
+			return strings.ReplaceAll(actual.Description, "\n", "\n// ")
 		}
 
 		return Goify(actual.TypeName, upper) + " user type."
 	case *design.MediaTypeDefinition:
 		if actual.Description != "" {
-			return strings.Replace(actual.Description, "\n", "\n// ", -1)
+			return strings.ReplaceAll(actual.Description, "\n", "\n// ")
 		}
 		name := Goify(actual.TypeName, upper)
 		if actual.View != "default" {
