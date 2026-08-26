@@ -1,14 +1,20 @@
 package middleware
 
 import (
-	"math/rand"
+	"math/rand/v2"
 	"testing"
 	"time"
 )
 
 func TestFixedSampler(t *testing.T) {
+	seed := [32]byte{
+		0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10,
+		0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20,
+	}
+
 	// 0 %
 	subject := NewFixedSampler(0)
+	subject.(*fixedSampler).rand = rand.New(rand.NewChaCha8(seed)) // set seed for reproducibility.
 	for i := range 10 {
 		if subject.Sample() {
 			t.Errorf("%d: Sample() returned true for 0%%", i)
@@ -24,32 +30,38 @@ func TestFixedSampler(t *testing.T) {
 	}
 
 	// 50 %
-	rand.Seed(123) // set seed for reproducibility.
 	trueCount := 0
 	subject = NewFixedSampler(33)
+	subject.(*fixedSampler).rand = rand.New(rand.NewChaCha8(seed)) // set seed for reproducibility.
 	for range 100 {
 		if subject.Sample() {
 			trueCount++
 		}
 	}
-	if trueCount != 30 {
+	if trueCount != 35 {
 		t.Errorf("Unexpected trueCount: %d", trueCount)
 	}
 
 	// 66 %
 	trueCount = 0
 	subject = NewFixedSampler(66)
+	subject.(*fixedSampler).rand = rand.New(rand.NewChaCha8(seed)) // set seed for reproducibility.
 	for range 100 {
 		if subject.Sample() {
 			trueCount++
 		}
 	}
-	if trueCount != 67 {
+	if trueCount != 71 {
 		t.Errorf("Unexpected trueCount: %d", trueCount)
 	}
 }
 
 func TestAdaptiveSampler(t *testing.T) {
+	seed := [32]byte{
+		0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10,
+		0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20,
+	}
+
 	// initial sampling
 	subject := NewAdaptiveSampler(1, 100)
 	for i := range 99 {
@@ -60,8 +72,8 @@ func TestAdaptiveSampler(t *testing.T) {
 
 	// change start time to 1s ago for a more predictable result.
 	trueCount := 0
-	rand.Seed(123) // set seed for reproducibility.
 	now := time.Now()
+	subject.(*adaptiveSampler).rand = rand.New(rand.NewChaCha8(seed)) // set seed for reproducibility.
 	subject.(*adaptiveSampler).start = now.Add(-time.Second)
 	for i := 99; i < 199; i++ {
 		if subject.Sample() {
@@ -89,7 +101,7 @@ func TestAdaptiveSampler(t *testing.T) {
 	}
 
 	// sample rate should be 10/s
-	if trueCount != 10 {
+	if trueCount != 11 {
 		t.Errorf("Unexpected trueCount: %d", trueCount)
 	}
 

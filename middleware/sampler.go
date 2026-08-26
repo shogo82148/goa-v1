@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"math/rand"
+	crand "crypto/rand"
+	"math/rand/v2"
 	"sync"
-	"sync/atomic"
 	"time"
 )
 
@@ -15,15 +15,20 @@ type (
 	}
 
 	adaptiveSampler struct {
-		sync.Mutex
+		mu              sync.Mutex
+		rand            *rand.Rand
 		lastRate        int64
 		maxSamplingRate int
 		sampleSize      uint32
 		start           time.Time
-		counter         atomic.Uint32
+		counter         uint32
 	}
 
-	fixedSampler int
+	fixedSampler struct {
+		samplingPercent int
+		mu              sync.Mutex
+		rand            *rand.Rand
+	}
 )
 
 const (
@@ -47,7 +52,13 @@ func NewAdaptiveSampler(maxSamplingRate, sampleSize int) Sampler {
 	if sampleSize <= 0 {
 		panic("sample size must be greater than 0")
 	}
+
+	var seed [32]byte
+	crand.Read(seed[:])
+	src := rand.NewChaCha8(seed)
+
 	return &adaptiveSampler{
+		rand:            rand.New(src),
 		lastRate:        adaptiveUpperBoundInt, // samples all until initial count reaches sample size
 		maxSamplingRate: maxSamplingRate,
 		sampleSize:      uint32(sampleSize),
@@ -60,39 +71,49 @@ func NewFixedSampler(samplingPercent int) Sampler {
 	if samplingPercent < 0 || samplingPercent > 100 {
 		panic("samplingPercent must be between 0 and 100")
 	}
-	return fixedSampler(samplingPercent)
+
+	var seed [32]byte
+	crand.Read(seed[:])
+	src := rand.NewChaCha8(seed)
+	return &fixedSampler{
+		samplingPercent: samplingPercent,
+		rand:            rand.New(src),
+	}
 }
 
 // Sample implementation for adaptive rate
 func (s *adaptiveSampler) Sample() bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	// adjust sampling rate whenever sample size is reached.
 	var currentRate int
-	if s.counter.Add(1) == s.sampleSize { // exact match prevents
-		s.counter.Store(0) // race is ok
-		s.Lock()
-		{
-			d := time.Since(s.start).Seconds()
-			r := float64(s.sampleSize) / d
-			currentRate = int((float64(s.maxSamplingRate) * adaptiveUpperBoundFloat) / r)
-			if currentRate > adaptiveUpperBoundInt {
-				currentRate = adaptiveUpperBoundInt
-			} else if currentRate < 1 {
-				currentRate = 1
-			}
-			s.start = time.Now()
+	s.counter++
+	if s.counter == s.sampleSize { // exact match prevents
+		s.counter = 0
+
+		d := time.Since(s.start).Seconds()
+		r := float64(s.sampleSize) / d
+		currentRate = int((float64(s.maxSamplingRate) * adaptiveUpperBoundFloat) / r)
+		if currentRate > adaptiveUpperBoundInt {
+			currentRate = adaptiveUpperBoundInt
+		} else if currentRate < 1 {
+			currentRate = 1
 		}
-		s.Unlock()
-		atomic.StoreInt64(&s.lastRate, int64(currentRate))
+		s.start = time.Now()
+
+		s.lastRate = int64(currentRate)
 	} else {
-		currentRate = int(atomic.LoadInt64(&s.lastRate))
+		currentRate = int(s.lastRate)
 	}
 
 	// currentRate is never zero.
-	return currentRate == adaptiveUpperBoundInt || rand.Intn(adaptiveUpperBoundInt) < currentRate
+	return currentRate == adaptiveUpperBoundInt || s.rand.IntN(adaptiveUpperBoundInt) < currentRate
 }
 
 // Sample implementation for fixed percentage
-func (s fixedSampler) Sample() bool {
-	samplingPercent := int(s)
-	return samplingPercent > 0 && (samplingPercent == 100 || rand.Intn(100) < samplingPercent)
+func (s *fixedSampler) Sample() bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.samplingPercent > 0 && (s.samplingPercent == 100 || s.rand.IntN(100) < s.samplingPercent)
 }
