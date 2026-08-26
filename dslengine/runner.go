@@ -58,7 +58,7 @@ func Register(r Root) {
 		}
 	}
 	t := reflect.TypeOf(r)
-	if t.Kind() == reflect.Ptr {
+	if t.Kind() == reflect.Pointer {
 		t = t.Elem()
 	}
 	dslPackages[t.PkgPath()] = true
@@ -160,7 +160,7 @@ type TopLevelDefinition struct{}
 func (t *TopLevelDefinition) Context() string { return "top-level" }
 
 // ReportError records a DSL error for reporting post DSL execution.
-func ReportError(fm string, vals ...interface{}) {
+func ReportError(fm string, vals ...any) {
 	var suffix string
 	if cur := ctxStack.Current(); cur != nil {
 		if ctx := cur.Context(); ctx != "" {
@@ -211,7 +211,7 @@ func IncompatibleDSL() {
 
 // InvalidArgError records an invalid argument error.
 // It is used by DSL functions that take dynamic arguments.
-func InvalidArgError(expected string, actual interface{}) {
+func InvalidArgError(expected string, actual any) {
 	ReportError("cannot use %#v (type %s) as type %s",
 		actual, reflect.TypeOf(actual), expected)
 }

@@ -20,7 +20,7 @@ import (
 	"github.com/shogo82148/goa-v1/goagen/utils"
 )
 
-//NewGenerator returns an initialized instance of a JavaScript Client Generator
+// NewGenerator returns an initialized instance of a JavaScript Client Generator
 func NewGenerator(options ...Option) *Generator {
 	g := &Generator{OutDir: "."}
 
@@ -298,7 +298,7 @@ func (g *Generator) createMainFile(mainFile string, funcs template.FuncMap) (err
 	if err = file.WriteHeader("", "main", imports); err != nil {
 		return err
 	}
-	data := map[string]interface{}{
+	data := map[string]any{
 		"Name": g.API.Name,
 		"API":  g.API,
 	}
@@ -318,7 +318,7 @@ func tempvar() string {
 	return fmt.Sprintf("c%d", tempCount)
 }
 
-func okResp(a *design.ActionDefinition, appPkg string) map[string]interface{} {
+func okResp(a *design.ActionDefinition, appPkg string) map[string]any {
 	var ok *design.ResponseDefinition
 	for _, resp := range a.Responses {
 		if resp.Status == 200 {
@@ -362,7 +362,7 @@ func okResp(a *design.ActionDefinition, appPkg string) map[string]interface{} {
 	if view != "default" {
 		nameSuffix = codegen.Goify(view, true)
 	}
-	return map[string]interface{}{
+	return map[string]any{
 		"Name":    ok.Name + nameSuffix,
 		"GoType":  codegen.GoNativeType(pmt),
 		"TypeRef": typeref,

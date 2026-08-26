@@ -195,7 +195,7 @@ func (g *Generator) generateCommands(commandsFile string, clientPkg string, func
 		return err
 	}
 
-	var fsdata []map[string]interface{}
+	var fsdata []map[string]any
 	g.API.IterateResources(func(res *design.ResourceDefinition) error {
 		if res.FileServers != nil {
 			res.IterateFileServers(func(fs *design.FileServerDefinition) error {
@@ -207,7 +207,7 @@ func (g *Generator) generateCommands(commandsFile string, clientPkg string, func
 				} else {
 					_, filename = filepath.Split(fs.FilePath)
 				}
-				fsdata = append(fsdata, map[string]interface{}{
+				fsdata = append(fsdata, map[string]any{
 					"IsDir":       isDir,
 					"RequestPath": fs.RequestPath,
 					"FilePath":    fs.FilePath,
@@ -223,7 +223,7 @@ func (g *Generator) generateCommands(commandsFile string, clientPkg string, func
 	if fsdata != nil {
 		data := struct {
 			Package     string
-			FileServers []map[string]interface{}
+			FileServers []map[string]any
 		}{
 			Package:     g.Target,
 			FileServers: fsdata,
@@ -234,7 +234,7 @@ func (g *Generator) generateCommands(commandsFile string, clientPkg string, func
 	}
 	err = g.API.IterateResources(func(res *design.ResourceDefinition) error {
 		return res.IterateActions(func(action *design.ActionDefinition) error {
-			data := map[string]interface{}{
+			data := map[string]any{
 				"Action":          action,
 				"Resource":        action.Parent,
 				"Package":         g.Target,
@@ -384,7 +384,7 @@ func flagTypeArrayVal(a *design.AttributeDefinition, field string) string {
 
 // format a string format("%s") with the given vars as argument
 func format(format string, vars []string) string {
-	new := make([]interface{}, len(vars))
+	new := make([]any, len(vars))
 	for i, v := range vars {
 		new[i] = v
 	}
@@ -402,12 +402,13 @@ type specialTypeResult struct {
 // custom conversion from String Flags to Rich objects in Client action
 //
 // tmp, err := uuidVal(cmd.X)
-// if err != nil {
-//        goa.LogError(ctx, "argument parse failed", "err", err)
-//        return err
-// }
-// resp, err := c.ShowX(ctx, path, tmp)
 //
+//	if err != nil {
+//	       goa.LogError(ctx, "argument parse failed", "err", err)
+//	       return err
+//	}
+//
+// resp, err := c.ShowX(ctx, path, tmp)
 func handleSpecialTypes(atts ...*design.AttributeDefinition) specialTypeResult {
 	result := specialTypeResult{}
 	for _, att := range atts {
@@ -602,7 +603,7 @@ func shouldAddExample(ut *design.UserTypeDefinition) bool {
 	return ut.Example != nil
 }
 
-func formatExample(example interface{}) string {
+func formatExample(example any) string {
 	if example == nil {
 		return ""
 	}

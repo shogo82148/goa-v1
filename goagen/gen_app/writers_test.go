@@ -561,7 +561,7 @@ var _ = Describe("ContextsWriter", func() {
 
 				Context("with a default value", func() {
 					BeforeEach(func() {
-						arrayParam.SetDefault([]interface{}{"foo", "bar", "baz"})
+						arrayParam.SetDefault([]any{"foo", "bar", "baz"})
 					})
 
 					It("writes the array contexts code", func() {
@@ -594,7 +594,7 @@ var _ = Describe("ContextsWriter", func() {
 
 					Context("with a default value", func() {
 						BeforeEach(func() {
-							arrayParam.SetDefault([]interface{}{"foo", "bar", "baz"})
+							arrayParam.SetDefault([]any{"foo", "bar", "baz"})
 						})
 
 						It("writes the array contexts code", func() {
@@ -643,7 +643,7 @@ var _ = Describe("ContextsWriter", func() {
 
 				Context("with a default value", func() {
 					BeforeEach(func() {
-						arrayParam.SetDefault([]interface{}{1, 1, 2, 3, 5, 8})
+						arrayParam.SetDefault([]any{1, 1, 2, 3, 5, 8})
 					})
 
 					It("writes the array contexts code", func() {
@@ -676,7 +676,7 @@ var _ = Describe("ContextsWriter", func() {
 
 					Context("with a default value", func() {
 						BeforeEach(func() {
-							arrayParam.SetDefault([]interface{}{1, 1, 2, 3, 5, 8})
+							arrayParam.SetDefault([]any{1, 1, 2, 3, 5, 8})
 						})
 
 						It("writes the array contexts code", func() {
@@ -1033,7 +1033,7 @@ var _ = Describe("ControllersWriter", func() {
 					Resource: "Bottles",
 					Origins:  origins,
 				}
-				as := make([]map[string]interface{}, len(actions))
+				as := make([]map[string]any, len(actions))
 				for i, a := range actions {
 					var unmarshal string
 					var payload *design.UserTypeDefinition
@@ -1043,7 +1043,7 @@ var _ = Describe("ControllersWriter", func() {
 					if i < len(payloads) {
 						payload = payloads[i]
 					}
-					as[i] = map[string]interface{}{
+					as[i] = map[string]any{
 						"Name":       codegen.Goify(a, true),
 						"DesignName": a,
 						"Routes": []*design.RouteDefinition{

@@ -82,7 +82,7 @@ func Type(name string, dsl func()) *design.UserTypeDefinition {
 // If you are looking to return a collection of elements in a Response clause,
 // refer to CollectionOf. ArrayOf creates a type, where CollectionOf creates a
 // media type.
-func ArrayOf(v interface{}, dsl ...func()) *design.Array {
+func ArrayOf(v any, dsl ...func()) *design.Array {
 	t := resolveType(v)
 	// never return nil to avoid panics, errors are reported after DSL execution
 	res := &design.Array{ElemType: &design.AttributeDefinition{Type: design.String}}
@@ -120,21 +120,20 @@ func ArrayOf(v interface{}, dsl ...func()) *design.Array {
 // HashOf accepts optional DSLs as third and fourth argument which allows
 // providing validations for the keys and values of the hash respectively:
 //
-//	var RatedBottles = HashOf(String, Bottle, func() {
-//          Pattern("[a-zA-Z]+") // Validate bottle names
-//      })
+//		var RatedBottles = HashOf(String, Bottle, func() {
+//	         Pattern("[a-zA-Z]+") // Validate bottle names
+//	     })
 //
-//      func ValidateKey() {
-//          Pattern("^foo")
-//      }
+//	     func ValidateKey() {
+//	         Pattern("^foo")
+//	     }
 //
-//      func TypeValue() {
-//          Metadata("struct:field:type", "json.RawMessage", "encoding/json")
-//      }
+//	     func TypeValue() {
+//	         Metadata("struct:field:type", "json.RawMessage", "encoding/json")
+//	     }
 //
-//	var Mappings = HashOf(String, String, ValidateKey, TypeValue)
-//
-func HashOf(k, v interface{}, dsls ...func()) *design.Hash {
+//		var Mappings = HashOf(String, String, ValidateKey, TypeValue)
+func HashOf(k, v any, dsls ...func()) *design.Hash {
 	tk := resolveType(k)
 	tv := resolveType(v)
 	if tk == nil || tv == nil {
@@ -161,7 +160,7 @@ func HashOf(k, v interface{}, dsls ...func()) *design.Hash {
 	return &design.Hash{KeyType: &kat, ElemType: &vat}
 }
 
-func resolveType(v interface{}) design.DataType {
+func resolveType(v any) design.DataType {
 	if t, ok := v.(design.DataType); ok {
 		return t
 	}

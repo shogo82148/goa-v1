@@ -53,7 +53,8 @@ func init() {
 // line is never indented.
 // jsonTags controls whether to produce json tags.
 // private controls whether the field is a pointer or not. All fields in the struct are
-//   pointers for a private struct.
+//
+//	pointers for a private struct.
 func GoTypeDef(ds design.DataStructure, tabs int, jsonTags, private bool) string {
 	def := ds.Definition()
 	if tname, ok := def.Metadata["struct:field:type"]; ok {
@@ -530,7 +531,7 @@ func GoTypeTransform(source, target *design.UserTypeDefinition, targetPkg, funcN
 	if strings.HasPrefix(t, "*") && len(targetPkg) > 0 {
 		t = fmt.Sprintf("*%s.%s", targetPkg, t[1:])
 	}
-	data := map[string]interface{}{
+	data := map[string]any{
 		"Name":      funcName,
 		"Source":    source,
 		"Target":    target,
@@ -550,7 +551,7 @@ func GoTypeTransformName(source, target *design.UserTypeDefinition, suffix strin
 
 // WriteTabs is a helper function that writes count tabulation characters to buf.
 func WriteTabs(buf *bytes.Buffer, count int) {
-	for i := 0; i < count; i++ {
+	for range count {
 		buf.WriteByte('\t')
 	}
 }
@@ -563,7 +564,7 @@ func Tempvar() string {
 
 // RunTemplate executs the given template with the given input and returns
 // the rendered string.
-func RunTemplate(tmpl *template.Template, data interface{}) string {
+func RunTemplate(tmpl *template.Template, data any) string {
 	var b bytes.Buffer
 	err := tmpl.Execute(&b, data)
 	if err != nil {
@@ -607,7 +608,7 @@ func transformObject(source, target design.Object, targetPkg, targetType, sctx, 
 	}
 
 	// We're good - generate
-	data := map[string]interface{}{
+	data := map[string]any{
 		"AttributeMap": attributeMap,
 		"Source":       source,
 		"Target":       target,
@@ -625,7 +626,7 @@ func transformArray(source, target *design.Array, targetPkg, sctx, tctx string, 
 		return "", fmt.Errorf("incompatible attribute types: %s is an array with elements of type %s but %s is an array with elements of type %s",
 			sctx, source.ElemType.Type.Name(), tctx, target.ElemType.Type.Name())
 	}
-	data := map[string]interface{}{
+	data := map[string]any{
 		"Source":    source,
 		"Target":    target,
 		"TargetPkg": targetPkg,
@@ -645,7 +646,7 @@ func transformHash(source, target *design.Hash, targetPkg, sctx, tctx string, de
 		return "", fmt.Errorf("incompatible attribute types: %s is a hash with keys of type %s but %s is a hash with keys of type %s",
 			sctx, source.KeyType.Type.Name(), tctx, target.KeyType.Type.Name())
 	}
-	data := map[string]interface{}{
+	data := map[string]any{
 		"Source":    source,
 		"Target":    target,
 		"TargetPkg": targetPkg,
@@ -694,7 +695,7 @@ func computeMapping(source, target design.Object, sctx, tctx string) (map[string
 }
 
 // toSlice returns Go code that represents the given slice.
-func toSlice(val []interface{}) string {
+func toSlice(val []any) string {
 	elems := make([]string, len(val))
 	for i, v := range val {
 		elems[i] = fmt.Sprintf("%#v", v)

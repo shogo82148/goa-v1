@@ -79,13 +79,13 @@ func (v *Validator) arrayValCode(att *design.AttributeDefinition, nonzero, requi
 		switch a.ElemType.Type.(type) {
 		case *design.UserTypeDefinition, *design.MediaTypeDefinition:
 			// For user and media types, call the Validate method
-			val = RunTemplate(v.userValT, map[string]interface{}{
+			val = RunTemplate(v.userValT, map[string]any{
 				"depth":  depth + 2,
 				"target": "e",
 			})
 			val = fmt.Sprintf("%sif e != nil {\n%s\n%s}", Tabs(depth+1), val, Tabs(depth+1))
 		}
-		data := map[string]interface{}{
+		data := map[string]any{
 			"elemType":   a.ElemType,
 			"context":    context,
 			"target":     target,
@@ -125,7 +125,7 @@ func (v *Validator) hashValCode(att *design.AttributeDefinition, nonzero, requir
 		switch h.KeyType.Type.(type) {
 		case *design.UserTypeDefinition, *design.MediaTypeDefinition:
 			// For user and media types, call the Validate method
-			keyVal = RunTemplate(v.userValT, map[string]interface{}{
+			keyVal = RunTemplate(v.userValT, map[string]any{
 				"depth":  depth + 2,
 				"target": "k",
 			})
@@ -137,7 +137,7 @@ func (v *Validator) hashValCode(att *design.AttributeDefinition, nonzero, requir
 		switch h.ElemType.Type.(type) {
 		case *design.UserTypeDefinition, *design.MediaTypeDefinition:
 			// For user and media types, call the Validate method
-			elemVal = RunTemplate(v.userValT, map[string]interface{}{
+			elemVal = RunTemplate(v.userValT, map[string]any{
 				"depth":  depth + 2,
 				"target": "e",
 			})
@@ -145,7 +145,7 @@ func (v *Validator) hashValCode(att *design.AttributeDefinition, nonzero, requir
 		}
 	}
 	if keyVal != "" || elemVal != "" {
-		data := map[string]interface{}{
+		data := map[string]any{
 			"depth":          1,
 			"target":         target,
 			"keyValidation":  keyVal,
@@ -220,7 +220,7 @@ func (v *Validator) recurse(att *design.AttributeDefinition, nonzero, required, 
 func (v *Validator) recurseAttribute(att, catt *design.AttributeDefinition, n, target, context string, depth int, private bool) string {
 	var validation string
 	if _, ok := catt.Type.(design.DataStructure); ok {
-		validation = RunTemplate(v.userValT, map[string]interface{}{
+		validation = RunTemplate(v.userValT, map[string]any{
 			"depth":  depth,
 			"target": fmt.Sprintf("%s.%s", target, GoifyAtt(catt, n, true)),
 		})
@@ -265,7 +265,7 @@ func ValidationChecker(att *design.AttributeDefinition, nonzero, required, hasDe
 	if isPointer && att.Type.IsPrimitive() {
 		t = "*" + t
 	}
-	data := map[string]interface{}{
+	data := map[string]any{
 		"attribute": att,
 		"isPointer": private || isPointer,
 		"nonzero":   nonzero,
@@ -282,7 +282,7 @@ func ValidationChecker(att *design.AttributeDefinition, nonzero, required, hasDe
 	return strings.Join(res, "\n")
 }
 
-func validationsCode(att *design.AttributeDefinition, data map[string]interface{}) (res []string) {
+func validationsCode(att *design.AttributeDefinition, data map[string]any) (res []string) {
 	validation := att.Validation
 	if values := validation.Values; values != nil {
 		data["values"] = values
@@ -343,15 +343,15 @@ func validationsCode(att *design.AttributeDefinition, data map[string]interface{
 		}
 	}
 	if required := validation.Required; len(required) > 0 {
-		var val string
+		var val strings.Builder
 		for i, r := range required {
 			if i > 0 {
-				val += "\n"
+				val.WriteString("\n")
 			}
 			data["required"] = r
-			val += RunTemplate(requiredValT, data)
+			val.WriteString(RunTemplate(requiredValT, data))
 		}
-		res = append(res, val)
+		res = append(res, val.String())
 	}
 	return
 }
@@ -370,7 +370,7 @@ func renderInteger(f float64) string {
 
 // oneof produces code that compares target with each element of vals and ORs
 // the result, e.g. "target == 1 || target == 2".
-func oneof(target string, vals []interface{}) string {
+func oneof(target string, vals []any) string {
 	elems := make([]string, len(vals))
 	for i, v := range vals {
 		elems[i] = fmt.Sprintf("%s == %#v", target, v)

@@ -18,22 +18,22 @@ import (
 //
 // The steps taken by the middleware are:
 //
-//     1. Extract the "Bearer" token from the Authorization header or query parameter
-//     2. Validate the "Bearer" token against the key(s)
-//        given to New
-//     3. If scopes are defined in the design for the action, validate them
-//        against the scopes presented by the JWT in the claim "scope", or if
-//        that's not defined, "scopes".
+//  1. Extract the "Bearer" token from the Authorization header or query parameter
+//  2. Validate the "Bearer" token against the key(s)
+//     given to New
+//  3. If scopes are defined in the design for the action, validate them
+//     against the scopes presented by the JWT in the claim "scope", or if
+//     that's not defined, "scopes".
 //
 // The `exp` (expiration) and `nbf` (not before) date checks are validated by the JWT library.
 //
 // validationKeys can be one of these:
 //
-//     * a string (for HMAC)
-//     * a []byte (for HMAC)
-//     * an rsa.PublicKey
-//     * an ecdsa.PublicKey
-//     * a slice of any of the above
+//   - a string (for HMAC)
+//   - a []byte (for HMAC)
+//   - an rsa.PublicKey
+//   - an ecdsa.PublicKey
+//   - a slice of any of the above
 //
 // The type of the keys determine the algorithm that will be used to do the check.  The goal of
 // having lists of keys is to allow for key rotation, still check the previous keys until rotation
@@ -42,19 +42,18 @@ import (
 // You can define an optional function to do additional validations on the token once the signature
 // and the claims requirements are proven to be valid.  Example:
 //
-//    validationHandler, _ := goa.NewMiddleware(func(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-//        token := jwt.ContextJWT(ctx)
-//        if val, ok := token.Claims["is_uncle"].(string); !ok || val != "ben" {
-//            return jwt.ErrJWTError("you are not uncle ben's")
-//        }
-//    })
+//	validationHandler, _ := goa.NewMiddleware(func(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+//	    token := jwt.ContextJWT(ctx)
+//	    if val, ok := token.Claims["is_uncle"].(string); !ok || val != "ben" {
+//	        return jwt.ErrJWTError("you are not uncle ben's")
+//	    }
+//	})
 //
 // Mount the middleware with the generated UseXX function where XX is the name of the scheme as
 // defined in the design, e.g.:
 //
-//    app.UseJWT(jwt.New("secret", validationHandler, app.NewJWTSecurity()))
-//
-func New(validationKeys interface{}, validationFunc goa.Middleware, scheme *goa.JWTSecurity) goa.Middleware {
+//	app.UseJWT(jwt.New("secret", validationHandler, app.NewJWTSecurity()))
+func New(validationKeys any, validationFunc goa.Middleware, scheme *goa.JWTSecurity) goa.Middleware {
 	var rsaKeys []*rsa.PublicKey
 	var hmacKeys [][]byte
 
@@ -177,7 +176,7 @@ func parseClaimScopes(token *jwt.Token) (map[string]bool, []string, error) {
 					scopesInClaim[scope] = true
 					scopesInClaimList = append(scopesInClaimList, scope)
 				}
-			case []interface{}:
+			case []any:
 				for _, scope := range scopes {
 					if val, ok := scope.(string); ok {
 						scopesInClaim[val] = true
@@ -205,7 +204,7 @@ const (
 )
 
 // partitionKeys sorts keys by their type.
-func partitionKeys(k interface{}) ([]*rsa.PublicKey, []*ecdsa.PublicKey, [][]byte) {
+func partitionKeys(k any) ([]*rsa.PublicKey, []*ecdsa.PublicKey, [][]byte) {
 	var (
 		rsaKeys   []*rsa.PublicKey
 		ecdsaKeys []*ecdsa.PublicKey
@@ -238,7 +237,7 @@ func partitionKeys(k interface{}) ([]*rsa.PublicKey, []*ecdsa.PublicKey, [][]byt
 
 func validateRSAKeys(rsaKeys []*rsa.PublicKey, algo, incomingToken string) (token *jwt.Token, err error) {
 	for _, pubkey := range rsaKeys {
-		token, err = jwt.Parse(incomingToken, func(token *jwt.Token) (interface{}, error) {
+		token, err = jwt.Parse(incomingToken, func(token *jwt.Token) (any, error) {
 			if !strings.HasPrefix(token.Method.Alg(), algo) {
 				return nil, ErrJWTError(fmt.Sprintf("Unexpected signing method: %v", token.Header["alg"]))
 			}
@@ -253,7 +252,7 @@ func validateRSAKeys(rsaKeys []*rsa.PublicKey, algo, incomingToken string) (toke
 
 func validateECDSAKeys(ecdsaKeys []*ecdsa.PublicKey, algo, incomingToken string) (token *jwt.Token, err error) {
 	for _, pubkey := range ecdsaKeys {
-		token, err = jwt.Parse(incomingToken, func(token *jwt.Token) (interface{}, error) {
+		token, err = jwt.Parse(incomingToken, func(token *jwt.Token) (any, error) {
 			if !strings.HasPrefix(token.Method.Alg(), algo) {
 				return nil, ErrJWTError(fmt.Sprintf("Unexpected signing method: %v", token.Header["alg"]))
 			}
@@ -268,7 +267,7 @@ func validateECDSAKeys(ecdsaKeys []*ecdsa.PublicKey, algo, incomingToken string)
 
 func validateHMACKeys(hmacKeys [][]byte, algo, incomingToken string) (token *jwt.Token, err error) {
 	for _, key := range hmacKeys {
-		token, err = jwt.Parse(incomingToken, func(token *jwt.Token) (interface{}, error) {
+		token, err = jwt.Parse(incomingToken, func(token *jwt.Token) (any, error) {
 			if !strings.HasPrefix(token.Method.Alg(), algo) {
 				return nil, ErrJWTError(fmt.Sprintf("Unexpected signing method: %v", token.Header["alg"]))
 			}

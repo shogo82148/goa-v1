@@ -18,7 +18,7 @@ type (
 
 	// A Decoder unmarshals an io.Reader into an interface.
 	Decoder interface {
-		Decode(v interface{}) error
+		Decode(v any) error
 	}
 
 	// ResettableDecoder is used to determine whether or not a Decoder can be reset and thus
@@ -40,7 +40,7 @@ type (
 
 	// An Encoder marshals from an interface into an io.Writer.
 	Encoder interface {
-		Encode(v interface{}) error
+		Encode(v any) error
 	}
 
 	// The ResettableEncoder is used to determine whether or not a Encoder can be reset and
@@ -104,7 +104,7 @@ func NewHTTPDecoder() *HTTPDecoder {
 }
 
 // Decode uses registered Decoders to unmarshal a body based on the contentType.
-func (decoder *HTTPDecoder) Decode(v interface{}, body io.Reader, contentType string) error {
+func (decoder *HTTPDecoder) Decode(v any, body io.Reader, contentType string) error {
 	now := time.Now()
 	defer MeasureSince([]string{"goa", "decode", contentType}, now)
 	var p *decoderPool
@@ -156,7 +156,7 @@ func newDecodePool(f DecoderFunc) *decoderPool {
 	// if the decoder can be reset, create a pool and put the typed decoder in
 	if ok {
 		p.pool = &sync.Pool{
-			New: func() interface{} { return f(strings.NewReader("")) },
+			New: func() any { return f(strings.NewReader("")) },
 		}
 		p.pool.Put(rd)
 	}
@@ -185,7 +185,7 @@ func (p *decoderPool) Put(d Decoder) {
 
 // Encode uses the registered encoders and given content type to marshal and write the given value
 // using the given writer.
-func (encoder *HTTPEncoder) Encode(v interface{}, resp io.Writer, accept string) error {
+func (encoder *HTTPEncoder) Encode(v any, resp io.Writer, accept string) error {
 	now := time.Now()
 	if accept == "" {
 		accept = "*/*"
@@ -247,7 +247,7 @@ func newEncodePool(f EncoderFunc) *encoderPool {
 	// if the encoder can be reset, create a pool and put the typed encoder in
 	if ok {
 		p.pool = &sync.Pool{
-			New: func() interface{} { return f(io.Discard) },
+			New: func() any { return f(io.Discard) },
 		}
 		p.pool.Put(re)
 	}

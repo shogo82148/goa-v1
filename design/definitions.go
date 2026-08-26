@@ -3,8 +3,10 @@ package design
 import (
 	"errors"
 	"fmt"
+	"maps"
 	"net/http"
 	"path"
+	"slices"
 	"sort"
 	"strings"
 
@@ -325,9 +327,9 @@ type (
 		// Metadata is a list of key/value pairs
 		Metadata dslengine.MetadataDefinition
 		// Optional member default value
-		DefaultValue interface{}
+		DefaultValue any
 		// Optional member example value
-		Example interface{}
+		Example any
 		// Optional view used to render Attribute (only applies to media type attributes).
 		View string
 		// NonZeroAttributes lists the names of the child attributes that cannot have a
@@ -825,12 +827,8 @@ func (r *ResourceDefinition) Parent() *ResourceDefinition {
 // The result is sorted alphabetically by policy origin.
 func (r *ResourceDefinition) AllOrigins() []*CORSDefinition {
 	all := make(map[string]*CORSDefinition)
-	for n, o := range Design.Origins {
-		all[n] = o
-	}
-	for n, o := range r.Origins {
-		all[n] = o
-	}
+	maps.Copy(all, Design.Origins)
+	maps.Copy(all, r.Origins)
 	names := make([]string, len(all))
 	i := 0
 	for n := range all {
@@ -855,11 +853,8 @@ func (r *ResourceDefinition) PreflightPaths() []string {
 			}
 			found := false
 			fp := r.FullPath()
-			for _, p := range paths {
-				if fp == p {
-					found = true
-					break
-				}
+			if slices.Contains(paths, fp) {
+				found = true
 			}
 			if !found {
 				paths = append(paths, fp)
@@ -870,11 +865,8 @@ func (r *ResourceDefinition) PreflightPaths() []string {
 	r.IterateFileServers(func(fs *FileServerDefinition) error {
 		found := false
 		fp := fs.RequestPath
-		for _, p := range paths {
-			if fp == p {
-				found = true
-				break
-			}
+		if slices.Contains(paths, fp) {
+			found = true
 		}
 		if !found {
 			paths = append(paths, fp)
@@ -918,9 +910,7 @@ func (r *ResourceDefinition) Finalize() {
 func (r *ResourceDefinition) UserTypes() map[string]*UserTypeDefinition {
 	types := make(map[string]*UserTypeDefinition)
 	for _, a := range r.Actions {
-		for n, ut := range a.UserTypes() {
-			types[n] = ut
-		}
+		maps.Copy(types, a.UserTypes())
 	}
 	if len(types) == 0 {
 		return nil
@@ -934,7 +924,7 @@ type byParent []*ResourceDefinition
 func (p byParent) Len() int      { return len(p) }
 func (p byParent) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
 func (p byParent) Less(i, j int) bool {
-	for k := 0; k < i; k++ {
+	for k := range i {
 		// We need to inspect _all_ previous fields to see if they are a parent. Sort doesn't do this.
 		if p[i].Name == p[k].ParentName {
 			return true
@@ -977,12 +967,7 @@ func (a *AttributeDefinition) AllRequired() (required []string) {
 // IsRequired returns true if the given string matches the name of a required
 // attribute, false otherwise.
 func (a *AttributeDefinition) IsRequired(attName string) bool {
-	for _, name := range a.AllRequired() {
-		if name == attName {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(a.AllRequired(), attName)
 }
 
 // HasDefaultValue returns true if the given attribute has a default value.
@@ -996,7 +981,7 @@ func (a *AttributeDefinition) HasDefaultValue(attName string) bool {
 
 // SetDefault sets the default for the attribute. It also converts HashVal
 // and ArrayVal to map and slice respectively.
-func (a *AttributeDefinition) SetDefault(def interface{}) {
+func (a *AttributeDefinition) SetDefault(def any) {
 	switch actual := def.(type) {
 	case HashVal:
 		a.DefaultValue = actual.ToMap()
@@ -1009,11 +994,11 @@ func (a *AttributeDefinition) SetDefault(def interface{}) {
 
 // AddValues adds the Enum values to the attribute's validation definition.
 // It also performs any conversion needed for HashVal and ArrayVal types.
-func (a *AttributeDefinition) AddValues(values []interface{}) {
+func (a *AttributeDefinition) AddValues(values []any) {
 	if a.Validation == nil {
 		a.Validation = &dslengine.ValidationDefinition{}
 	}
-	a.Validation.Values = make([]interface{}, len(values))
+	a.Validation.Values = make([]any, len(values))
 	for i, v := range values {
 		switch actual := v.(type) {
 		case HashVal:
@@ -1087,7 +1072,7 @@ func (a *AttributeDefinition) IsFile(attName string) bool {
 
 // SetExample sets the custom example. SetExample also handles the case when the user doesn't
 // want any example or any auto-generated example.
-func (a *AttributeDefinition) SetExample(example interface{}) bool {
+func (a *AttributeDefinition) SetExample(example any) bool {
 	if example == nil {
 		a.Example = "-" // set it to something else than nil so we know not to generate one
 		return true
@@ -1101,7 +1086,7 @@ func (a *AttributeDefinition) SetExample(example interface{}) bool {
 
 // GenerateExample returns the value of the Example field if not nil. Otherwise it traverses the
 // attribute type and recursively generates an example. The result is saved in the Example field.
-func (a *AttributeDefinition) GenerateExample(rand *RandomGenerator, seen []string) interface{} {
+func (a *AttributeDefinition) GenerateExample(rand *RandomGenerator, seen []string) any {
 	if a.Example != nil {
 		return a.Example
 	}
@@ -1163,11 +1148,11 @@ func (a *AttributeDefinition) IsReadOnly() bool {
 	return false
 }
 
-func (a *AttributeDefinition) arrayExample(rand *RandomGenerator, seen []string) interface{} {
+func (a *AttributeDefinition) arrayExample(rand *RandomGenerator, seen []string) any {
 	ary := a.Type.ToArray()
 	ln := newExampleGenerator(a, rand).ExampleLength()
-	var res []interface{}
-	for i := 0; i < ln; i++ {
+	var res []any
+	for range ln {
 		ex := ary.ElemType.GenerateExample(rand, seen)
 		if ex != nil {
 			res = append(res, ex)
@@ -1179,11 +1164,11 @@ func (a *AttributeDefinition) arrayExample(rand *RandomGenerator, seen []string)
 	return ary.MakeSlice(res)
 }
 
-func (a *AttributeDefinition) hashExample(rand *RandomGenerator, seen []string) interface{} {
+func (a *AttributeDefinition) hashExample(rand *RandomGenerator, seen []string) any {
 	h := a.Type.ToHash()
 	ln := newExampleGenerator(a, rand).ExampleLength()
-	res := make(map[interface{}]interface{})
-	for i := 0; i < ln; i++ {
+	res := make(map[any]any)
+	for range ln {
 		k := h.KeyType.GenerateExample(rand, seen)
 		v := h.ElemType.GenerateExample(rand, seen)
 		if k != nil && v != nil {
@@ -1196,7 +1181,7 @@ func (a *AttributeDefinition) hashExample(rand *RandomGenerator, seen []string) 
 	return h.MakeMap(res)
 }
 
-func (a *AttributeDefinition) objectExample(rand *RandomGenerator, seen []string) interface{} {
+func (a *AttributeDefinition) objectExample(rand *RandomGenerator, seen []string) any {
 	// project media types
 	actual := a
 	if mt, ok := a.Type.(*MediaTypeDefinition); ok {
@@ -1221,7 +1206,7 @@ func (a *AttributeDefinition) objectExample(rand *RandomGenerator, seen []string
 	}
 	sort.Strings(keys)
 
-	res := make(map[string]interface{})
+	res := make(map[string]any)
 	for _, n := range keys {
 		att := aObj[n]
 		if ex := att.GenerateExample(rand, seen); ex != nil {
@@ -1251,9 +1236,7 @@ func (a *AttributeDefinition) Merge(other *AttributeDefinition) *AttributeDefini
 	if left == nil || right == nil {
 		panic("cannot merge non object attributes") // bug
 	}
-	for n, v := range right {
-		left[n] = v
-	}
+	maps.Copy(left, right)
 	if other.Validation != nil && len(other.Validation.Required) > 0 {
 		if a.Validation == nil {
 			a.Validation = &dslengine.ValidationDefinition{}
@@ -1611,15 +1594,11 @@ func (a *ActionDefinition) UserTypes() map[string]*UserTypeDefinition {
 	if a.Payload != nil {
 		allp["__payload__"] = &AttributeDefinition{Type: a.Payload}
 	}
-	for n, ut := range UserTypes(allp) {
-		types[n] = ut
-	}
+	maps.Copy(types, UserTypes(allp))
 	for _, r := range a.Responses {
 		if mt := Design.MediaTypeWithIdentifier(r.MediaType); mt != nil {
 			types[mt.TypeName] = mt.UserTypeDefinition
-			for n, ut := range UserTypes(mt.UserTypeDefinition) {
-				types[n] = ut
-			}
+			maps.Copy(types, UserTypes(mt.UserTypeDefinition))
 		}
 	}
 	if len(types) == 0 {

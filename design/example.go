@@ -24,7 +24,7 @@ func newExampleGenerator(a *AttributeDefinition, r *RandomGenerator) *exampleGen
 const maxAttempts = 500
 
 // Generate generates a random value based on the given validations.
-func (eg *exampleGenerator) Generate(seen []string) interface{} {
+func (eg *exampleGenerator) Generate(seen []string) any {
 	// Randomize array length first, since that's from higher level
 	if eg.hasLengthValidation() {
 		return eg.generateValidatedLengthExample(seen)
@@ -38,7 +38,7 @@ func (eg *exampleGenerator) Generate(seen []string) interface{} {
 	attempts := 0
 	for attempts < maxAttempts {
 		attempts++
-		var example interface{}
+		var example any
 		// Format comes first, since it initiates the example
 		if hasFormat {
 			example = eg.generateFormatExample()
@@ -81,10 +81,7 @@ func (eg *exampleGenerator) ExampleLength() int {
 		} else if math.IsInf(maxlength, -1) {
 			count = int(minlength) + (eg.r.Int() % 3)
 		} else if minlength < maxlength {
-			diff := int(maxlength - minlength)
-			if diff > maxExampleLength {
-				diff = maxExampleLength
-			}
+			diff := min(int(maxlength-minlength), maxExampleLength)
 			count = int(minlength) + (eg.r.Int() % diff)
 		} else if minlength == maxlength {
 			count = int(minlength)
@@ -112,13 +109,13 @@ func (eg *exampleGenerator) hasLengthValidation() bool {
 const maxExampleLength = 10
 
 // generateValidatedLengthExample generates a random size array of examples based on what's given.
-func (eg *exampleGenerator) generateValidatedLengthExample(seen []string) interface{} {
+func (eg *exampleGenerator) generateValidatedLengthExample(seen []string) any {
 	count := eg.ExampleLength()
 	if !eg.a.Type.IsArray() {
 		return eg.r.faker.Characters(count)
 	}
-	res := make([]interface{}, count)
-	for i := 0; i < count; i++ {
+	res := make([]any, count)
+	for i := range count {
 		res[i] = eg.a.Type.ToArray().ElemType.GenerateExample(eg.r, seen)
 	}
 	return res
@@ -129,7 +126,7 @@ func (eg *exampleGenerator) hasEnumValidation() bool {
 }
 
 // generateValidatedEnumExample returns a random selected enum value.
-func (eg *exampleGenerator) generateValidatedEnumExample() interface{} {
+func (eg *exampleGenerator) generateValidatedEnumExample() any {
 	if !eg.hasEnumValidation() {
 		return nil
 	}
@@ -144,12 +141,12 @@ func (eg *exampleGenerator) hasFormatValidation() bool {
 }
 
 // generateFormatExample returns a random example based on the format the user asks.
-func (eg *exampleGenerator) generateFormatExample() interface{} {
+func (eg *exampleGenerator) generateFormatExample() any {
 	if !eg.hasFormatValidation() {
 		return nil
 	}
 	format := eg.a.Validation.Format
-	if res, ok := map[string]interface{}{
+	if res, ok := map[string]any{
 		"email":     eg.r.faker.Email(),
 		"hostname":  eg.r.faker.DomainName() + "." + eg.r.faker.DomainSuffix(),
 		"date":      time.Unix(int64(eg.r.Int())%1454957045, 0).Format("2006-01-02"), // to obtain a "fixed" rand
@@ -178,7 +175,7 @@ func (eg *exampleGenerator) hasPatternValidation() bool {
 	return eg.a.Validation != nil && eg.a.Validation.Pattern != ""
 }
 
-func (eg *exampleGenerator) checkPatternValidation(example interface{}) bool {
+func (eg *exampleGenerator) checkPatternValidation(example any) bool {
 	if !eg.hasPatternValidation() {
 		return true
 	}
@@ -195,7 +192,7 @@ func (eg *exampleGenerator) checkPatternValidation(example interface{}) bool {
 
 // generateValidatedPatternExample generates a random value that satisfies the pattern. Note: if
 // multiple patterns are given, only one of them is used. currently, it doesn't support multiple.
-func (eg *exampleGenerator) generateValidatedPatternExample() interface{} {
+func (eg *exampleGenerator) generateValidatedPatternExample() any {
 	if !eg.hasPatternValidation() {
 		return false
 	}
@@ -214,7 +211,7 @@ func (eg *exampleGenerator) hasMinMaxValidation() bool {
 	return eg.a.Validation.Minimum != nil || eg.a.Validation.Maximum != nil
 }
 
-func (eg *exampleGenerator) checkMinMaxValueValidation(example interface{}) bool {
+func (eg *exampleGenerator) checkMinMaxValueValidation(example any) bool {
 	if !eg.hasMinMaxValidation() {
 		return true
 	}
@@ -239,7 +236,7 @@ func (eg *exampleGenerator) checkMinMaxValueValidation(example interface{}) bool
 	return true
 }
 
-func (eg *exampleGenerator) generateValidatedMinMaxValueExample() interface{} {
+func (eg *exampleGenerator) generateValidatedMinMaxValueExample() any {
 	if !eg.hasMinMaxValidation() {
 		return nil
 	}

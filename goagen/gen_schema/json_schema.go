@@ -24,8 +24,8 @@ type (
 		Properties   map[string]*JSONSchema `json:"properties,omitempty"`
 		Definitions  map[string]*JSONSchema `json:"definitions,omitempty"`
 		Description  string                 `json:"description,omitempty"`
-		DefaultValue interface{}            `json:"default,omitempty"`
-		Example      interface{}            `json:"example,omitempty"`
+		DefaultValue any                    `json:"default,omitempty"`
+		Example      any                    `json:"example,omitempty"`
 
 		// Hyper schema
 		Media     *JSONMedia  `json:"media,omitempty"`
@@ -35,17 +35,17 @@ type (
 		Ref       string      `json:"$ref,omitempty"`
 
 		// Validation
-		Enum                 []interface{} `json:"enum,omitempty"`
-		Format               string        `json:"format,omitempty"`
-		Pattern              string        `json:"pattern,omitempty"`
-		Minimum              *float64      `json:"minimum,omitempty"`
-		Maximum              *float64      `json:"maximum,omitempty"`
-		MinLength            *int          `json:"minLength,omitempty"`
-		MaxLength            *int          `json:"maxLength,omitempty"`
-		MinItems             *int          `json:"minItems,omitempty"`
-		MaxItems             *int          `json:"maxItems,omitempty"`
-		Required             []string      `json:"required,omitempty"`
-		AdditionalProperties bool          `json:"additionalProperties,omitempty"`
+		Enum                 []any    `json:"enum,omitempty"`
+		Format               string   `json:"format,omitempty"`
+		Pattern              string   `json:"pattern,omitempty"`
+		Minimum              *float64 `json:"minimum,omitempty"`
+		Maximum              *float64 `json:"maximum,omitempty"`
+		MinLength            *int     `json:"minLength,omitempty"`
+		MaxLength            *int     `json:"maxLength,omitempty"`
+		MinItems             *int     `json:"minItems,omitempty"`
+		MaxItems             *int     `json:"maxItems,omitempty"`
+		Required             []string `json:"required,omitempty"`
+		AdditionalProperties bool     `json:"additionalProperties,omitempty"`
 
 		// Union
 		AnyOf []*JSONSchema `json:"anyOf,omitempty"`
@@ -321,7 +321,7 @@ func TypeSchema(api *design.APIDefinition, t design.DataType) *JSONSchema {
 }
 
 type mergeItems []struct {
-	a, b   interface{}
+	a, b   any
 	needed bool
 }
 
@@ -488,16 +488,16 @@ func buildAttributeSchema(api *design.APIDefinition, s *JSONSchema, at *design.A
 }
 
 // toStringMap converts map[interface{}]interface{} to a map[string]interface{} when possible.
-func toStringMap(val interface{}) interface{} {
+func toStringMap(val any) any {
 	switch actual := val.(type) {
-	case map[interface{}]interface{}:
-		m := make(map[string]interface{})
+	case map[any]any:
+		m := make(map[string]any)
 		for k, v := range actual {
 			m[toString(k)] = toStringMap(v)
 		}
 		return m
-	case []interface{}:
-		mapSlice := make([]interface{}, len(actual))
+	case []any:
+		mapSlice := make([]any, len(actual))
 		for i, e := range actual {
 			mapSlice[i] = toStringMap(e)
 		}
@@ -508,7 +508,7 @@ func toStringMap(val interface{}) interface{} {
 }
 
 // toString returns the string representation of the given type.
-func toString(val interface{}) string {
+func toString(val any) string {
 	switch actual := val.(type) {
 	case string:
 		return actual
@@ -527,7 +527,7 @@ func toString(val interface{}) string {
 // appropriate.
 func toSchemaHref(api *design.APIDefinition, r *design.RouteDefinition) string {
 	params := r.Params()
-	args := make([]interface{}, len(params))
+	args := make([]any, len(params))
 	for i, p := range params {
 		args[i] = fmt.Sprintf("/{%s}", p)
 	}

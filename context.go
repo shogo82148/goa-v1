@@ -25,7 +25,7 @@ type (
 		*http.Request
 
 		// Payload returns the decoded request body.
-		Payload interface{}
+		Payload any
 		// Params contains the raw values for the parameters defined in the design including
 		// path parameters, query string parameters and header parameters.
 		Params url.Values
@@ -123,7 +123,7 @@ func (ctx *mergedContext) Err() error {
 	return ctx.child.Err()
 }
 
-func (ctx *mergedContext) Value(key interface{}) interface{} {
+func (ctx *mergedContext) Value(key any) any {
 	if v := ctx.child.Value(key); v != nil {
 		return v
 	}
@@ -142,7 +142,7 @@ func WithLogger(ctx context.Context, logger LogAdapter) context.Context {
 
 // WithLogContext instantiates a new logger by appending the given key/value pairs to the context
 // logger and setting the resulting logger in the context.
-func WithLogContext(ctx context.Context, keyvals ...interface{}) context.Context {
+func WithLogContext(ctx context.Context, keyvals ...any) context.Context {
 	logger := ContextLogger(ctx)
 	if logger == nil {
 		return ctx

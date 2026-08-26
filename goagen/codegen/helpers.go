@@ -108,12 +108,12 @@ func IndentBytes(b, prefix []byte) []byte {
 
 // Tabs returns a string made of depth tab characters.
 func Tabs(depth int) string {
-	var tabs string
-	for i := 0; i < depth; i++ {
-		tabs += "\t"
+	var tabs strings.Builder
+	for range depth {
+		tabs.WriteString("\t")
 	}
 	//	return fmt.Sprintf("%d%s", depth, tabs)
-	return tabs
+	return tabs.String()
 }
 
 // Add adds two integers and returns the sum of the two.

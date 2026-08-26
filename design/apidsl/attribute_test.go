@@ -70,7 +70,7 @@ var _ = Describe("ContainerDefinition", func() {
 
 var _ = Describe("Attribute", func() {
 	var name string
-	var dataType interface{}
+	var dataType any
 	var description string
 	var dsl func()
 
@@ -227,7 +227,7 @@ var _ = Describe("Attribute", func() {
 			Ω(o).Should(HaveKey(name))
 			Ω(o[name].Type).Should(Equal(design.String))
 			Ω(o[name].Validation).ShouldNot(BeNil())
-			Ω(o[name].Validation.Values).Should(Equal([]interface{}{"one", "two"}))
+			Ω(o[name].Validation.Values).Should(Equal([]any{"one", "two"}))
 		})
 	})
 
@@ -247,7 +247,7 @@ var _ = Describe("Attribute", func() {
 			Ω(o).Should(HaveKey(name))
 			Ω(o[name].Type).Should(Equal(design.DateTime))
 			Ω(o[name].Validation).Should(BeNil())
-			Ω(o[name].DefaultValue).Should(Equal(interface{}("1978-06-30T10:00:00+09:00")))
+			Ω(o[name].DefaultValue).Should(Equal(any("1978-06-30T10:00:00+09:00")))
 		})
 	})
 
@@ -267,7 +267,7 @@ var _ = Describe("Attribute", func() {
 			Ω(o).Should(HaveKey(name))
 			Ω(o[name].Type).Should(Equal(design.Integer))
 			Ω(o[name].Validation).ShouldNot(BeNil())
-			Ω(o[name].Validation.Values).Should(Equal([]interface{}{1, 2}))
+			Ω(o[name].Validation.Values).Should(Equal([]any{1, 2}))
 		})
 	})
 
@@ -288,7 +288,7 @@ var _ = Describe("Attribute", func() {
 			Ω(o).Should(HaveKey(name))
 			Ω(o[name].Type).Should(Equal(design.String))
 			Ω(o[name].Validation).ShouldNot(BeNil())
-			Ω(o[name].Validation.Values).Should(Equal([]interface{}{"one", "two"}))
+			Ω(o[name].Validation.Values).Should(Equal([]any{"one", "two"}))
 		})
 	})
 

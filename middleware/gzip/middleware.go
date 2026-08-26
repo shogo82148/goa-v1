@@ -264,7 +264,7 @@ func Middleware(level int, o ...Option) goa.Middleware {
 		}
 	}
 	gzipPool := sync.Pool{
-		New: func() interface{} {
+		New: func() any {
 			gz, err := gzip.NewWriterLevel(io.Discard, level)
 			if err != nil {
 				panic(err)

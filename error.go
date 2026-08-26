@@ -33,6 +33,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
+	"maps"
 	"strings"
 )
 
@@ -89,7 +90,7 @@ type (
 	// Otherwise the string produced using fmt.Sprintf("%v") is used.
 	// The optional key value pairs are intended to provide additional contextual information
 	// and are returned to the client.
-	ErrorClass func(message interface{}, keyvals ...interface{}) error
+	ErrorClass func(message any, keyvals ...any) error
 
 	// ServiceError is the interface implemented by all errors created using a ErrorClass
 	// function.
@@ -124,14 +125,14 @@ type (
 		// Detail describes the specific error occurrence.
 		Detail string `json:"detail" yaml:"detail" xml:"detail" form:"detail"`
 		// Meta contains additional key/value pairs useful to clients.
-		Meta map[string]interface{} `json:"meta,omitempty" yaml:"meta,omitempty" xml:"meta,omitempty" form:"meta,omitempty"`
+		Meta map[string]any `json:"meta,omitempty" yaml:"meta,omitempty" xml:"meta,omitempty" form:"meta,omitempty"`
 	}
 )
 
 // NewErrorClass creates a new error class.
 // It is the responsibility of the client to guarantee uniqueness of code.
 func NewErrorClass(code string, status int) ErrorClass {
-	return func(message interface{}, keyvals ...interface{}) error {
+	return func(message any, keyvals ...any) error {
 		var msg string
 		switch actual := message.(type) {
 		case string:
@@ -143,14 +144,14 @@ func NewErrorClass(code string, status int) ErrorClass {
 		default:
 			msg = fmt.Sprintf("%v", actual)
 		}
-		var meta map[string]interface{}
+		var meta map[string]any
 		l := len(keyvals)
 		if l > 0 {
-			meta = make(map[string]interface{})
+			meta = make(map[string]any)
 		}
 		for i := 0; i < l; i += 2 {
 			k := keyvals[i]
-			var v interface{} = "MISSING"
+			var v any = "MISSING"
 			if i+1 < l {
 				v = keyvals[i+1]
 			}
@@ -167,7 +168,7 @@ func MissingPayloadError() error {
 
 // InvalidParamTypeError is the error produced when the type of a parameter does not match the type
 // defined in the design.
-func InvalidParamTypeError(name string, val interface{}, expected string) error {
+func InvalidParamTypeError(name string, val any, expected string) error {
 	msg := fmt.Sprintf("invalid value %#v for parameter %#v, must be a %s", val, name, expected)
 	return ErrInvalidRequest(msg, "param", name, "value", val, "expected", expected)
 }
@@ -181,7 +182,7 @@ func MissingParamError(name string) error {
 
 // InvalidAttributeTypeError is the error produced when the type of payload field does not match
 // the type defined in the design.
-func InvalidAttributeTypeError(ctx string, val interface{}, expected string) error {
+func InvalidAttributeTypeError(ctx string, val any, expected string) error {
 	msg := fmt.Sprintf("type of %s must be %s but got value %#v", ctx, expected, val)
 	return ErrInvalidRequest(msg, "attribute", ctx, "value", val, "expected", expected)
 }
@@ -200,7 +201,7 @@ func MissingHeaderError(name string) error {
 
 // InvalidEnumValueError is the error produced when the value of a parameter or payload field does
 // not match one the values defined in the design Enum validation.
-func InvalidEnumValueError(ctx string, val interface{}, allowed []interface{}) error {
+func InvalidEnumValueError(ctx string, val any, allowed []any) error {
 	elems := make([]string, len(allowed))
 	for i, a := range allowed {
 		elems[i] = fmt.Sprintf("%#v", a)
@@ -225,7 +226,7 @@ func InvalidPatternError(ctx, target string, pattern string) error {
 
 // InvalidRangeError is the error produced when the value of a parameter or payload field does
 // not match the range validation defined in the design. value may be a int or a float64.
-func InvalidRangeError(ctx string, target interface{}, value interface{}, min bool) error {
+func InvalidRangeError(ctx string, target any, value any, min bool) error {
 	comp := "greater than or equal to"
 	if !min {
 		comp = "less than or equal to"
@@ -236,7 +237,7 @@ func InvalidRangeError(ctx string, target interface{}, value interface{}, min bo
 
 // InvalidLengthError is the error produced when the value of a parameter or payload field does
 // not match the length validation defined in the design.
-func InvalidLengthError(ctx string, target interface{}, ln, value int, min bool) error {
+func InvalidLengthError(ctx string, target any, ln, value int, min bool) error {
 	comp := "greater than or equal to"
 	if !min {
 		comp = "less than or equal to"
@@ -265,11 +266,12 @@ func MethodNotAllowedError(method string, allowed []string) error {
 
 // Error returns the error occurrence details.
 func (e *ErrorResponse) Error() string {
-	msg := fmt.Sprintf("[%s] %d %s: %s", e.ID, e.Status, e.Code, e.Detail)
+	var msg strings.Builder
+	msg.WriteString(fmt.Sprintf("[%s] %d %s: %s", e.ID, e.Status, e.Code, e.Detail))
 	for k, v := range e.Meta {
-		msg += ", " + fmt.Sprintf("%s: %v", k, v)
+		msg.WriteString(", " + fmt.Sprintf("%s: %v", k, v))
 	}
-	return msg
+	return msg.String()
 }
 
 // ResponseStatus is the status used to build responses.
@@ -328,11 +330,9 @@ func MergeErrors(err, other error) error {
 	e.Detail = e.Detail + "; " + o.Detail
 
 	if e.Meta == nil && len(o.Meta) > 0 {
-		e.Meta = make(map[string]interface{})
+		e.Meta = make(map[string]any)
 	}
-	for k, v := range o.Meta {
-		e.Meta[k] = v
-	}
+	maps.Copy(e.Meta, o.Meta)
 	return e
 }
 
