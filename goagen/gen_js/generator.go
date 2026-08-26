@@ -15,7 +15,7 @@ import (
 	"github.com/shogo82148/goa-v1/goagen/utils"
 )
 
-//NewGenerator returns an initialized instance of a JavaScript Client Generator
+// NewGenerator returns an initialized instance of a JavaScript Client Generator
 func NewGenerator(options ...Option) *Generator {
 	g := &Generator{}
 
@@ -140,7 +140,7 @@ func (g *Generator) generateJS(jsFile string) (_ *design.ActionDefinition, err e
 	defer file.Close()
 	g.genfiles = append(g.genfiles, jsFile)
 
-	data := map[string]interface{}{
+	data := map[string]any{
 		"API":     g.API,
 		"Host":    g.Host,
 		"Scheme":  g.Scheme,
@@ -173,7 +173,7 @@ func (g *Generator) generateJS(jsFile string) (_ *design.ActionDefinition, err e
 			if exampleAction == nil && a.Routes[0].Verb == "GET" {
 				exampleAction = a
 			}
-			data := map[string]interface{}{"Action": a}
+			data := map[string]any{"Action": a}
 			funcs := template.FuncMap{"params": params}
 			if err = file.ExecuteTemplate("jsFuncs", jsFuncsT, funcs, data); err != nil {
 				return
@@ -208,7 +208,7 @@ func (g *Generator) generateIndexHTML(htmlFile string, exampleAction *design.Act
 	pathParams := exampleAction.Routes[0].Params()
 	if len(pathParams) > 0 {
 		pathVars := exampleAction.AllParams().Type.ToObject()
-		pathValues := make([]interface{}, len(pathParams))
+		pathValues := make([]any, len(pathParams))
 		for i, n := range pathParams {
 			ex := pathVars[n].GenerateExample(g.API.RandomGenerator(), nil)
 			pathValues[i] = ex
@@ -226,7 +226,7 @@ func (g *Generator) generateIndexHTML(htmlFile string, exampleAction *design.Act
 		examplePath,
 		args,
 	)
-	data := map[string]interface{}{
+	data := map[string]any{
 		"API":         g.API,
 		"ExampleFunc": exampleFunc,
 	}
@@ -266,7 +266,7 @@ func (g *Generator) generateExample() error {
 	}
 	g.genfiles = append(g.genfiles, controllerFile)
 
-	data := map[string]interface{}{"ServeDir": g.OutDir}
+	data := map[string]any{"ServeDir": g.OutDir}
 	return file.ExecuteTemplate("examples", exampleCtrlT, nil, data)
 }
 

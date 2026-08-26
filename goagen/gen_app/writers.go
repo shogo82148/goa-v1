@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
+	"slices"
 	"strings"
 	"text/template"
 
@@ -90,7 +91,7 @@ type (
 	ControllerTemplateData struct {
 		API            *design.APIDefinition          // API definition
 		Resource       string                         // Lower case plural resource name, e.g. "bottles"
-		Actions        []map[string]interface{}       // Array of actions, each action has keys "Name", "DesignName", "Routes", "Context" and "Unmarshal"
+		Actions        []map[string]any               // Array of actions, each action has keys "Name", "DesignName", "Routes", "Context" and "Unmarshal"
 		FileServers    []*design.FileServerDefinition // File servers
 		Encoders       []*EncoderTemplateData         // Encoder data
 		Decoders       []*EncoderTemplateData         // Decoder data
@@ -132,13 +133,7 @@ func (c *ContextTemplateData) IsPathParam(param string) bool {
 	pp := false
 	if params.Type.IsObject() {
 		for _, r := range c.Routes {
-			pp = false
-			for _, p := range r.Params() {
-				if p == param {
-					pp = true
-					break
-				}
-			}
+			pp = slices.Contains(r.Params(), param)
 			if !pp {
 				break
 			}
@@ -239,7 +234,7 @@ func (w *ContextsWriter) Execute(data *ContextTemplateData) error {
 		}
 	}
 	return data.IterateResponses(func(resp *design.ResponseDefinition) error {
-		respData := map[string]interface{}{
+		respData := map[string]any{
 			"Context":  data,
 			"Response": resp,
 		}
@@ -308,7 +303,7 @@ func NewControllersWriter(filename string) (*ControllersWriter, error) {
 
 // WriteInitService writes the initService function
 func (w *ControllersWriter) WriteInitService(encoders, decoders []*EncoderTemplateData) error {
-	ctx := map[string]interface{}{
+	ctx := map[string]any{
 		"API":      design.Design,
 		"Encoders": encoders,
 		"Decoders": decoders,
@@ -439,8 +434,8 @@ func (w *UserTypesWriter) Execute(t *design.UserTypeDefinition) error {
 }
 
 // newCoerceData is a helper function that creates a map that can be given to the "Coerce" template.
-func newCoerceData(name string, att *design.AttributeDefinition, pointer bool, pkg string, depth int) map[string]interface{} {
-	return map[string]interface{}{
+func newCoerceData(name string, att *design.AttributeDefinition, pointer bool, pkg string, depth int) map[string]any {
+	return map[string]any{
 		"Name":      name,
 		"VarName":   codegen.Goify(name, false),
 		"Pointer":   pointer,

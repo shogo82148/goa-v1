@@ -171,7 +171,7 @@ var _ = Describe("Service", func() {
 			unmarshaler = func(c context.Context, service *goa.Service, req *http.Request) error {
 				ctx = c
 				if req != nil {
-					var payload interface{}
+					var payload any
 					err := service.DecodeRequest(req, &payload)
 					if err != nil {
 						return err
@@ -199,13 +199,13 @@ var _ = Describe("Service", func() {
 					return nil
 				}
 				ctrl = s.NewController("test")
-				for i := 0; i < 5; i++ {
+				for range 5 {
 					ctrl.Service.Use(func(goa.Handler) goa.Handler {
 						return nopHandler
 					})
 				}
 				ctrl.Use(func(goa.Handler) goa.Handler { return nopHandler })
-				for i := 0; i < 10; i++ {
+				for range 10 {
 					tmp := ctrl.MuxHandler("test", nopHandler, nil)
 					handlers = append(handlers, tmp)
 					rws = append(rws, &TestResponseWriter{})
@@ -328,7 +328,7 @@ var _ = Describe("Service", func() {
 
 			Context("with different payload types", func() {
 				content := []byte(`{"hello": "world"}`)
-				decodedContent := map[string]interface{}{"hello": "world"}
+				decodedContent := map[string]any{"hello": "world"}
 
 				BeforeEach(func() {
 					r.Header.Set("Content-Type", "application/json")

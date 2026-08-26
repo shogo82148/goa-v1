@@ -20,7 +20,7 @@ type (
 		maxSamplingRate int
 		sampleSize      uint32
 		start           time.Time
-		counter         uint32
+		counter         atomic.Uint32
 	}
 
 	fixedSampler int
@@ -67,8 +67,8 @@ func NewFixedSampler(samplingPercent int) Sampler {
 func (s *adaptiveSampler) Sample() bool {
 	// adjust sampling rate whenever sample size is reached.
 	var currentRate int
-	if atomic.AddUint32(&s.counter, 1) == s.sampleSize { // exact match prevents
-		atomic.StoreUint32(&s.counter, 0) // race is ok
+	if s.counter.Add(1) == s.sampleSize { // exact match prevents
+		s.counter.Store(0) // race is ok
 		s.Lock()
 		{
 			d := time.Since(s.start).Seconds()

@@ -12,7 +12,7 @@ import (
 	"github.com/shogo82148/goa-v1/goagen/utils"
 )
 
-//NewGenerator returns an initialized instance of an Application Generator
+// NewGenerator returns an initialized instance of an Application Generator
 func NewGenerator(options ...Option) *Generator {
 	g := &Generator{}
 	g.validator = codegen.NewValidator()
@@ -308,7 +308,7 @@ func (g *Generator) generateControllers() (err error) {
 		r.IterateActions(func(a *design.ActionDefinition) error {
 			context := fmt.Sprintf("%s%sContext", codegen.Goify(a.Name, true), codegen.Goify(r.Name, true))
 			unmarshal := fmt.Sprintf("unmarshal%s%sPayload", codegen.Goify(a.Name, true), codegen.Goify(r.Name, true))
-			action := map[string]interface{}{
+			action := map[string]any{
 				"Name":             codegen.Goify(a.Name, true),
 				"DesignName":       a.Name,
 				"Routes":           a.Routes,

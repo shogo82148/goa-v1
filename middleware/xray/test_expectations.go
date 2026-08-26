@@ -19,7 +19,7 @@ type (
 
 	// expectations is the data structure used to record expected function
 	// calls and the corresponding behavior.
-	expectations map[string][]interface{}
+	expectations map[string][]any
 )
 
 // NewTestClientExpectation creates a new *TestClientExpectation
@@ -31,18 +31,18 @@ func NewTestClientExpectation() *TestClientExpectation {
 }
 
 // Expect records the request handler in the list of expected request calls.
-func (c *TestClientExpectation) Expect(fn string, e interface{}) {
+func (c *TestClientExpectation) Expect(fn string, e any) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.expected[fn] = append(c.expected[fn], e)
 }
 
 // ExpectNTimes records the request handler n times in the list of expected request calls.
-func (c *TestClientExpectation) ExpectNTimes(n int, fn string, e interface{}) {
+func (c *TestClientExpectation) ExpectNTimes(n int, fn string, e any) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	for i := 0; i < n; i++ {
+	for range n {
 		c.expected[fn] = append(c.expected[fn], e)
 	}
 }
@@ -50,7 +50,7 @@ func (c *TestClientExpectation) ExpectNTimes(n int, fn string, e interface{}) {
 // Expectation removes the expectation for the function with the given name from the expected calls
 // if there is one and returns it. If there is no (more) expectations for the function,
 // it prints a warning to stderr and returns nil.
-func (c *TestClientExpectation) Expectation(fn string) interface{} {
+func (c *TestClientExpectation) Expectation(fn string) any {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	es, ok := c.expected[fn]

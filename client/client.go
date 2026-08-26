@@ -109,8 +109,8 @@ func (c *Client) dumpResponse(ctx context.Context, resp *http.Response) {
 }
 
 // headersToSlice produces a loggable slice from a HTTP header.
-func headersToSlice(header http.Header) []interface{} {
-	res := make([]interface{}, 2*len(header))
+func headersToSlice(header http.Header) []any {
+	res := make([]any, 2*len(header))
 	i := 0
 	for k, v := range header {
 		res[i] = k

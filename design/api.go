@@ -136,12 +136,12 @@ var (
 			AttributeDefinition: &AttributeDefinition{
 				Type:        errorMediaType,
 				Description: "Error response media type",
-				Example: map[string]interface{}{
+				Example: map[string]any{
 					"id":     "3F1FKVRR",
 					"status": 400,
 					"code":   "invalid_value",
 					"detail": "Value of ID must be an integer",
-					"meta":   map[string]interface{}{"timestamp": 1458609066},
+					"meta":   map[string]any{"timestamp": 1458609066},
 				},
 			},
 			TypeName: "error",
@@ -177,7 +177,7 @@ var (
 				ElemType: &AttributeDefinition{Type: Any},
 			},
 			Description: "a meta object containing non-standard meta-information about the error.",
-			Example:     map[string]interface{}{"timestamp": 1458609066},
+			Example:     map[string]any{"timestamp": 1458609066},
 		},
 	}
 

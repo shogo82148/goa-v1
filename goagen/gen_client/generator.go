@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"slices"
 	"sort"
 	"strings"
 	"text/template"
@@ -20,7 +21,7 @@ import (
 // Filename used to generate all data types (without the ".go" extension)
 const typesFileName = "datatypes"
 
-//NewGenerator returns an initialized instance of a Go Client Generator
+// NewGenerator returns an initialized instance of a Go Client Generator
 func NewGenerator(options ...Option) *Generator {
 	g := &Generator{}
 
@@ -773,12 +774,7 @@ func isArrayOfType(array design.DataType, kinds ...design.Kind) bool {
 		return false
 	}
 	kind := array.ToArray().ElemType.Type.Kind()
-	for _, t := range kinds {
-		if t == kind {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(kinds, kind)
 }
 
 // template used to produce code that serializes arrays of simple values into comma separated
@@ -810,7 +806,7 @@ func toString(name, target string, att *design.AttributeDefinition) string {
 			panic("unknown primitive type")
 		}
 	case *design.Array:
-		data := map[string]interface{}{
+		data := map[string]any{
 			"Name":     name,
 			"Target":   target,
 			"ElemType": actual.ElemType,

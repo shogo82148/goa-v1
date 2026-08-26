@@ -3,13 +3,13 @@ Package goalogrus contains an adapter that makes it possible to configure goa so
 as logger backend.
 Usage:
 
-    logger := logrus.New()
-    // Initialize logger handler using logrus package
-    service.WithLogger(goalogrus.New(logger))
-    // ... Proceed with configuring and starting the goa service
+	logger := logrus.New()
+	// Initialize logger handler using logrus package
+	service.WithLogger(goalogrus.New(logger))
+	// ... Proceed with configuring and starting the goa service
 
-    // In handlers:
-    goalogrus.Entry(ctx).Info("foo", "bar")
+	// In handlers:
+	goalogrus.Entry(ctx).Info("foo", "bar")
 */
 package goalogrus
 
@@ -46,31 +46,31 @@ func Entry(ctx context.Context) *logrus.Entry {
 }
 
 // Info logs messages using logrus.
-func (a *adapter) Info(msg string, data ...interface{}) {
+func (a *adapter) Info(msg string, data ...any) {
 	a.Entry.WithFields(data2rus(data)).Info(msg)
 }
 
 // Warn logs message using logrus.
-func (a *adapter) Warn(msg string, data ...interface{}) {
+func (a *adapter) Warn(msg string, data ...any) {
 	a.Entry.WithFields(data2rus(data)).Warn(msg)
 }
 
 // Error logs errors using logrus.
-func (a *adapter) Error(msg string, data ...interface{}) {
+func (a *adapter) Error(msg string, data ...any) {
 	a.Entry.WithFields(data2rus(data)).Error(msg)
 }
 
 // New creates a new logger given a context.
-func (a *adapter) New(data ...interface{}) goa.LogAdapter {
+func (a *adapter) New(data ...any) goa.LogAdapter {
 	return &adapter{Entry: a.Entry.WithFields(data2rus(data))}
 }
 
-func data2rus(keyvals []interface{}) logrus.Fields {
+func data2rus(keyvals []any) logrus.Fields {
 	n := (len(keyvals) + 1) / 2
 	res := make(logrus.Fields, n)
 	for i := 0; i < len(keyvals); i += 2 {
 		k := keyvals[i]
-		var v interface{} = goa.ErrMissingLogValue
+		var v any = goa.ErrMissingLogValue
 		if i+1 < len(keyvals) {
 			v = keyvals[i+1]
 		}

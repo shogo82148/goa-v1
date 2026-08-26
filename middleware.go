@@ -23,7 +23,7 @@ type (
 // - or an http handler: http.Handler or func(http.ResponseWriter, *http.Request)
 //
 // An error is returned if the given argument is not one of the types above.
-func NewMiddleware(m interface{}) (mw Middleware, err error) {
+func NewMiddleware(m any) (mw Middleware, err error) {
 	switch m := m.(type) {
 	case Middleware:
 		mw = m

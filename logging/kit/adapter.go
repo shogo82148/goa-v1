@@ -3,14 +3,14 @@ Package goakit contains an adapter that makes it possible to configure goa so it
 log package as logger backend.
 Usage:
 
-    // Initialize logger using github.com/go-kit/log package
-    logger := log.NewLogfmtLogger(w)
-    // Initialize goa service logger using adapter
-    service.WithLogger(goakit.New(logger))
-    // ... Proceed with configuring and starting the goa service
+	// Initialize logger using github.com/go-kit/log package
+	logger := log.NewLogfmtLogger(w)
+	// Initialize goa service logger using adapter
+	service.WithLogger(goakit.New(logger))
+	// ... Proceed with configuring and starting the goa service
 
-    // In middlewares:
-    goakit.Logger(ctx).Log("foo", "bar")
+	// In middlewares:
+	goakit.Logger(ctx).Log("foo", "bar")
 */
 package goakit
 
@@ -41,27 +41,27 @@ func Logger(ctx context.Context) log.Logger {
 }
 
 // Info logs informational messages using go-kit.
-func (a *adapter) Info(msg string, data ...interface{}) {
-	ctx := []interface{}{"lvl", "info", "msg", msg}
+func (a *adapter) Info(msg string, data ...any) {
+	ctx := []any{"lvl", "info", "msg", msg}
 	ctx = append(ctx, data...)
 	a.Logger.Log(ctx...)
 }
 
 // Info logs warning messages using go-kit.
-func (a *adapter) Warn(msg string, data ...interface{}) {
-	ctx := []interface{}{"lvl", "warn", "msg", msg}
+func (a *adapter) Warn(msg string, data ...any) {
+	ctx := []any{"lvl", "warn", "msg", msg}
 	ctx = append(ctx, data...)
 	a.Logger.Log(ctx...)
 }
 
 // Error logs error messages using go-kit.
-func (a *adapter) Error(msg string, data ...interface{}) {
-	ctx := []interface{}{"lvl", "error", "msg", msg}
+func (a *adapter) Error(msg string, data ...any) {
+	ctx := []any{"lvl", "error", "msg", msg}
 	ctx = append(ctx, data...)
 	a.Logger.Log(ctx...)
 }
 
 // New instantiates a new logger from the given context.
-func (a *adapter) New(data ...interface{}) goa.LogAdapter {
+func (a *adapter) New(data ...any) goa.LogAdapter {
 	return &adapter{Logger: log.With(a.Logger, data...)}
 }

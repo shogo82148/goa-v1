@@ -62,7 +62,7 @@ func RecursivePublicizer(att *design.AttributeDefinition, source, target string,
 // Publicizer publicizes a single attribute based on the type.
 func Publicizer(att *design.AttributeDefinition, sourceField, targetField string, dereference bool, depth int, init bool) string {
 	var publication string
-	data := map[string]interface{}{
+	data := map[string]any{
 		"sourceField": sourceField,
 		"targetField": targetField,
 		"depth":       depth,

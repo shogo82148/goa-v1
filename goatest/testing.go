@@ -15,10 +15,10 @@ import (
 type TInterface = testing.TB
 
 // ResponseSetterFunc func
-type ResponseSetterFunc func(resp interface{})
+type ResponseSetterFunc func(resp any)
 
 // Encode implements a dummy encoder that returns the value being encoded
-func (r ResponseSetterFunc) Encode(v interface{}) error {
+func (r ResponseSetterFunc) Encode(v any) error {
 	r(v)
 	return nil
 }

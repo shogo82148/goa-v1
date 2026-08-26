@@ -48,7 +48,7 @@ var _ = Describe("Validation", func() {
 			It("records the validation", func() {
 				Ω(dslengine.Errors).ShouldNot(HaveOccurred())
 				Ω(att.Validation).ShouldNot(BeNil())
-				Ω(att.Validation.Values).Should(Equal([]interface{}{"red", "blue"}))
+				Ω(att.Validation.Values).Should(Equal([]any{"red", "blue"}))
 			})
 		})
 

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"maps"
 	"strings"
 
 	. "github.com/onsi/ginkgo"
@@ -17,7 +18,7 @@ var _ = Describe("Error", func() {
 		status = 400
 		detail = "error"
 	)
-	var meta = map[string]interface{}{"what": 42}
+	var meta = map[string]any{"what": 42}
 
 	var gerr *ErrorResponse
 
@@ -166,7 +167,7 @@ var _ = Describe("InvalidEnumValueError", func() {
 	var valErr error
 	ctx := "ctx"
 	val := 42
-	allowed := []interface{}{"43", "44"}
+	allowed := []any{"43", "44"}
 
 	JustBeforeEach(func() {
 		valErr = InvalidEnumValueError(ctx, val, allowed)
@@ -226,7 +227,7 @@ var _ = Describe("InvalidPatternError", func() {
 
 var _ = Describe("InvalidRangeError", func() {
 	var valErr error
-	var value interface{}
+	var value any
 
 	ctx := "ctx"
 	target := "target"
@@ -274,7 +275,7 @@ var _ = Describe("InvalidLengthError", func() {
 	const value = 42
 	const min = true
 
-	var target interface{}
+	var target any
 	var ln int
 
 	var valErr error
@@ -465,7 +466,7 @@ var _ = Describe("Merge", func() {
 					})
 
 					Context("with other metadata", func() {
-						metaValues2 := map[string]interface{}{"foo": 1, "bar": 2}
+						metaValues2 := map[string]any{"foo": 1, "bar": 2}
 
 						BeforeEach(func() {
 							err.(*ErrorResponse).Meta = nil
@@ -482,13 +483,11 @@ var _ = Describe("Merge", func() {
 				})
 
 				Context("with target metadata", func() {
-					metaValues := map[string]interface{}{"baz": 3, "qux": 4}
+					metaValues := map[string]any{"baz": 3, "qux": 4}
 
 					BeforeEach(func() {
-						mv := make(map[string]interface{}, len(metaValues))
-						for k, v := range metaValues {
-							mv[k] = v
-						}
+						mv := make(map[string]any, len(metaValues))
+						maps.Copy(mv, metaValues)
 						err.(*ErrorResponse).Meta = mv
 					})
 
@@ -506,7 +505,7 @@ var _ = Describe("Merge", func() {
 					})
 
 					Context("with other metadata", func() {
-						metaValues2 := map[string]interface{}{"foo": 1, "bar": 2}
+						metaValues2 := map[string]any{"foo": 1, "bar": 2}
 
 						BeforeEach(func() {
 							mErr2.Meta = metaValues2
@@ -538,14 +537,12 @@ var _ = Describe("Merge", func() {
 				Context("with metadata with a common key", func() {
 					const commonKey = "foo"
 
-					var metaValues = map[string]interface{}{commonKey: "bar", "foo2": 44}
-					var metaValues2 = map[string]interface{}{commonKey: 43, "baz": 42}
+					var metaValues = map[string]any{commonKey: "bar", "foo2": 44}
+					var metaValues2 = map[string]any{commonKey: 43, "baz": 42}
 
 					BeforeEach(func() {
-						mv := make(map[string]interface{}, len(metaValues))
-						for k, v := range metaValues {
-							mv[k] = v
-						}
+						mv := make(map[string]any, len(metaValues))
+						maps.Copy(mv, metaValues)
 						err.(*ErrorResponse).Meta = mv
 						mErr2.Meta = metaValues2
 					})

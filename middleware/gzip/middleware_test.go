@@ -38,7 +38,7 @@ var _ = Describe("Gzip", func() {
 	var ctx context.Context
 	var req *http.Request
 	var rw *TestResponseWriter
-	payload := map[string]interface{}{"payload": 42}
+	payload := map[string]any{"payload": 42}
 
 	BeforeEach(func() {
 		var err error
@@ -147,7 +147,7 @@ var _ = Describe("Gzip", func() {
 			resp := goa.ContextResponse(ctx)
 			resp.WriteHeader(http.StatusOK)
 			// Use multiple writes.
-			for i := 0; i < 128; i++ {
+			for range 128 {
 				_, err := resp.Write([]byte("gzip me!"))
 				if err != nil {
 					return err
@@ -176,7 +176,7 @@ var _ = Describe("Gzip", func() {
 			resp.Header().Add("Accept-Ranges", "some value")
 			resp.WriteHeader(http.StatusOK)
 			// Use multiple writes.
-			for i := 0; i < 128; i++ {
+			for range 128 {
 				_, err := resp.Write([]byte("gzip me!"))
 				if err != nil {
 					return err
@@ -205,7 +205,7 @@ var _ = Describe("Gzip", func() {
 			resp := goa.ContextResponse(ctx)
 			resp.WriteHeader(http.StatusConflict)
 			// Use multiple writes.
-			for i := 0; i < 128; i++ {
+			for range 128 {
 				_, err := resp.Write([]byte("gzip me!"))
 				if err != nil {
 					return err
@@ -234,7 +234,7 @@ var _ = Describe("NotGzip", func() {
 	var ctx context.Context
 	var req *http.Request
 	var rw *TestResponseWriter
-	payload := map[string]interface{}{"payload": 42}
+	payload := map[string]any{"payload": 42}
 
 	BeforeEach(func() {
 		var err error
@@ -456,7 +456,7 @@ var _ = Describe("NotGzip", func() {
 	var ctx context.Context
 	var req *http.Request
 	var rw *TestResponseWriter
-	payload := map[string]interface{}{"payload": 42}
+	payload := map[string]any{"payload": 42}
 
 	BeforeEach(func() {
 		var err error

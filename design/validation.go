@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"sort"
 	"strings"
 
@@ -412,13 +413,7 @@ func (a *ActionDefinition) ValidateParams() *dslengine.ValidationErrors {
 	for _, r := range a.Routes {
 		rwcs := ExtractWildcards(r.FullPath())
 		for _, rwc := range rwcs {
-			found := false
-			for _, wc := range wcs {
-				if rwc == wc {
-					found = true
-					break
-				}
-			}
+			found := slices.Contains(wcs, rwc)
 			if !found {
 				wcs = append(wcs, rwc)
 			}
@@ -471,11 +466,8 @@ func (a *AttributeDefinition) Validate(ctx string, parent dslengine.Definition) 
 	// Issue 388 (https://github.com/shogo82148/goa-v1/issues/388) will address this for other types.
 	if a.Type.IsPrimitive() && a.DefaultValue != nil && a.Validation != nil && a.Validation.Values != nil {
 		var found bool
-		for _, e := range a.Validation.Values {
-			if e == a.DefaultValue {
-				found = true
-				break
-			}
+		if slices.Contains(a.Validation.Values, a.DefaultValue) {
+			found = true
 		}
 		if !found {
 			verr.Add(parent, "%sdefault value %#v is not one of the accepted values: %#v", ctx, a.DefaultValue, a.Validation.Values)

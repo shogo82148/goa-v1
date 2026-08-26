@@ -17,11 +17,11 @@ type (
 	// action names.
 	LogAdapter interface {
 		// Info logs an informational message.
-		Info(msg string, keyvals ...interface{})
+		Info(msg string, keyvals ...any)
 		// Error logs an error.
-		Error(msg string, keyvals ...interface{})
+		Error(msg string, keyvals ...any)
 		// New appends to the logger context and returns the updated logger logger.
-		New(keyvals ...interface{}) LogAdapter
+		New(keyvals ...any) LogAdapter
 	}
 
 	// WarningLogAdapter is the logger interface used by goa to log informational, warning and error messages.
@@ -31,7 +31,7 @@ type (
 	WarningLogAdapter interface {
 		LogAdapter
 		// Warn logs a warning message.
-		Warn(mgs string, keyvals ...interface{})
+		Warn(mgs string, keyvals ...any)
 	}
 
 	// ContextLogAdapter is the logger interface used by goa to log informational, warning and error messages.
@@ -40,17 +40,17 @@ type (
 		WarningLogAdapter
 
 		// InfoContext is same as Info but with context.
-		InfoContext(ctx context.Context, msg string, keyvals ...interface{})
+		InfoContext(ctx context.Context, msg string, keyvals ...any)
 		// ErrorContext is same as Error but with context.
-		ErrorContext(ctx context.Context, msg string, keyvals ...interface{})
+		ErrorContext(ctx context.Context, msg string, keyvals ...any)
 		// WarnContext is same as Warn but with context.
-		WarnContext(ctx context.Context, mgs string, keyvals ...interface{})
+		WarnContext(ctx context.Context, mgs string, keyvals ...any)
 	}
 
 	// adapter is the stdlib logger adapter.
 	adapter struct {
 		*log.Logger
-		keyvals []interface{}
+		keyvals []any
 	}
 )
 
@@ -68,19 +68,19 @@ func Logger(ctx context.Context) *log.Logger {
 	return nil
 }
 
-func (a *adapter) Info(msg string, keyvals ...interface{}) {
+func (a *adapter) Info(msg string, keyvals ...any) {
 	a.logit(msg, keyvals, "INFO")
 }
 
-func (a *adapter) Warn(msg string, keyvals ...interface{}) {
+func (a *adapter) Warn(msg string, keyvals ...any) {
 	a.logit(msg, keyvals, "WARN")
 }
 
-func (a *adapter) Error(msg string, keyvals ...interface{}) {
+func (a *adapter) Error(msg string, keyvals ...any) {
 	a.logit(msg, keyvals, "EROR")
 }
 
-func (a *adapter) New(keyvals ...interface{}) LogAdapter {
+func (a *adapter) New(keyvals ...any) LogAdapter {
 	if len(keyvals) == 0 {
 		return a
 	}
@@ -96,7 +96,7 @@ func (a *adapter) New(keyvals ...interface{}) LogAdapter {
 	}
 }
 
-func (a *adapter) logit(msg string, keyvals []interface{}, level string) {
+func (a *adapter) logit(msg string, keyvals []any, level string) {
 	n := (len(keyvals) + 1) / 2
 	if len(keyvals)%2 != 0 {
 		keyvals = append(keyvals, ErrMissingLogValue)
@@ -105,7 +105,7 @@ func (a *adapter) logit(msg string, keyvals []interface{}, level string) {
 	n += m
 	var fm bytes.Buffer
 	fm.WriteString(fmt.Sprintf("[%s] %s", level, msg))
-	vals := make([]interface{}, n)
+	vals := make([]any, n)
 	offset := len(a.keyvals)
 	for i := 0; i < offset; i += 2 {
 		k := a.keyvals[i]
@@ -125,7 +125,7 @@ func (a *adapter) logit(msg string, keyvals []interface{}, level string) {
 // LogInfo extracts the logger from the given context and calls Info on it.
 // This is intended for code that needs portable logging such as the internal code of goa and
 // middleware. User code should use the log adapters instead.
-func LogInfo(ctx context.Context, msg string, keyvals ...interface{}) {
+func LogInfo(ctx context.Context, msg string, keyvals ...any) {
 	// This block should be synced with Service.LogInfo
 	if l := ctx.Value(logKey); l != nil {
 		switch logger := l.(type) {
@@ -140,7 +140,7 @@ func LogInfo(ctx context.Context, msg string, keyvals ...interface{}) {
 // LogWarn extracts the logger from the given context and calls Warn on it.
 // This is intended for code that needs portable logging such as the internal code of goa and
 // middleware. User code should use the log adapters instead.
-func LogWarn(ctx context.Context, msg string, keyvals ...interface{}) {
+func LogWarn(ctx context.Context, msg string, keyvals ...any) {
 	if l := ctx.Value(logKey); l != nil {
 		switch logger := l.(type) {
 		case ContextLogAdapter:
@@ -156,7 +156,7 @@ func LogWarn(ctx context.Context, msg string, keyvals ...interface{}) {
 // LogError extracts the logger from the given context and calls Error on it.
 // This is intended for code that needs portable logging such as the internal code of goa and
 // middleware. User code should use the log adapters instead.
-func LogError(ctx context.Context, msg string, keyvals ...interface{}) {
+func LogError(ctx context.Context, msg string, keyvals ...any) {
 	// this block should be synced with Service.LogError
 	if l := ctx.Value(logKey); l != nil {
 		switch logger := l.(type) {

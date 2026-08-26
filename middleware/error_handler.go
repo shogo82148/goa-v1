@@ -23,7 +23,7 @@ func ErrorHandler(service *goa.Service, verbose bool) goa.Middleware {
 			}
 			cause := cause(e)
 			status := http.StatusInternalServerError
-			var respBody interface{}
+			var respBody any
 			if err, ok := cause.(goa.ServiceError); ok {
 				status = err.ResponseStatus()
 				respBody = err
@@ -60,9 +60,9 @@ func ErrorHandler(service *goa.Service, verbose bool) goa.Middleware {
 // An error value has a cause if it implements the following
 // interface:
 //
-//     type causer interface {
-//            Cause() error
-//     }
+//	type causer interface {
+//	       Cause() error
+//	}
 //
 // If the error does not implement Cause, the original error will
 // be returned. If the error is nil, nil will be returned without further
