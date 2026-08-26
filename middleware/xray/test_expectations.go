@@ -1,6 +1,7 @@
 package xray
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -94,5 +95,5 @@ func (c *TestClientExpectation) MetExpectations() error {
 	if msg == "" {
 		return nil
 	}
-	return fmt.Errorf(msg)
+	return errors.New(msg)
 }
