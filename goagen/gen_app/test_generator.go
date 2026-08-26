@@ -249,7 +249,7 @@ func pathParams(action *design.ActionDefinition, route *design.RouteDefinition) 
 	return paramFromNames(action, route.Params())
 }
 
-// headers builds the template data structure needed to proprely render the code
+// headers builds the template data structure needed to properly render the code
 // for setting the headers for the given action.
 func headers(action *design.ActionDefinition, headers *design.AttributeDefinition) []*ObjectType {
 	hds := &design.AttributeDefinition{
