@@ -2,6 +2,7 @@ package codegen
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"go/ast"
 	"go/build"
@@ -240,7 +241,7 @@ func (p *Package) Compile(bin string) (string, error) {
 	out, err := c.CombinedOutput()
 	if err != nil {
 		if len(out) > 0 {
-			return "", fmt.Errorf(string(out))
+			return "", errors.New(string(out))
 		}
 		return "", fmt.Errorf("failed to compile %s: %s", bin, err)
 	}
