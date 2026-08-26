@@ -82,7 +82,7 @@ func Resource(name string, dsl func()) *design.ResourceDefinition {
 // properties of attributes listed in action payloads and params. So if a media type defines an
 // attribute "name" with associated validations then simply calling Attribute("name") inside a
 // request Payload or Param defines the attribute with the same type and validations.
-func DefaultMedia(val interface{}, viewName ...string) {
+func DefaultMedia(val any, viewName ...string) {
 	if r, ok := resourceDefinition(); ok {
 		if m, ok := val.(*design.MediaTypeDefinition); ok {
 			if m.UserTypeDefinition == nil {

@@ -21,7 +21,7 @@ const (
 )
 
 // Counter used to create new request ids.
-var reqID int64
+var reqID atomic.Int64
 
 // Common prefix to all newly created request ids for this process.
 var reqPrefix string
@@ -56,7 +56,7 @@ func RequestIDWithHeaderAndLengthLimit(requestIDHeader string, lengthLimit int) 
 		return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 			id := req.Header.Get(requestIDHeader)
 			if id == "" {
-				id = fmt.Sprintf("%s-%d", reqPrefix, atomic.AddInt64(&reqID, 1))
+				id = fmt.Sprintf("%s-%d", reqPrefix, reqID.Add(1))
 			} else if lengthLimit >= 0 && len(id) > lengthLimit {
 				id = id[:lengthLimit]
 			}

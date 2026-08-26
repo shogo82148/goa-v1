@@ -25,32 +25,32 @@ func newContext(service *goa.Service, rw http.ResponseWriter, req *http.Request,
 
 type logEntry struct {
 	Msg  string
-	Data []interface{}
+	Data []any
 }
 
 type testLogger struct {
-	Context      []interface{}
+	Context      []any
 	InfoEntries  []logEntry
 	WarnEntries  []logEntry
 	ErrorEntries []logEntry
 }
 
-func (t *testLogger) Info(msg string, data ...interface{}) {
+func (t *testLogger) Info(msg string, data ...any) {
 	e := logEntry{msg, append(t.Context, data...)}
 	t.InfoEntries = append(t.InfoEntries, e)
 }
 
-func (t *testLogger) Warn(msg string, data ...interface{}) {
+func (t *testLogger) Warn(msg string, data ...any) {
 	e := logEntry{msg, append(t.Context, data...)}
 	t.WarnEntries = append(t.InfoEntries, e)
 }
 
-func (t *testLogger) Error(msg string, data ...interface{}) {
+func (t *testLogger) Error(msg string, data ...any) {
 	e := logEntry{msg, append(t.Context, data...)}
 	t.ErrorEntries = append(t.ErrorEntries, e)
 }
 
-func (t *testLogger) New(data ...interface{}) goa.LogAdapter {
+func (t *testLogger) New(data ...any) goa.LogAdapter {
 	t.Context = append(t.Context, data...)
 	return t
 }

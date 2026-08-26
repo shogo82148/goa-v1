@@ -20,7 +20,7 @@ var _ = Describe("LogRequest", func() {
 	var logger *testLogger
 	var service *goa.Service
 
-	payload := map[string]interface{}{"payload": 42}
+	payload := map[string]any{"payload": 42}
 
 	BeforeEach(func() {
 		logger = new(testLogger)

@@ -3,6 +3,8 @@ package genswagger
 import (
 	"encoding/json"
 	"fmt"
+	"maps"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -23,7 +25,7 @@ type (
 		Schemes             []string                         `json:"schemes,omitempty"`
 		Consumes            []string                         `json:"consumes,omitempty"`
 		Produces            []string                         `json:"produces,omitempty"`
-		Paths               map[string]interface{}           `json:"paths"`
+		Paths               map[string]any                   `json:"paths"`
 		Definitions         map[string]*genschema.JSONSchema `json:"definitions,omitempty"`
 		Parameters          map[string]*Parameter            `json:"parameters,omitempty"`
 		Responses           map[string]*Response             `json:"responses,omitempty"`
@@ -41,7 +43,7 @@ type (
 		Contact        *design.ContactDefinition `json:"contact,omitempty"`
 		License        *design.LicenseDefinition `json:"license,omitempty"`
 		Version        string                    `json:"version"`
-		Extensions     map[string]interface{}    `json:"-"`
+		Extensions     map[string]any            `json:"-"`
 	}
 
 	// Path holds the relative paths to the individual endpoints.
@@ -66,7 +68,7 @@ type (
 		// described under this path.
 		Parameters []*Parameter `json:"parameters,omitempty"`
 		// Extensions defines the swagger extensions.
-		Extensions map[string]interface{} `json:"-"`
+		Extensions map[string]any `json:"-"`
 	}
 
 	// Operation describes a single API operation on a path.
@@ -100,7 +102,7 @@ type (
 		// Secury is a declaration of which security schemes are applied for this operation.
 		Security []map[string][]string `json:"security,omitempty"`
 		// Extensions defines the swagger extensions.
-		Extensions map[string]interface{} `json:"-"`
+		Extensions map[string]any `json:"-"`
 	}
 
 	// Parameter describes a single operation parameter.
@@ -137,21 +139,21 @@ type (
 		// Default declares the value of the parameter that the server will use if none is
 		// provided, for example a "count" to control the number of results per page might
 		// default to 100 if not supplied by the client in the request.
-		Default          interface{}   `json:"default,omitempty"`
-		Maximum          *float64      `json:"maximum,omitempty"`
-		ExclusiveMaximum bool          `json:"exclusiveMaximum,omitempty"`
-		Minimum          *float64      `json:"minimum,omitempty"`
-		ExclusiveMinimum bool          `json:"exclusiveMinimum,omitempty"`
-		MaxLength        *int          `json:"maxLength,omitempty"`
-		MinLength        *int          `json:"minLength,omitempty"`
-		Pattern          string        `json:"pattern,omitempty"`
-		MaxItems         *int          `json:"maxItems,omitempty"`
-		MinItems         *int          `json:"minItems,omitempty"`
-		UniqueItems      bool          `json:"uniqueItems,omitempty"`
-		Enum             []interface{} `json:"enum,omitempty"`
-		MultipleOf       float64       `json:"multipleOf,omitempty"`
+		Default          any      `json:"default,omitempty"`
+		Maximum          *float64 `json:"maximum,omitempty"`
+		ExclusiveMaximum bool     `json:"exclusiveMaximum,omitempty"`
+		Minimum          *float64 `json:"minimum,omitempty"`
+		ExclusiveMinimum bool     `json:"exclusiveMinimum,omitempty"`
+		MaxLength        *int     `json:"maxLength,omitempty"`
+		MinLength        *int     `json:"minLength,omitempty"`
+		Pattern          string   `json:"pattern,omitempty"`
+		MaxItems         *int     `json:"maxItems,omitempty"`
+		MinItems         *int     `json:"minItems,omitempty"`
+		UniqueItems      bool     `json:"uniqueItems,omitempty"`
+		Enum             []any    `json:"enum,omitempty"`
+		MultipleOf       float64  `json:"multipleOf,omitempty"`
 		// Extensions defines the swagger extensions.
-		Extensions map[string]interface{} `json:"-"`
+		Extensions map[string]any `json:"-"`
 	}
 
 	// Response describes an operation response.
@@ -169,7 +171,7 @@ type (
 		// This field is exclusive with the other fields of Response.
 		Ref string `json:"$ref,omitempty"`
 		// Extensions defines the swagger extensions.
-		Extensions map[string]interface{} `json:"-"`
+		Extensions map[string]any `json:"-"`
 	}
 
 	// Header represents a header parameter.
@@ -189,19 +191,19 @@ type (
 		// Default declares the value of the parameter that the server will use if none is
 		// provided, for example a "count" to control the number of results per page might
 		// default to 100 if not supplied by the client in the request.
-		Default          interface{}   `json:"default,omitempty"`
-		Maximum          *float64      `json:"maximum,omitempty"`
-		ExclusiveMaximum bool          `json:"exclusiveMaximum,omitempty"`
-		Minimum          *float64      `json:"minimum,omitempty"`
-		ExclusiveMinimum bool          `json:"exclusiveMinimum,omitempty"`
-		MaxLength        *int          `json:"maxLength,omitempty"`
-		MinLength        *int          `json:"minLength,omitempty"`
-		Pattern          string        `json:"pattern,omitempty"`
-		MaxItems         *int          `json:"maxItems,omitempty"`
-		MinItems         *int          `json:"minItems,omitempty"`
-		UniqueItems      bool          `json:"uniqueItems,omitempty"`
-		Enum             []interface{} `json:"enum,omitempty"`
-		MultipleOf       float64       `json:"multipleOf,omitempty"`
+		Default          any      `json:"default,omitempty"`
+		Maximum          *float64 `json:"maximum,omitempty"`
+		ExclusiveMaximum bool     `json:"exclusiveMaximum,omitempty"`
+		Minimum          *float64 `json:"minimum,omitempty"`
+		ExclusiveMinimum bool     `json:"exclusiveMinimum,omitempty"`
+		MaxLength        *int     `json:"maxLength,omitempty"`
+		MinLength        *int     `json:"minLength,omitempty"`
+		Pattern          string   `json:"pattern,omitempty"`
+		MaxItems         *int     `json:"maxItems,omitempty"`
+		MinItems         *int     `json:"minItems,omitempty"`
+		UniqueItems      bool     `json:"uniqueItems,omitempty"`
+		Enum             []any    `json:"enum,omitempty"`
+		MultipleOf       float64  `json:"multipleOf,omitempty"`
 	}
 
 	// SecurityDefinition allows the definition of a security scheme that can be used by the
@@ -228,7 +230,7 @@ type (
 		// Scopes list the  available scopes for the OAuth2 security scheme.
 		Scopes map[string]string `json:"scopes,omitempty"`
 		// Extensions defines the swagger extensions.
-		Extensions map[string]interface{} `json:"-"`
+		Extensions map[string]any `json:"-"`
 	}
 
 	// Scope corresponds to an available scope for an OAuth2 security scheme.
@@ -261,19 +263,19 @@ type (
 		// Default declares the value of the parameter that the server will use if none is
 		// provided, for example a "count" to control the number of results per page might
 		// default to 100 if not supplied by the client in the request.
-		Default          interface{}   `json:"default,omitempty"`
-		Maximum          *float64      `json:"maximum,omitempty"`
-		ExclusiveMaximum bool          `json:"exclusiveMaximum,omitempty"`
-		Minimum          *float64      `json:"minimum,omitempty"`
-		ExclusiveMinimum bool          `json:"exclusiveMinimum,omitempty"`
-		MaxLength        *int          `json:"maxLength,omitempty"`
-		MinLength        *int          `json:"minLength,omitempty"`
-		Pattern          string        `json:"pattern,omitempty"`
-		MaxItems         *int          `json:"maxItems,omitempty"`
-		MinItems         *int          `json:"minItems,omitempty"`
-		UniqueItems      bool          `json:"uniqueItems,omitempty"`
-		Enum             []interface{} `json:"enum,omitempty"`
-		MultipleOf       float64       `json:"multipleOf,omitempty"`
+		Default          any      `json:"default,omitempty"`
+		Maximum          *float64 `json:"maximum,omitempty"`
+		ExclusiveMaximum bool     `json:"exclusiveMaximum,omitempty"`
+		Minimum          *float64 `json:"minimum,omitempty"`
+		ExclusiveMinimum bool     `json:"exclusiveMinimum,omitempty"`
+		MaxLength        *int     `json:"maxLength,omitempty"`
+		MinLength        *int     `json:"minLength,omitempty"`
+		Pattern          string   `json:"pattern,omitempty"`
+		MaxItems         *int     `json:"maxItems,omitempty"`
+		MinItems         *int     `json:"minItems,omitempty"`
+		UniqueItems      bool     `json:"uniqueItems,omitempty"`
+		Enum             []any    `json:"enum,omitempty"`
+		MultipleOf       float64  `json:"multipleOf,omitempty"`
 	}
 
 	// Tag allows adding meta data to a single tag that is used by the Operation Object. It is
@@ -287,7 +289,7 @@ type (
 		// ExternalDocs is additional external documentation for this tag.
 		ExternalDocs *ExternalDocs `json:"externalDocs,omitempty"`
 		// Extensions defines the swagger extensions.
-		Extensions map[string]interface{} `json:"-"`
+		Extensions map[string]any `json:"-"`
 	}
 
 	// These types are used in marshalJSON() to avoid recursive call of json.Marshal().
@@ -300,7 +302,7 @@ type (
 	_Tag                Tag
 )
 
-func marshalJSON(v interface{}, extensions map[string]interface{}) ([]byte, error) {
+func marshalJSON(v any, extensions map[string]any) ([]byte, error) {
 	marshaled, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
@@ -308,14 +310,12 @@ func marshalJSON(v interface{}, extensions map[string]interface{}) ([]byte, erro
 	if len(extensions) == 0 {
 		return marshaled, nil
 	}
-	var unmarshaled interface{}
+	var unmarshaled any
 	if err := json.Unmarshal(marshaled, &unmarshaled); err != nil {
 		return nil, err
 	}
-	asserted := unmarshaled.(map[string]interface{})
-	for k, v := range extensions {
-		asserted[k] = v
-	}
+	asserted := unmarshaled.(map[string]any)
+	maps.Copy(asserted, extensions)
 	merged, err := json.Marshal(asserted)
 	if err != nil {
 		return nil, err
@@ -400,7 +400,7 @@ func New(api *design.APIDefinition) (*Swagger, error) {
 		},
 		Host:                api.Host,
 		BasePath:            basePath,
-		Paths:               make(map[string]interface{}),
+		Paths:               make(map[string]any),
 		Schemes:             api.Schemes,
 		Consumes:            consumes,
 		Produces:            produces,
@@ -425,9 +425,7 @@ func New(api *design.APIDefinition) (*Swagger, error) {
 		return nil, err
 	}
 	err = api.IterateResources(func(res *design.ResourceDefinition) error {
-		for k, v := range extensionsFromDefinition(res.Metadata) {
-			s.Paths[k] = v
-		}
+		maps.Copy(s.Paths, extensionsFromDefinition(res.Metadata))
 		err := res.IterateFileServers(func(fs *design.FileServerDefinition) error {
 			if !mustGenerate(fs.Metadata) {
 				return nil
@@ -624,8 +622,8 @@ func summaryFromDefinition(name string, metadata dslengine.MetadataDefinition) s
 	return name
 }
 
-func extensionsFromDefinition(mdata dslengine.MetadataDefinition) map[string]interface{} {
-	extensions := make(map[string]interface{})
+func extensionsFromDefinition(mdata dslengine.MetadataDefinition) map[string]any {
+	extensions := make(map[string]any)
 	for key, value := range mdata {
 		chunks := strings.Split(key, ":")
 		if len(chunks) != 3 {
@@ -638,7 +636,7 @@ func extensionsFromDefinition(mdata dslengine.MetadataDefinition) map[string]int
 			continue
 		}
 		val := value[0]
-		ival := interface{}(val)
+		ival := any(val)
 		if err := json.Unmarshal([]byte(val), &ival); err != nil {
 			extensions[chunks[2]] = val
 			continue
@@ -665,12 +663,9 @@ func paramsFromDefinition(params *design.AttributeDefinition, path string) ([]*P
 	obj.IterateAttributes(func(n string, at *design.AttributeDefinition) error {
 		in := "query"
 		required := params.IsRequired(n)
-		for _, w := range wildcards {
-			if n == w {
-				in = "path"
-				required = true
-				break
-			}
+		if slices.Contains(wildcards, n) {
+			in = "path"
+			required = true
 		}
 		param := paramFor(at, n, in, required)
 		res[i] = param
@@ -730,16 +725,16 @@ func paramFor(at *design.AttributeDefinition, name, in string, required bool) *P
 }
 
 // toStringMap converts map[interface{}]interface{} to a map[string]interface{} when possible.
-func toStringMap(val interface{}) interface{} {
+func toStringMap(val any) any {
 	switch actual := val.(type) {
-	case map[interface{}]interface{}:
-		m := make(map[string]interface{})
+	case map[any]any:
+		m := make(map[string]any)
 		for k, v := range actual {
 			m[toString(k)] = toStringMap(v)
 		}
 		return m
-	case []interface{}:
-		mapSlice := make([]interface{}, len(actual))
+	case []any:
+		mapSlice := make([]any, len(actual))
 		for i, e := range actual {
 			mapSlice[i] = toStringMap(e)
 		}
@@ -750,7 +745,7 @@ func toStringMap(val interface{}) interface{} {
 }
 
 // toString returns the string representation of the given type.
-func toString(val interface{}) string {
+func toString(val any) string {
 	switch actual := val.(type) {
 	case string:
 		return actual
@@ -892,7 +887,7 @@ func buildPathFromFileServer(s *Swagger, api *design.APIDefinition, fs *design.F
 	if key == "" {
 		key = "/"
 	}
-	var path interface{}
+	var path any
 	var ok bool
 	if path, ok = s.Paths[key]; !ok {
 		path = new(Path)
@@ -1002,13 +997,7 @@ func computeProduces(operation *Operation, s *Swagger, action *design.ActionDefi
 	})
 	subset := true
 	for p := range produces {
-		found := false
-		for _, p2 := range s.Produces {
-			if p == p2 {
-				found = true
-				break
-			}
-		}
+		found := slices.Contains(s.Produces, p)
 		if !found {
 			subset = false
 			break
@@ -1044,7 +1033,7 @@ func computePaths(operation *Operation, s *Swagger, route *design.RouteDefinitio
 	if key == "" {
 		key = "/"
 	}
-	var path interface{}
+	var path any
 	var ok bool
 	if path, ok = s.Paths[key]; !ok {
 		path = new(Path)
@@ -1107,7 +1096,7 @@ func docsFromDefinition(docs *design.DocsDefinition) *ExternalDocs {
 	}
 }
 
-func initEnumValidation(def interface{}, values []interface{}) {
+func initEnumValidation(def any, values []any) {
 	switch actual := def.(type) {
 	case *Parameter:
 		actual.Enum = values
@@ -1118,7 +1107,7 @@ func initEnumValidation(def interface{}, values []interface{}) {
 	}
 }
 
-func initFormatValidation(def interface{}, format string) {
+func initFormatValidation(def any, format string) {
 	switch actual := def.(type) {
 	case *Parameter:
 		actual.Format = format
@@ -1129,7 +1118,7 @@ func initFormatValidation(def interface{}, format string) {
 	}
 }
 
-func initPatternValidation(def interface{}, pattern string) {
+func initPatternValidation(def any, pattern string) {
 	switch actual := def.(type) {
 	case *Parameter:
 		actual.Pattern = pattern
@@ -1140,7 +1129,7 @@ func initPatternValidation(def interface{}, pattern string) {
 	}
 }
 
-func initMinimumValidation(def interface{}, min *float64) {
+func initMinimumValidation(def any, min *float64) {
 	switch actual := def.(type) {
 	case *Parameter:
 		actual.Minimum = min
@@ -1154,7 +1143,7 @@ func initMinimumValidation(def interface{}, min *float64) {
 	}
 }
 
-func initMaximumValidation(def interface{}, max *float64) {
+func initMaximumValidation(def any, max *float64) {
 	switch actual := def.(type) {
 	case *Parameter:
 		actual.Maximum = max
@@ -1168,7 +1157,7 @@ func initMaximumValidation(def interface{}, max *float64) {
 	}
 }
 
-func initMinLengthValidation(def interface{}, isArray bool, min *int) {
+func initMinLengthValidation(def any, isArray bool, min *int) {
 	switch actual := def.(type) {
 	case *Parameter:
 		if isArray {
@@ -1183,7 +1172,7 @@ func initMinLengthValidation(def interface{}, isArray bool, min *int) {
 	}
 }
 
-func initMaxLengthValidation(def interface{}, isArray bool, max *int) {
+func initMaxLengthValidation(def any, isArray bool, max *int) {
 	switch actual := def.(type) {
 	case *Parameter:
 		if isArray {
@@ -1198,7 +1187,7 @@ func initMaxLengthValidation(def interface{}, isArray bool, max *int) {
 	}
 }
 
-func initValidations(attr *design.AttributeDefinition, def interface{}) {
+func initValidations(attr *design.AttributeDefinition, def any) {
 	val := attr.Validation
 	if val == nil {
 		return

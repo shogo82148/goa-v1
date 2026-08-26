@@ -449,22 +449,22 @@ var _ = Describe("Example", func() {
 			attr := mt.Type.ToObject()["test1"]
 			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string]int{}))
 			attr = mt.Type.ToObject()["test2"]
-			Expect(attr.Example).Should(BeAssignableToTypeOf(map[interface{}]string{}))
+			Expect(attr.Example).Should(BeAssignableToTypeOf(map[any]string{}))
 			attr = mt.Type.ToObject()["test3"]
-			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string]interface{}{}))
+			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string]any{}))
 			attr = mt.Type.ToObject()["test4"]
-			Expect(attr.Example).Should(BeAssignableToTypeOf(map[interface{}]interface{}{}))
+			Expect(attr.Example).Should(BeAssignableToTypeOf(map[any]any{}))
 
 			attr = mt.Type.ToObject()["test-with-user-type-1"]
-			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string]map[string]interface{}{}))
-			for _, utattr := range attr.Example.(map[string]map[string]interface{}) {
+			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string]map[string]any{}))
+			for _, utattr := range attr.Example.(map[string]map[string]any) {
 				Expect(utattr).Should(HaveKey("test1"))
 				Expect(utattr).Should(HaveKey("test2"))
 				Expect(utattr["test1"]).Should(BeAssignableToTypeOf(int(0)))
 			}
 			attr = mt.Type.ToObject()["test-with-user-type-2"]
-			Expect(attr.Example).Should(BeAssignableToTypeOf(map[interface{}]map[string]interface{}{}))
-			for _, utattr := range attr.Example.(map[interface{}]map[string]interface{}) {
+			Expect(attr.Example).Should(BeAssignableToTypeOf(map[any]map[string]any{}))
+			for _, utattr := range attr.Example.(map[any]map[string]any) {
 				Expect(utattr).Should(HaveKey("test1"))
 				Expect(utattr).Should(HaveKey("test2"))
 				Expect(utattr["test1"]).Should(BeAssignableToTypeOf(int(0)))
@@ -473,15 +473,15 @@ var _ = Describe("Example", func() {
 			attr = mt.Type.ToObject()["test-with-array-1"]
 			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string][]int{}))
 			attr = mt.Type.ToObject()["test-with-array-2"]
-			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string][]interface{}{}))
+			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string][]any{}))
 			attr = mt.Type.ToObject()["test-with-array-3"]
-			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string][]map[string]interface{}{}))
+			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string][]map[string]any{}))
 			attr = mt.Type.ToObject()["test-with-array-4"]
-			Expect(attr.Example).Should(BeAssignableToTypeOf(map[interface{}][]string{}))
+			Expect(attr.Example).Should(BeAssignableToTypeOf(map[any][]string{}))
 			attr = mt.Type.ToObject()["test-with-array-5"]
-			Expect(attr.Example).Should(BeAssignableToTypeOf(map[interface{}][]interface{}{}))
+			Expect(attr.Example).Should(BeAssignableToTypeOf(map[any][]any{}))
 			attr = mt.Type.ToObject()["test-with-array-6"]
-			Expect(attr.Example).Should(BeAssignableToTypeOf(map[interface{}][]map[string]interface{}{}))
+			Expect(attr.Example).Should(BeAssignableToTypeOf(map[any][]map[string]any{}))
 
 			attr = mt.Type.ToObject()["test-with-example-1"]
 			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string]bool{}))
@@ -524,8 +524,8 @@ var _ = Describe("Example", func() {
 			Ω(mt).ShouldNot(BeNil())
 			attr := mt.Type.ToObject()["foo"]
 			Ω(attr.Example).ShouldNot(BeNil())
-			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string]interface{}{}))
-			attrChild := attr.Example.(map[string]interface{})
+			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string]any{}))
+			attrChild := attr.Example.(map[string]any)
 			Ω(attrChild).Should(HaveKey("bar"))
 			Ω(attrChild["others"]).Should(BeNumerically(">=", 1))
 			Ω(attrChild["others"]).Should(BeNumerically("<=", 2))
@@ -535,8 +535,8 @@ var _ = Describe("Example", func() {
 			Ω(mt2).ShouldNot(BeNil())
 			attr = mt2.Type.ToObject()["bar"]
 			Ω(attr.Example).ShouldNot(BeNil())
-			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string]interface{}{}))
-			attrChild = attr.Example.(map[string]interface{})
+			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string]any{}))
+			attrChild = attr.Example.(map[string]any)
 			Ω(attrChild).Should(HaveKey("foo"))
 			Ω(attrChild["others"]).Should(Equal(3))
 			attr = mt2.Type.ToObject()["others"]
@@ -605,8 +605,8 @@ var _ = Describe("Example", func() {
 			Ω(attr.Example).Should(BeNumerically(">=", 1))
 			attr = pmt.Type.ToObject()["test4"]
 			Ω(attr.Example).ShouldNot(BeNil())
-			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string]interface{}{}))
-			attrChild := attr.Example.(map[string]interface{})
+			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string]any{}))
+			attrChild := attr.Example.(map[string]any)
 			Ω(attrChild["test1"]).Should(Equal("test1"))
 			Ω(attrChild["test2"]).Should(Equal("-"))
 			Ω(attrChild["test3"]).Should(BeNumerically(">=", 1))
@@ -673,10 +673,10 @@ var _ = Describe("Example", func() {
 			Ω(attr.Example).Should(Equal("1"))
 			attr = pmt.Type.ToObject()["test4"]
 			Ω(attr.Example).ShouldNot(BeNil())
-			Expect(attr.Example).Should(BeAssignableToTypeOf([]map[string]interface{}{}))
-			attrChildren := attr.Example.([]map[string]interface{})
+			Expect(attr.Example).Should(BeAssignableToTypeOf([]map[string]any{}))
+			attrChildren := attr.Example.([]map[string]any)
 			Ω(attrChildren).Should(HaveLen(1))
-			Ω(attrChildren[0]).Should(BeAssignableToTypeOf(map[string]interface{}{}))
+			Ω(attrChildren[0]).Should(BeAssignableToTypeOf(map[string]any{}))
 			Ω(attrChildren[0]["test1"]).Should(Equal("test1"))
 			Ω(attrChildren[0]["test2"]).Should(Equal("-"))
 			Ω(attrChildren[0]["test3"]).Should(BeNumerically(">=", 1))
@@ -723,7 +723,7 @@ var _ = Describe("Example", func() {
 			Ω(attr.Example).Should(Equal("-"))
 			attr = pmt.Type.ToObject()["test3"]
 			Ω(attr.Example).ShouldNot(BeNil())
-			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string]interface{}{}))
+			Expect(attr.Example).Should(BeAssignableToTypeOf(map[string]any{}))
 		})
 
 		It("produces media type examples from the linked media type collection without custom examples", func() {
@@ -766,8 +766,8 @@ var _ = Describe("Example", func() {
 			Ω(attr.Example).Should(Equal("-"))
 			attr = pmt.Type.ToObject()["test3"]
 			Ω(attr.Example).ShouldNot(BeNil())
-			Expect(attr.Example).Should(BeAssignableToTypeOf([]map[string]interface{}{}))
-			attrChildren := attr.Example.([]map[string]interface{})
+			Expect(attr.Example).Should(BeAssignableToTypeOf([]map[string]any{}))
+			attrChildren := attr.Example.([]map[string]any)
 			Ω(len(attrChildren)).Should(BeNumerically(">=", 1))
 		})
 
@@ -809,14 +809,14 @@ var _ = Describe("Example", func() {
 
 			Ω(mt).ShouldNot(BeNil())
 			attr := mt.Type.ToObject()["test1"]
-			Ω(attr.Example).Should(BeAssignableToTypeOf([]interface{}{}))
-			Ω(len(attr.Example.([]interface{}))).Should(BeNumerically("<=", 10))
+			Ω(attr.Example).Should(BeAssignableToTypeOf([]any{}))
+			Ω(len(attr.Example.([]any))).Should(BeNumerically("<=", 10))
 			attr = mt.Type.ToObject()["test2"]
-			Ω(attr.Example).Should(BeAssignableToTypeOf([]interface{}{}))
-			Ω(attr.Example.([]interface{})).Should(HaveLen(10))
+			Ω(attr.Example).Should(BeAssignableToTypeOf([]any{}))
+			Ω(attr.Example.([]any)).Should(HaveLen(10))
 			attr = mt.Type.ToObject()["test3"]
-			Ω(attr.Example).Should(BeAssignableToTypeOf([]interface{}{}))
-			Ω(attr.Example.([]interface{})).Should(HaveLen(10))
+			Ω(attr.Example).Should(BeAssignableToTypeOf([]any{}))
+			Ω(attr.Example.([]any)).Should(HaveLen(10))
 			attr = mt.Type.ToObject()["test-failure1"]
 			Ω(attr.Example).Should(BeNil())
 		})

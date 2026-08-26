@@ -1,5 +1,7 @@
 package dslengine
 
+import "slices"
+
 import "fmt"
 
 type (
@@ -81,7 +83,7 @@ type (
 	ValidationDefinition struct {
 		// Values represents an enum validation as described at
 		// http://json-schema.org/latest/json-schema-validation.html#anchor76.
-		Values []interface{}
+		Values []any
 		// Format represents a format validation as described at
 		// http://json-schema.org/latest/json-schema-validation.html#anchor104.
 		Format string
@@ -153,13 +155,7 @@ func (v *ValidationDefinition) Merge(other *ValidationDefinition) {
 // AddRequired merges the required fields from other into v
 func (v *ValidationDefinition) AddRequired(required []string) {
 	for _, r := range required {
-		found := false
-		for _, rr := range v.Required {
-			if r == rr {
-				found = true
-				break
-			}
-		}
+		found := slices.Contains(v.Required, r)
 		if !found {
 			v.Required = append(v.Required, r)
 		}

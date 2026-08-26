@@ -36,7 +36,7 @@ var _ = Describe("validation code generation", func() {
 				BeforeEach(func() {
 					attType = design.Integer
 					validation = &dslengine.ValidationDefinition{
-						Values: []interface{}{1, 2, 3},
+						Values: []any{1, 2, 3},
 					}
 				})
 
@@ -221,7 +221,7 @@ var _ = Describe("validation code generation", func() {
 
 				BeforeEach(func() {
 					enumVal := &dslengine.ValidationDefinition{
-						Values: []interface{}{1, 2, 3},
+						Values: []any{1, 2, 3},
 					}
 					ccatt = &design.AttributeDefinition{
 						Type:       design.Integer,

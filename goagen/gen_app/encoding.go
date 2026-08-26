@@ -2,6 +2,7 @@ package genapp
 
 import (
 	"fmt"
+	"slices"
 	"sort"
 
 	"github.com/shogo82148/goa-v1/design"
@@ -145,13 +146,7 @@ func serialize(byfn map[string][]*design.EncodingDefinition, first string) []*de
 			encs = encs[1:]
 			for _, enc := range encs {
 				for _, m := range enc.MIMETypes {
-					found := false
-					for _, rm := range res[i].MIMETypes {
-						if m == rm {
-							found = true
-							break
-						}
-					}
+					found := slices.Contains(res[i].MIMETypes, m)
 					if !found {
 						res[i].MIMETypes = append(res[i].MIMETypes, m)
 					}

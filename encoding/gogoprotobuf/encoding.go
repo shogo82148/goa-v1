@@ -40,7 +40,7 @@ func NewDecoder(r io.Reader) goa.Decoder {
 }
 
 // Decode unmarshals an io.Reader into proto.Message v
-func (dec *ProtoDecoder) Decode(v interface{}) error {
+func (dec *ProtoDecoder) Decode(v any) error {
 	msg, ok := v.(proto.Message)
 	if !ok {
 		return errors.New("Cannot decode into struct that doesn't implement proto.Message")
@@ -73,7 +73,7 @@ func NewEncoder(w io.Writer) goa.Encoder {
 }
 
 // Encode marshals a proto.Message and writes it to an io.Writer
-func (enc *ProtoEncoder) Encode(v interface{}) error {
+func (enc *ProtoEncoder) Encode(v any) error {
 	msg, ok := v.(proto.Message)
 	if !ok {
 		return errors.New("Cannot encode struct that doesn't implement proto.Message")

@@ -15,11 +15,11 @@ import (
 // HandleResponse logs the response details and exits the process with a status computed from
 // the response status code. The mapping of response status code to exit status is as follows:
 //
-//    401: 1
-//    402 to 500 (other than 403 and 404): 2
-//    403: 3
-//    404: 4
-//    500+: 5
+//	401: 1
+//	402 to 500 (other than 403 and 404): 2
+//	403: 3
+//	404: 4
+//	500+: 5
 func HandleResponse(c *Client, resp *http.Response, pretty bool) {
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
@@ -37,7 +37,7 @@ func HandleResponse(c *Client, resp *http.Response, pretty bool) {
 	} else if !c.Dump && len(body) > 0 {
 		var out string
 		if pretty {
-			var jbody interface{}
+			var jbody any
 			err = json.Unmarshal(body, &jbody)
 			if err != nil {
 				out = string(body)

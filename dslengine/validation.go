@@ -30,7 +30,7 @@ func (verr *ValidationErrors) Merge(err *ValidationErrors) {
 }
 
 // Add adds a validation error to the target.
-func (verr *ValidationErrors) Add(def Definition, format string, vals ...interface{}) {
+func (verr *ValidationErrors) Add(def Definition, format string, vals ...any) {
 	verr.AddError(def, fmt.Errorf(format, vals...))
 }
 

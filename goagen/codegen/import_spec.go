@@ -2,6 +2,7 @@ package codegen
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/shogo82148/goa-v1/design"
 )
@@ -34,10 +35,8 @@ func (s *ImportSpec) Code() string {
 // struct:field:type Metadata tags.
 func AttributeImports(att *design.AttributeDefinition, imports []*ImportSpec, seen []*design.AttributeDefinition) []*ImportSpec {
 
-	for _, a := range seen {
-		if att == a {
-			return imports
-		}
+	if slices.Contains(seen, att) {
+		return imports
 	}
 	seen = append(seen, att)
 

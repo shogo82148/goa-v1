@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -79,7 +80,7 @@ import (
 //	Attribute(name string, dsl func())	// dataType is String or Object (if DSL defines child attributes)
 //
 //	Attribute(name string)			// dataType is String
-func Attribute(name string, args ...interface{}) {
+func Attribute(name string, args ...any) {
 	var parent *design.AttributeDefinition
 
 	switch def := dslengine.CurrentDefinition().(type) {
@@ -172,7 +173,7 @@ func attributeFromRef(name string, ref design.DataType) *design.AttributeDefinit
 	return nil
 }
 
-func parseAttributeArgs(baseAttr *design.AttributeDefinition, args ...interface{}) (design.DataType, string, func()) {
+func parseAttributeArgs(baseAttr *design.AttributeDefinition, args ...any) (design.DataType, string, func()) {
 	var (
 		dataType    design.DataType
 		description string
@@ -248,7 +249,7 @@ func parseAttributeArgs(baseAttr *design.AttributeDefinition, args ...interface{
 // Within an APIKeySecurity or JWTSecurity definition, Header
 // defines that an implementation must check the given header to get
 // the API Key.  In this case, no `args` parameter is necessary.
-func Header(name string, args ...interface{}) {
+func Header(name string, args ...any) {
 	if _, ok := dslengine.CurrentDefinition().(*design.SecuritySchemeDefinition); ok {
 		if len(args) != 0 {
 			dslengine.ReportError("do not specify args")
@@ -264,14 +265,14 @@ func Header(name string, args ...interface{}) {
 // Member can be used in: Payload
 //
 // Member is an alias of Attribute.
-func Member(name string, args ...interface{}) {
+func Member(name string, args ...any) {
 	Attribute(name, args...)
 }
 
 // Param can be used in: Params
 //
 // Param is an alias of Attribute.
-func Param(name string, args ...interface{}) {
+func Param(name string, args ...any) {
 	Attribute(name, args...)
 }
 
@@ -279,7 +280,7 @@ func Param(name string, args ...interface{}) {
 //
 // Default sets the default value for an attribute.
 // See http://json-schema.org/latest/json-schema-validation.html#anchor10.
-func Default(def interface{}) {
+func Default(def any) {
 	if a, ok := attributeDefinition(); ok {
 		if a.Type != nil {
 			if !a.Type.CanHaveDefault() {
@@ -311,7 +312,7 @@ func Default(def interface{}) {
 //	})
 //
 // If you do not want an auto-generated example for an attribute, add NoExample() to it.
-func Example(exp interface{}) {
+func Example(exp any) {
 	if a, ok := attributeDefinition(); ok {
 		if pass := a.SetExample(exp); !pass {
 			dslengine.ReportError("example value %#v is incompatible with attribute of type %s",
@@ -348,7 +349,7 @@ func NoExample() {
 //
 // Enum adds a "enum" validation to the attribute.
 // See http://json-schema.org/latest/json-schema-validation.html#anchor76.
-func Enum(val ...interface{}) {
+func Enum(val ...any) {
 	if a, ok := attributeDefinition(); ok {
 		ok := true
 		for i, v := range val {
@@ -429,13 +430,7 @@ func Format(f string) {
 		if a.Type != nil && a.Type.Kind() != design.StringKind {
 			incompatibleAttributeType("format", a.Type.Name(), "a string")
 		} else {
-			supported := false
-			for _, s := range SupportedValidationFormats {
-				if s == f {
-					supported = true
-					break
-				}
-			}
+			supported := slices.Contains(SupportedValidationFormats, f)
 			if !supported {
 				dslengine.ReportError("unsupported format %#v, supported formats are: %s",
 					f, strings.Join(SupportedValidationFormats, ", "))
@@ -475,7 +470,7 @@ func Pattern(p string) {
 //
 // Minimum adds a "minimum" validation to the attribute.
 // See http://json-schema.org/latest/json-schema-validation.html#anchor21.
-func Minimum(val interface{}) {
+func Minimum(val any) {
 	if a, ok := attributeDefinition(); ok {
 		if a.Type != nil && a.Type.Kind() != design.IntegerKind && a.Type.Kind() != design.NumberKind {
 			incompatibleAttributeType("minimum", a.Type.Name(), "an integer or a number")
@@ -483,7 +478,7 @@ func Minimum(val interface{}) {
 			var f float64
 			switch v := val.(type) {
 			case float32, float64, int, int8, int16, int32, int64, uint8, uint16, uint32, uint64:
-				f = reflect.ValueOf(v).Convert(reflect.TypeOf(float64(0.0))).Float()
+				f = reflect.ValueOf(v).Convert(reflect.TypeFor[float64]()).Float()
 			case string:
 				var err error
 				f, err = strconv.ParseFloat(v, 64)
@@ -507,7 +502,7 @@ func Minimum(val interface{}) {
 //
 // Maximum adds a "maximum" validation to the attribute.
 // See http://json-schema.org/latest/json-schema-validation.html#anchor17.
-func Maximum(val interface{}) {
+func Maximum(val any) {
 	if a, ok := attributeDefinition(); ok {
 		if a.Type != nil && a.Type.Kind() != design.IntegerKind && a.Type.Kind() != design.NumberKind {
 			incompatibleAttributeType("maximum", a.Type.Name(), "an integer or a number")
@@ -515,7 +510,7 @@ func Maximum(val interface{}) {
 			var f float64
 			switch v := val.(type) {
 			case float32, float64, int, int8, int16, int32, int64, uint8, uint16, uint32, uint64:
-				f = reflect.ValueOf(v).Convert(reflect.TypeOf(float64(0.0))).Float()
+				f = reflect.ValueOf(v).Convert(reflect.TypeFor[float64]()).Float()
 			case string:
 				var err error
 				f, err = strconv.ParseFloat(v, 64)

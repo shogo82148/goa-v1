@@ -38,7 +38,7 @@ var _ = Describe("LogAdapter", func() {
 	Context("with a valid Log", func() {
 		var logger goa.LogAdapter
 		const msg = "message"
-		data := []interface{}{"data", "foo"}
+		data := []any{"data", "foo"}
 
 		var out bytes.Buffer
 

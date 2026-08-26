@@ -11,7 +11,7 @@ import (
 )
 
 var _ = Describe("NewMiddleware", func() {
-	var input interface{}
+	var input any
 	var middleware goa.Middleware
 	var mErr error
 

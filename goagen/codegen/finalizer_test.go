@@ -83,7 +83,7 @@ var _ = Describe("Struct finalize code generation", func() {
 								Type: design.String,
 							},
 						},
-						DefaultValue: []interface{}{"bar", "baz"},
+						DefaultValue: []any{"bar", "baz"},
 					},
 				},
 			}
@@ -108,7 +108,7 @@ var _ = Describe("Struct finalize code generation", func() {
 								Type: design.String,
 							},
 						},
-						DefaultValue: map[interface{}]interface{}{"bar": "baz"},
+						DefaultValue: map[any]any{"bar": "baz"},
 					},
 				},
 			}
@@ -120,7 +120,7 @@ var _ = Describe("Struct finalize code generation", func() {
 					Type: &design.Object{
 						"foo": &design.AttributeDefinition{
 							Type:         design.DateTime,
-							DefaultValue: interface{}("1978-06-30T10:00:00+09:00"),
+							DefaultValue: any("1978-06-30T10:00:00+09:00"),
 						},
 					},
 				}

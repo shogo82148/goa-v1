@@ -16,37 +16,37 @@ import (
 // status code, media type and headers overriding what the default response or response template
 // specifies:
 //
-//        Response(OK, "text/plain")              // OK response template accepts one argument:
-//                                                // the media type identifier
+//	Response(OK, "text/plain")              // OK response template accepts one argument:
+//	                                        // the media type identifier
 //
-//        Response(OK, BottleMedia)               // or a media type defined in the design
+//	Response(OK, BottleMedia)               // or a media type defined in the design
 //
-//        Response(OK, "application/vnd.bottle")  // optionally referred to by identifier
+//	Response(OK, "application/vnd.bottle")  // optionally referred to by identifier
 //
-//        Response(OK, func() {
-//                Media("application/vnd.bottle") // Alternatively media type is set with Media
-//        })
+//	Response(OK, func() {
+//	        Media("application/vnd.bottle") // Alternatively media type is set with Media
+//	})
 //
-//        Response(OK, BottleMedia, func() {
-//                Headers(func() {                // Headers list the response HTTP headers
-//                        Header("X-Request-Id")  // Header syntax is identical to Attribute's
-//                })
-//        })
+//	Response(OK, BottleMedia, func() {
+//	        Headers(func() {                // Headers list the response HTTP headers
+//	                Header("X-Request-Id")  // Header syntax is identical to Attribute's
+//	        })
+//	})
 //
-//        Response(OK, BottleMedia, func() {
-//                Status(201)                     // Set response status (overrides template's)
-//        })
+//	Response(OK, BottleMedia, func() {
+//	        Status(201)                     // Set response status (overrides template's)
+//	})
 //
-//        Response("MyResponse", func() {         // Define custom response (using no template)
-//                Description("This is my response")
-//                Media(BottleMedia)
-//                Headers(func() {
-//                        Header("X-Request-Id", func() {
-//                                Pattern("[a-f0-9]+")
-//                        })
-//                })
-//                Status(200)
-//        })
+//	Response("MyResponse", func() {         // Define custom response (using no template)
+//	        Description("This is my response")
+//	        Media(BottleMedia)
+//	        Headers(func() {
+//	                Header("X-Request-Id", func() {
+//	                        Pattern("[a-f0-9]+")
+//	                })
+//	        })
+//	        Status(200)
+//	})
 //
 // goa defines a default response template for all the HTTP status code. The default template simply sets
 // the status code. So if an action can return NotFound for example all it has to do is specify
@@ -70,7 +70,7 @@ import (
 // media type defined in the API DSL. In this latter case goa uses the media type definition to
 // generate helper response methods. These methods know how to render the views defined on the media
 // type and run the validations defined in the media type during rendering.
-func Response(name string, paramsAndDSL ...interface{}) {
+func Response(name string, paramsAndDSL ...any) {
 	switch def := dslengine.CurrentDefinition().(type) {
 	case *design.ActionDefinition:
 		if def.Responses == nil {
@@ -118,7 +118,7 @@ func Status(status int) {
 	}
 }
 
-func executeResponseDSL(name string, paramsAndDSL ...interface{}) *design.ResponseDefinition {
+func executeResponseDSL(name string, paramsAndDSL ...any) *design.ResponseDefinition {
 	var params []string
 	var dsl func()
 	var ok bool

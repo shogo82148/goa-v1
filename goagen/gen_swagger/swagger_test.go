@@ -122,7 +122,7 @@ var _ = Describe("New", func() {
 				Host:     host,
 				BasePath: basePath,
 				Schemes:  []string{"https"},
-				Paths:    make(map[string]interface{}),
+				Paths:    make(map[string]any),
 				Consumes: []string{"application/json", "application/xml", "application/gob", "application/x-gob"},
 				Produces: []string{"application/json", "application/xml", "application/gob", "application/x-gob"},
 				Tags: []*genswagger.Tag{{Name: tag, Description: "Tag desc.", ExternalDocs: &genswagger.ExternalDocs{
@@ -208,7 +208,7 @@ var _ = Describe("New", func() {
 				Ω(swagger.Parameters[queryParam].Name).Should(Equal(queryParam))
 				Ω(swagger.Parameters[queryParam].In).Should(Equal("query"))
 				Ω(swagger.Parameters[queryParam].Type).Should(Equal("string"))
-				Ω(swagger.Parameters[queryParam].Enum).Should(Equal([]interface{}{enum1, enum2}))
+				Ω(swagger.Parameters[queryParam].Enum).Should(Equal([]any{enum1, enum2}))
 			})
 
 			It("serializes into valid swagger JSON", func() { validateSwagger(swagger) })
@@ -703,7 +703,7 @@ var _ = Describe("New", func() {
 				Ω(ps[7]).Should(Equal(&genswagger.Parameter{In: "header", Name: "OptionalRegex", Type: "string",
 					Pattern: `[a-z]\d+`, MinLength: &minLength1, MaxLength: &maxLength10}))
 				Ω(ps[8]).Should(Equal(&genswagger.Parameter{In: "header", Name: "OptionalResourceHeaderWithEnum", Type: "string",
-					Enum: []interface{}{"a", "b"}}))
+					Enum: []any{"a", "b"}}))
 				Ω(ps[9]).Should(Equal(&genswagger.Parameter{In: "header", Name: "OverrideOptionalHeader", Type: "string", Required: true}))
 				Ω(ps[10]).Should(Equal(&genswagger.Parameter{In: "header", Name: "OverrideRequiredHeader", Type: "string", Required: true}))
 				Ω(ps[11]).Should(Equal(&genswagger.Parameter{In: "header", Name: "X-Account", Type: "integer", Required: true}))
@@ -743,7 +743,7 @@ var _ = Describe("New", func() {
 			const stringExtension = "foo"
 
 			var (
-				unmarshaled map[string]interface{}
+				unmarshaled map[string]any
 				_           = json.Unmarshal([]byte(extension), &unmarshaled)
 			)
 
@@ -788,8 +788,8 @@ var _ = Describe("New", func() {
 			It("should set the swagger object tags", func() {
 				Ω(swagger.Tags).Should(HaveLen(2))
 				tags := []*genswagger.Tag{
-					{Name: gat, Description: "", ExternalDocs: nil, Extensions: map[string]interface{}{"x-api": unmarshaled}},
-					{Name: tag, Description: "Tag desc.", ExternalDocs: &genswagger.ExternalDocs{URL: "http://example.com/tag", Description: "Huge docs"}, Extensions: map[string]interface{}{"x-api": unmarshaled}},
+					{Name: gat, Description: "", ExternalDocs: nil, Extensions: map[string]any{"x-api": unmarshaled}},
+					{Name: tag, Description: "Tag desc.", ExternalDocs: &genswagger.ExternalDocs{URL: "http://example.com/tag", Description: "Huge docs"}, Extensions: map[string]any{"x-api": unmarshaled}},
 				}
 				Ω(swagger.Tags).Should(Equal(tags))
 			})
@@ -814,7 +814,7 @@ var _ = Describe("New", func() {
 				Ω(p.Put.Responses["204"].Extensions).Should(HaveLen(1))
 				Ω(p.Put.Responses["204"].Extensions["x-response"]).Should(Equal(unmarshaled))
 				Ω(swagger.Paths["x-resource"]).ShouldNot(BeNil())
-				rs := swagger.Paths["x-resource"].(map[string]interface{})
+				rs := swagger.Paths["x-resource"].(map[string]any)
 				Ω(rs).Should(Equal(unmarshaled))
 				rs2 := swagger.Paths["x-string"].(string)
 				Ω(rs2).Should(Equal(stringExtension))

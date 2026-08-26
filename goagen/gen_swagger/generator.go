@@ -14,7 +14,7 @@ import (
 	"github.com/shogo82148/goa-v1/goagen/utils"
 )
 
-//NewGenerator returns an initialized instance of a JavaScript Client Generator
+// NewGenerator returns an initialized instance of a JavaScript Client Generator
 func NewGenerator(options ...Option) *Generator {
 	g := &Generator{}
 
@@ -120,7 +120,7 @@ func (g *Generator) Cleanup() {
 }
 
 func jsonToYAML(rawJSON []byte) ([]byte, error) {
-	var yamlSource interface{}
+	var yamlSource any
 	if err := yaml.Unmarshal(rawJSON, &yamlSource); err != nil {
 		return nil, err
 	}

@@ -65,7 +65,7 @@ func (f *Finalizer) recurse(root, att *design.AttributeDefinition, target string
 	if o := att.Type.ToObject(); o != nil {
 		o.IterateAttributes(func(n string, catt *design.AttributeDefinition) error {
 			if att.HasDefaultValue(n) {
-				data := map[string]interface{}{
+				data := map[string]any{
 					"target":     target,
 					"field":      n,
 					"catt":       catt,
@@ -96,7 +96,7 @@ func (f *Finalizer) recurse(root, att *design.AttributeDefinition, target string
 			return nil
 		})
 	} else if a := att.Type.ToArray(); a != nil {
-		data := map[string]interface{}{
+		data := map[string]any{
 			"elemType": a.ElemType,
 			"target":   target,
 			"depth":    1,
@@ -110,7 +110,7 @@ func (f *Finalizer) recurse(root, att *design.AttributeDefinition, target string
 
 // PrintVal prints the given value corresponding to the given data type.
 // The value is already checked for the compatibility with the data type.
-func PrintVal(t design.DataType, val interface{}) string {
+func PrintVal(t design.DataType, val any) string {
 	switch {
 	case t.IsPrimitive():
 		// For primitive types, simply print the value
@@ -129,7 +129,7 @@ func PrintVal(t design.DataType, val interface{}) string {
 	case t.IsHash():
 		// The input is a hash
 		h := t.ToHash()
-		hval := val.(map[interface{}]interface{})
+		hval := val.(map[any]any)
 		if len(hval) == 0 {
 			return fmt.Sprintf("%s{}", GoTypeName(t, nil, 0, false))
 		}
@@ -144,7 +144,7 @@ func PrintVal(t design.DataType, val interface{}) string {
 	case t.IsArray():
 		// Input is an array
 		a := t.ToArray()
-		aval := val.([]interface{})
+		aval := val.([]any)
 		if len(aval) == 0 {
 			return fmt.Sprintf("%s{}", GoTypeName(t, nil, 0, false))
 		}

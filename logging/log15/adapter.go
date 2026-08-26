@@ -3,13 +3,13 @@ Package goalog15 contains an adapter that makes it possible to configure goa so 
 as logger backend.
 Usage:
 
-    logger := log15.New()
-    // ... Initialize logger handler using log15 package
-    service.WithLogger(goalog15.New(logger))
-    // ... Proceed with configuring and starting the goa service
+	logger := log15.New()
+	// ... Initialize logger handler using log15 package
+	service.WithLogger(goalog15.New(logger))
+	// ... Proceed with configuring and starting the goa service
 
-    // In handlers:
-    goalog15.Logger(ctx).Info("foo")
+	// In handlers:
+	goalog15.Logger(ctx).Info("foo")
 */
 package goalog15
 
@@ -40,21 +40,21 @@ func Logger(ctx context.Context) log15.Logger {
 }
 
 // Info logs informational messages using log15.
-func (a *adapter) Info(msg string, data ...interface{}) {
+func (a *adapter) Info(msg string, data ...any) {
 	a.Logger.Info(msg, data...)
 }
 
 // Warn logs informational messages using log15.
-func (a *adapter) Warn(msg string, data ...interface{}) {
+func (a *adapter) Warn(msg string, data ...any) {
 	a.Logger.Warn(msg, data...)
 }
 
 // Error logs error messages using log15.
-func (a *adapter) Error(msg string, data ...interface{}) {
+func (a *adapter) Error(msg string, data ...any) {
 	a.Logger.Error(msg, data...)
 }
 
 // New creates a new logger given a context.
-func (a *adapter) New(data ...interface{}) goa.LogAdapter {
+func (a *adapter) New(data ...any) goa.LogAdapter {
 	return &adapter{Logger: a.Logger.New(data...)}
 }

@@ -89,7 +89,7 @@ var _ = Describe("BuildEncoders", func() {
 			Ω(jd.PackagePath).Should(Equal(packagePath))
 			Ω(jd.PackageName).Should(Equal("design"))
 			Ω(jd.Function).Should(Equal("NewDecoder"))
-			Ω(jd.MIMETypes).Should(ConsistOf(interface{}(mimeTypes[0]), interface{}(mimeTypes[1])))
+			Ω(jd.MIMETypes).Should(ConsistOf(any(mimeTypes[0]), any(mimeTypes[1])))
 		})
 	})
 

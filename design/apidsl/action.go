@@ -13,7 +13,7 @@ import (
 // function. The path may end with a wildcard that matches the rest of the URL (e.g. *filepath). If
 // it does the matching path is appended to filename to form the full file path, so:
 //
-// 	Files("/index.html", "/www/data/index.html")
+//	Files("/index.html", "/www/data/index.html")
 //
 // Returns the content of the file "/www/data/index.html" when requests are sent to "/index.html"
 // and:
@@ -25,16 +25,16 @@ import (
 // The file path may be specified as a relative path to the current path of the process.
 // Files support setting a description, security scheme and doc links via additional DSL:
 //
-//    Files("/index.html", "/www/data/index.html", func() {
-//        Description("Serve home page")
-//        Docs(func() {
-//            Description("Download docs")
-//            URL("http//cellarapi.com/docs/actions/download")
-//        })
-//        Security("oauth2", func() {
-//            Scope("api:read")
-//        })
-//    })
+//	Files("/index.html", "/www/data/index.html", func() {
+//	    Description("Serve home page")
+//	    Docs(func() {
+//	        Description("Download docs")
+//	        URL("http//cellarapi.com/docs/actions/download")
+//	    })
+//	    Security("oauth2", func() {
+//	        Scope("api:read")
+//	    })
+//	})
 func Files(path, filename string, dsls ...func()) {
 	if r, ok := resourceDefinition(); ok {
 		server := &design.FileServerDefinition{
@@ -60,38 +60,39 @@ func Files(path, filename string, dsls ...func()) {
 // identical name in the resource default media type). Action definitions also describe all the
 // possible responses including the HTTP status, headers and body. Here is an example showing all
 // the possible sub-definitions:
-//    Action("Update", func() {
-//        Description("Update account")
-//        Docs(func() {
-//            Description("Update docs")
-//            URL("http//cellarapi.com/docs/actions/update")
-//        })
-//        Scheme("http")
-//        Routing(
-//            PUT("/:id"),                     // Action path is relative to parent resource base path
-//            PUT("//orgs/:org/accounts/:id"), // The // prefix indicates an absolute path
-//        )
-//        Params(func() {                      // Params describe the action parameters
-//            Param("org", String)             // Parameters may correspond to path wildcards
-//            Param("id", Integer)
-//            Param("sort", func() {           // or URL query string values.
-//                Enum("asc", "desc")
-//            })
-//        })
-//        Security("oauth2", func() {          // Security sets the security scheme used to secure requests
-//            Scope("api:read")
-//            Scope("api:write")
-//        })
-//        Headers(func() {                     // Headers describe relevant action headers
-//            Header("Authorization", String)
-//            Header("X-Account", Integer)
-//            Required("Authorization", "X-Account")
-//        })
-//        Payload(UpdatePayload)                // Payload describes the HTTP request body
-//        // OptionalPayload(UpdatePayload)     // OptionalPayload defines an HTTP request body which may be omitted
-//        Response(NoContent)                   // Each possible HTTP response is described via Response
-//        Response(NotFound)
-//    })
+//
+//	Action("Update", func() {
+//	    Description("Update account")
+//	    Docs(func() {
+//	        Description("Update docs")
+//	        URL("http//cellarapi.com/docs/actions/update")
+//	    })
+//	    Scheme("http")
+//	    Routing(
+//	        PUT("/:id"),                     // Action path is relative to parent resource base path
+//	        PUT("//orgs/:org/accounts/:id"), // The // prefix indicates an absolute path
+//	    )
+//	    Params(func() {                      // Params describe the action parameters
+//	        Param("org", String)             // Parameters may correspond to path wildcards
+//	        Param("id", Integer)
+//	        Param("sort", func() {           // or URL query string values.
+//	            Enum("asc", "desc")
+//	        })
+//	    })
+//	    Security("oauth2", func() {          // Security sets the security scheme used to secure requests
+//	        Scope("api:read")
+//	        Scope("api:write")
+//	    })
+//	    Headers(func() {                     // Headers describe relevant action headers
+//	        Header("Authorization", String)
+//	        Header("X-Account", Integer)
+//	        Required("Authorization", "X-Account")
+//	    })
+//	    Payload(UpdatePayload)                // Payload describes the HTTP request body
+//	    // OptionalPayload(UpdatePayload)     // OptionalPayload defines an HTTP request body which may be omitted
+//	    Response(NoContent)                   // Each possible HTTP response is described via Response
+//	    Response(NotFound)
+//	})
 func Action(name string, dsl func()) {
 	if r, ok := resourceDefinition(); ok {
 		if r.Actions == nil {
@@ -238,7 +239,7 @@ func PATCH(path string, dsl ...func()) *design.RouteDefinition {
 //
 // Headers can be used inside Action to define the action request headers, Response to define the
 // response headers or Resource to define common request headers to all the resource actions.
-func Headers(params ...interface{}) {
+func Headers(params ...any) {
 	if len(params) == 0 {
 		dslengine.ReportError("missing parameter")
 		return
@@ -310,29 +311,28 @@ func Headers(params ...interface{}) {
 // If Params is used inside Resource or Action then the resource base media type attributes provide
 // default values for all the properties of params with identical names. For example:
 //
-//     var BottleMedia = MediaType("application/vnd.bottle", func() {
-//         Attributes(func() {
-//             Attribute("name", String, "The name of the bottle", func() {
-//                 MinLength(2) // BottleMedia has one attribute "name" which is a
-//                              // string that must be at least 2 characters long.
-//             })
-//         })
-//         View("default", func() {
-//             Attribute("name")
-//         })
-//     })
+//	var BottleMedia = MediaType("application/vnd.bottle", func() {
+//	    Attributes(func() {
+//	        Attribute("name", String, "The name of the bottle", func() {
+//	            MinLength(2) // BottleMedia has one attribute "name" which is a
+//	                         // string that must be at least 2 characters long.
+//	        })
+//	    })
+//	    View("default", func() {
+//	        Attribute("name")
+//	    })
+//	})
 //
-//     var _ = Resource("Bottle", func() {
-//         DefaultMedia(BottleMedia) // Resource "Bottle" uses "BottleMedia" as default
-//         Action("show", func() {   // media type.
-//             Routing(GET("/:name"))
-//             Params(func() {
-//                 Param("name") // inherits type, description and validation from
-//                               // BottleMedia "name" attribute
-//             })
-//         })
-//     })
-//
+//	var _ = Resource("Bottle", func() {
+//	    DefaultMedia(BottleMedia) // Resource "Bottle" uses "BottleMedia" as default
+//	    Action("show", func() {   // media type.
+//	        Routing(GET("/:name"))
+//	        Params(func() {
+//	            Param("name") // inherits type, description and validation from
+//	                          // BottleMedia "name" attribute
+//	        })
+//	    })
+//	})
 func Params(dsl func()) {
 	var params *design.AttributeDefinition
 	switch def := dslengine.CurrentDefinition().(type) {
@@ -374,8 +374,7 @@ func Params(dsl func()) {
 //	Payload(BottlePayload, func() {	// Request payload is described by merging the inline
 //		Required("Name")	// definition into the BottlePayload type.
 //	})
-//
-func Payload(p interface{}, dsls ...func()) {
+func Payload(p any, dsls ...func()) {
 	payload(false, p, dsls...)
 }
 
@@ -384,12 +383,11 @@ func Payload(p interface{}, dsls ...func()) {
 // required. Example:
 //
 //	OptionalPayload(BottlePayload)		// Request payload is described by the BottlePayload type and is optional
-//
-func OptionalPayload(p interface{}, dsls ...func()) {
+func OptionalPayload(p any, dsls ...func()) {
 	payload(true, p, dsls...)
 }
 
-func payload(isOptional bool, p interface{}, dsls ...func()) {
+func payload(isOptional bool, p any, dsls ...func()) {
 	if len(dsls) > 1 {
 		dslengine.ReportError("too many arguments given to Payload")
 		return
@@ -453,7 +451,6 @@ func payload(isOptional bool, p interface{}, dsls ...func()) {
 // MultipartForm implements the action multipart form DSL. An action multipart form indicates that
 // the HTTP request body should be encoded using multipart form data as described in
 // https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.2.
-//
 func MultipartForm() {
 	if a, ok := actionDefinition(); ok {
 		a.PayloadMultipart = true

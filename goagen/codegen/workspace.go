@@ -262,7 +262,7 @@ func SourceFileFor(path string) (*SourceFile, error) {
 
 // WriteHeader writes the generic generated code header.
 func (f *SourceFile) WriteHeader(title, pack string, imports []*ImportSpec) error {
-	ctx := map[string]interface{}{
+	ctx := map[string]any{
 		"Title":       title,
 		"ToolVersion": version.String(),
 		"Pkg":         pack,
@@ -329,7 +329,7 @@ func (f *SourceFile) Abs() string {
 }
 
 // ExecuteTemplate executes the template and writes the output to the file.
-func (f *SourceFile) ExecuteTemplate(name, source string, funcMap template.FuncMap, data interface{}) error {
+func (f *SourceFile) ExecuteTemplate(name, source string, funcMap template.FuncMap, data any) error {
 	tmpl, err := template.New(name).Funcs(DefaultFuncMap).Funcs(funcMap).Parse(source)
 	if err != nil {
 		panic(err) // bug

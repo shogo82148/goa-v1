@@ -58,9 +58,9 @@ type (
 		// 429. Client code may set it to true manually as well.
 		Throttle bool `json:"throttle,omitempty"`
 		// Annotations contains the segment annotations.
-		Annotations map[string]interface{} `json:"annotations,omitempty"`
+		Annotations map[string]any `json:"annotations,omitempty"`
 		// Metadata contains the segment metadata.
-		Metadata map[string]map[string]interface{} `json:"metadata,omitempty"`
+		Metadata map[string]map[string]any `json:"metadata,omitempty"`
 		// Parent is the subsegment parent, it's nil for the root
 		// segment.
 		Parent *Segment `json:"-"`
@@ -268,11 +268,10 @@ func (s *Segment) NewSubsegment(name string) *Segment {
 // Capture creates a subsegment to record the execution of the given function.
 // Usage:
 //
-//     s := xray.ContextSegment(ctx)
-//     s.Capture("slow-func", func() {
-//         // ... some long executing code
-//     })
-//
+//	s := xray.ContextSegment(ctx)
+//	s.Capture("slow-func", func() {
+//	    // ... some long executing code
+//	})
 func (s *Segment) Capture(name string, fn func()) {
 	sub := s.NewSubsegment(name)
 	sub.SubmitInProgress()
@@ -297,12 +296,12 @@ func (s *Segment) AddBoolAnnotation(key string, value bool) {
 
 // addAnnotation adds a key-value pair that can be queried by AWS X-Ray.
 // AWS X-Ray only supports annotations of type string, integer or boolean.
-func (s *Segment) addAnnotation(key string, value interface{}) {
+func (s *Segment) addAnnotation(key string, value any) {
 	s.Lock()
 	defer s.Unlock()
 
 	if s.Annotations == nil {
-		s.Annotations = make(map[string]interface{})
+		s.Annotations = make(map[string]any)
 	}
 	s.Annotations[key] = value
 }
@@ -325,13 +324,13 @@ func (s *Segment) AddBoolMetadata(key string, value bool) {
 
 // addMetadata adds a key-value pair that can be queried by AWS X-Ray.
 // AWS X-Ray only supports annotations of type string, integer or boolean.
-func (s *Segment) addMetadata(key string, value interface{}) {
+func (s *Segment) addMetadata(key string, value any) {
 	s.Lock()
 	defer s.Unlock()
 
 	if s.Metadata == nil {
-		s.Metadata = make(map[string]map[string]interface{})
-		s.Metadata["default"] = make(map[string]interface{})
+		s.Metadata = make(map[string]map[string]any)
+		s.Metadata["default"] = make(map[string]any)
 	}
 	s.Metadata["default"][key] = value
 }
@@ -352,7 +351,8 @@ func (s *Segment) Close() {
 // This method should be called no more than once for this segment. Subsequent calls will have no effect.
 //
 // See the `in_progress` docs:
-//     https://docs.aws.amazon.com/xray/latest/devguide/xray-api-segmentdocuments.html#api-segmentdocuments-fields
+//
+//	https://docs.aws.amazon.com/xray/latest/devguide/xray-api-segmentdocuments.html#api-segmentdocuments-fields
 func (s *Segment) SubmitInProgress() {
 	s.Lock()
 	defer s.Unlock()
@@ -398,10 +398,7 @@ func exceptionData(e error) *Exception {
 	}
 	if s, ok := e.(stackTracer); ok {
 		st := s.StackTrace()
-		ln := len(st)
-		if ln > maxStackDepth {
-			ln = maxStackDepth
-		}
+		ln := min(len(st), maxStackDepth)
 		frames := make([]*StackEntry, ln)
 		for i := 0; i < ln; i++ {
 			f := st[i]

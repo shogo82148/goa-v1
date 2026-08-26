@@ -13,63 +13,62 @@ import (
 // API implements the top level API DSL. It defines the API name, default description and other
 // default global property values. Here is an example showing all the possible API sub-definitions:
 //
-//	API("API name", func() {
-//		Title("title")				// API title used in documentation
-//		Description("description")		// API description used in documentation
-//		Version("2.0")				// API version being described
-//		TermsOfService("terms")
-//		Contact(func() {			// API Contact information
-//			Name("contact name")
-//			Email("contact email")
-//			URL("contact URL")
-//		})
-//		License(func() {			// API Licensing information
-//			Name("license name")
-//			URL("license URL")
-//		})
-//	 	Docs(func() {
-//			Description("doc description")
-//			URL("doc URL")
-//		})
-//		Host("goa.design")			// API hostname
-//		Scheme("http")
-//		BasePath("/base/:param")		// Common base path to all API actions
-//		Params(func() {				// Common parameters to all API actions
-//			Param("param")
-//		})
-//		Security("JWT")
-//		Origin("http://swagger.goa.design", func() { // Define CORS policy, may be prefixed with "*" wildcard
-//			Headers("X-Shared-Secret")           // One or more authorized headers, use "*" to authorize all
-//			Methods("GET", "POST")               // One or more authorized HTTP methods
-//			Expose("X-Time")                     // One or more headers exposed to clients
-//			MaxAge(600)                          // How long to cache a prefligh request response
-//			Credentials()                        // Sets Access-Control-Allow-Credentials header
-//		})
-//		Consumes("application/xml") // Built-in encoders and decoders
-//		Consumes("application/json")
-//		Produces("application/gob")
-//		Produces("application/json", func() {   // Custom encoder
-//			Package("github.com/shogo82148/goa-v1/encoding/json")
-//		})
-//		ResponseTemplate("static", func() {	// Response template for use by actions
-//			Description("description")
-//			Status(404)
-//			MediaType("application/json")
-//		})
-//		ResponseTemplate("dynamic", func(arg1, arg2 string) {
-//			Description(arg1)
-//			Status(200)
-//			MediaType(arg2)
-//		})
-//              NoExample()                             // Prevent automatic generation of examples
-//		Trait("Authenticated", func() {		// Traits define DSL that can be run anywhere
-//			Headers(func() {
-//				Header("header")
-//				Required("header")
+//		API("API name", func() {
+//			Title("title")				// API title used in documentation
+//			Description("description")		// API description used in documentation
+//			Version("2.0")				// API version being described
+//			TermsOfService("terms")
+//			Contact(func() {			// API Contact information
+//				Name("contact name")
+//				Email("contact email")
+//				URL("contact URL")
 //			})
-//		})
-//	}
-//
+//			License(func() {			// API Licensing information
+//				Name("license name")
+//				URL("license URL")
+//			})
+//		 	Docs(func() {
+//				Description("doc description")
+//				URL("doc URL")
+//			})
+//			Host("goa.design")			// API hostname
+//			Scheme("http")
+//			BasePath("/base/:param")		// Common base path to all API actions
+//			Params(func() {				// Common parameters to all API actions
+//				Param("param")
+//			})
+//			Security("JWT")
+//			Origin("http://swagger.goa.design", func() { // Define CORS policy, may be prefixed with "*" wildcard
+//				Headers("X-Shared-Secret")           // One or more authorized headers, use "*" to authorize all
+//				Methods("GET", "POST")               // One or more authorized HTTP methods
+//				Expose("X-Time")                     // One or more headers exposed to clients
+//				MaxAge(600)                          // How long to cache a prefligh request response
+//				Credentials()                        // Sets Access-Control-Allow-Credentials header
+//			})
+//			Consumes("application/xml") // Built-in encoders and decoders
+//			Consumes("application/json")
+//			Produces("application/gob")
+//			Produces("application/json", func() {   // Custom encoder
+//				Package("github.com/shogo82148/goa-v1/encoding/json")
+//			})
+//			ResponseTemplate("static", func() {	// Response template for use by actions
+//				Description("description")
+//				Status(404)
+//				MediaType("application/json")
+//			})
+//			ResponseTemplate("dynamic", func(arg1, arg2 string) {
+//				Description(arg1)
+//				Status(200)
+//				MediaType(arg2)
+//			})
+//	             NoExample()                             // Prevent automatic generation of examples
+//			Trait("Authenticated", func() {		// Traits define DSL that can be run anywhere
+//				Headers(func() {
+//					Header("header")
+//					Required("header")
+//				})
+//			})
+//		}
 func API(name string, dsl func()) *design.APIDefinition {
 	if design.Design.Name != "" {
 		dslengine.ReportError("multiple API definitions, only one is allowed")
@@ -154,15 +153,15 @@ func BasePath(val string) {
 // The origin can also be a regular expression wrapped into "/".
 // Example:
 //
-//        Origin("http://swagger.goa.design", func() { // Define CORS policy, may be prefixed with "*" wildcard
-//                Headers("X-Shared-Secret")           // One or more authorized headers, use "*" to authorize all
-//                Methods("GET", "POST")               // One or more authorized HTTP methods
-//                Expose("X-Time")                     // One or more headers exposed to clients
-//                MaxAge(600)                          // How long to cache a prefligh request response
-//                Credentials()                        // Sets Access-Control-Allow-Credentials header
-//        })
+//	Origin("http://swagger.goa.design", func() { // Define CORS policy, may be prefixed with "*" wildcard
+//	        Headers("X-Shared-Secret")           // One or more authorized headers, use "*" to authorize all
+//	        Methods("GET", "POST")               // One or more authorized HTTP methods
+//	        Expose("X-Time")                     // One or more headers exposed to clients
+//	        MaxAge(600)                          // How long to cache a prefligh request response
+//	        Credentials()                        // Sets Access-Control-Allow-Credentials header
+//	})
 //
-//        Origin("/(api|swagger)[.]goa[.]design/", func() {}) // Define CORS policy with a regular expression
+//	Origin("/(api|swagger)[.]goa[.]design/", func() {}) // Define CORS policy with a regular expression
 func Origin(origin string, dsl func()) {
 	cors := &design.CORSDefinition{Origin: origin}
 
@@ -350,7 +349,7 @@ func URL(url string) {
 // Consumes may also specify the path of the decoding package.
 // The package must expose a DecoderFactory method that returns an object which implements
 // goa.DecoderFactory.
-func Consumes(args ...interface{}) {
+func Consumes(args ...any) {
 	if a, ok := apiDefinition(); ok {
 		if def := buildEncodingDefinition(false, args...); def != nil {
 			a.Consumes = append(a.Consumes, def)
@@ -362,7 +361,7 @@ func Consumes(args ...interface{}) {
 // Produces may also specify the path of the encoding package.
 // The package must expose a EncoderFactory method that returns an object which implements
 // goa.EncoderFactory.
-func Produces(args ...interface{}) {
+func Produces(args ...any) {
 	if a, ok := apiDefinition(); ok {
 		if def := buildEncodingDefinition(true, args...); def != nil {
 			a.Produces = append(a.Produces, def)
@@ -371,7 +370,7 @@ func Produces(args ...interface{}) {
 }
 
 // buildEncodingDefinition builds up an encoding definition.
-func buildEncodingDefinition(encoding bool, args ...interface{}) *design.EncodingDefinition {
+func buildEncodingDefinition(encoding bool, args ...any) *design.EncodingDefinition {
 	var dsl func()
 	var ok bool
 	funcName := "Consumes"
@@ -449,7 +448,7 @@ func Function(fn string) {
 // OK template is the only one that accepts an argument. It is used as shown in the example above to
 // set the response media type. Other predefined templates do not use arguments. ResponseTemplate
 // makes it possible to define additional response templates specific to the API.
-func ResponseTemplate(name string, p interface{}) {
+func ResponseTemplate(name string, p any) {
 	if a, ok := apiDefinition(); ok {
 		if a.Responses == nil {
 			a.Responses = make(map[string]*design.ResponseDefinition)
@@ -469,7 +468,7 @@ func ResponseTemplate(name string, p interface{}) {
 	}
 }
 
-func setupResponseTemplate(a *design.APIDefinition, name string, p interface{}) {
+func setupResponseTemplate(a *design.APIDefinition, name string, p any) {
 	if f, ok := p.(func()); ok {
 		r := &design.ResponseDefinition{Name: name}
 		if dslengine.Execute(f, r) {
@@ -506,7 +505,7 @@ func setupResponseTemplate(a *design.APIDefinition, name string, p interface{}) 
 			r := &design.ResponseDefinition{Name: name}
 
 			in := make([]reflect.Value, num)
-			for i := 0; i < num; i++ {
+			for i := range num {
 				// type checking
 				if t := typ.In(i); t.Kind() != reflect.String {
 					dslengine.ReportError("ResponseTemplate parameters must be strings but type of parameter at position %d is %s", i, t)
