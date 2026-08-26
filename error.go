@@ -267,9 +267,9 @@ func MethodNotAllowedError(method string, allowed []string) error {
 // Error returns the error occurrence details.
 func (e *ErrorResponse) Error() string {
 	var msg strings.Builder
-	msg.WriteString(fmt.Sprintf("[%s] %d %s: %s", e.ID, e.Status, e.Code, e.Detail))
+	fmt.Fprintf(&msg, "[%s] %d %s: %s", e.ID, e.Status, e.Code, e.Detail)
 	for k, v := range e.Meta {
-		msg.WriteString(", " + fmt.Sprintf("%s: %v", k, v))
+		fmt.Fprintf(&msg, ", %s: %v", k, v)
 	}
 	return msg.String()
 }
