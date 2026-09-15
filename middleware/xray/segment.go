@@ -400,7 +400,7 @@ func exceptionData(e error) *Exception {
 		st := s.StackTrace()
 		ln := min(len(st), maxStackDepth)
 		frames := make([]*StackEntry, ln)
-		for i := 0; i < ln; i++ {
+		for i := range ln {
 			f := st[i]
 			line, _ := strconv.Atoi(fmt.Sprintf("%d", f))
 			frames[i] = &StackEntry{
@@ -448,7 +448,7 @@ func responseData(resp *http.Response) *Response {
 // getIP implements a heuristic that returns an origin IP address for a request.
 func getIP(req *http.Request) string {
 	for _, h := range []string{"X-Forwarded-For", "X-Real-Ip"} {
-		for _, ip := range strings.Split(req.Header.Get(h), ",") {
+		for ip := range strings.SplitSeq(req.Header.Get(h), ",") {
 			if len(ip) == 0 {
 				continue
 			}

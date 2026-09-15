@@ -172,7 +172,7 @@ func parseClaimScopes(token *jwt.Token) (map[string]bool, []string, error) {
 		if rawscopes, ok := claims[k]; ok && rawscopes != nil {
 			switch scopes := rawscopes.(type) {
 			case string:
-				for _, scope := range strings.Split(scopes, " ") {
+				for scope := range strings.SplitSeq(scopes, " ") {
 					scopesInClaim[scope] = true
 					scopesInClaimList = append(scopesInClaimList, scope)
 				}
