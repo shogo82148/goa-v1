@@ -1084,7 +1084,7 @@ func toReflectType(dtype DataType) reflect.Type {
 	case DateTimeKind:
 		return reflect.TypeFor[time.Time]()
 	case ObjectKind, UserTypeKind, MediaTypeKind:
-		return reflect.TypeOf(map[string]any{})
+		return reflect.TypeFor[map[string]any]()
 	case ArrayKind:
 		return reflect.SliceOf(toReflectType(dtype.ToArray().ElemType.Type))
 	case HashKind:
@@ -1094,10 +1094,10 @@ func toReflectType(dtype DataType) reflect.Type {
 		if !hash.KeyType.Type.IsObject() {
 			ktype = toReflectType(hash.KeyType.Type)
 		} else {
-			ktype = reflect.TypeOf([]any{}).Elem()
+			ktype = reflect.TypeFor[any]()
 		}
 		return reflect.MapOf(ktype, toReflectType(hash.ElemType.Type))
 	default:
-		return reflect.TypeOf([]any{}).Elem()
+		return reflect.TypeFor[any]()
 	}
 }
