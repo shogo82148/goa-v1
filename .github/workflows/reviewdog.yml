@@ -25,7 +25,7 @@ jobs:
         with:
           persist-credentials: false
       - name: misspell
-        uses: reviewdog/action-misspell@v1.30.3
+        uses: reviewdog/action-misspell@v1.30.4
         with:
           reporter: github-pr-review
           level: warning
